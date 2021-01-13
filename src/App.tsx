@@ -1,26 +1,67 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {useCallback} from 'react'
+import Diagram from './components/Diagram/Diagram'
+import {useHistory} from './hooks/useHistory'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const defaultValue = {
+  nodes: [
+    {
+      id: 'node-1',
+      content: 'Start',
+      coordinates: [100, 150],
+      outputs: [
+        {id: 'port-1', alignment: 'right'},
+        {id: 'port-2', alignment: 'right'},
+      ],
+      disableDrag: false,
+      data: {
+        foo: 'bar',
+        count: 0,
+      }
+    },
+    {
+      id: 'node-2',
+      content: 'Middle',
+      coordinates: [300, 150],
+      inputs: [
+        {id: 'port-3', alignment: 'left'},
+        {id: 'port-4', alignment: 'left'},
+      ],
+      outputs: [
+        {id: 'port-5', alignment: 'right'},
+        {id: 'port-6', alignment: 'right'},
+      ],
+      data: {
+        bar: 'foo',
+      }
+    }
+  ],
+  links: [
+    {input: 'port-1', output: 'port-4'},
+  ]
 }
 
-export default App;
+function App() {
+
+  const {state, set, setHistory, undo, redo, clear, canUndo, canRedo} = useHistory(defaultValue)
+
+  // const [schema, setSchema] = useState(defaultValue)
+  const handleChange = useCallback((value: any) => {
+    const newValue = {...state, ...value}
+    set(newValue)
+  }, [set, state])
+
+  const hanleAddHistory = (value:any) => {
+    const newValue = {...state, ...value}
+    setHistory(newValue)
+  }
+
+  return (
+    <div className="App">
+      <Diagram schema={state} onChange={handleChange} onAddHistory={hanleAddHistory}/>
+      <button onClick={undo}>undo</button>
+      <button onClick={redo}>redo</button>
+    </div>
+  )
+}
+
+export default App
