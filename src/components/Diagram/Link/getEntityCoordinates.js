@@ -13,6 +13,7 @@ const getEntityCoordinates = (entity, portRefs, nodeRefs, canvas) => {
   if (portRefs && portRefs[entity.entity.id]) {
     const portEl = portRefs[entity.entity.id];
     const bbox = portEl.getBoundingClientRect();
+    console.log(bbox)
 
     return getRelativePoint([bbox.x + (bbox.width / 2), bbox.y + (bbox.height / 2)], [canvas.x, canvas.y]);
   }

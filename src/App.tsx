@@ -10,7 +10,7 @@ const defaultValue = {
       coordinates: [100, 150],
       outputs: [
         {id: 'port-1', alignment: 'right'},
-        {id: 'port-2', alignment: 'right'},
+        // {id: 'port-2', alignment: 'right'},
       ],
       disableDrag: false,
       data: {
@@ -23,12 +23,12 @@ const defaultValue = {
       content: 'Middle',
       coordinates: [300, 150],
       inputs: [
-        {id: 'port-3', alignment: 'left'},
-        {id: 'port-4', alignment: 'left'},
+        // {id: 'port-3', alignment: 'left'},
+        // {id: 'port-4', alignment: 'left'},
       ],
       outputs: [
-        {id: 'port-5', alignment: 'right'},
-        {id: 'port-6', alignment: 'right'},
+        // {id: 'port-5', alignment: 'right'},
+        // {id: 'port-6', alignment: 'right'},
       ],
       data: {
         bar: 'foo',
@@ -36,7 +36,7 @@ const defaultValue = {
     }
   ],
   links: [
-    {input: 'port-1', output: 'port-4'},
+    {input: 'port-1', output: 'node-2'},
   ]
 }
 

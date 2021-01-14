@@ -37,6 +37,11 @@ const Link = (props) => {
     inputAlignment: input.entity.alignment || null,
     outputAlignment: output.entity.alignment || null,
   };
+  useEffect(()=>{
+    console.log(portRefs[input.entity.id])
+
+  },[])
+
   const path = useMemo(() => makeSvgPath(inputPoint, outputPoint, pathOptions), [inputPoint, outputPoint]);
 
   // calculates label position
