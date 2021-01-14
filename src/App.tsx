@@ -1,7 +1,7 @@
-import React, {useCallback} from 'react'
+import React, {useCallback, useState} from 'react'
 import Diagram from './components/Diagram/Diagram'
 import {useHistory} from './hooks/useHistory'
-import { Button } from 'antd';
+import {Toolbar} from './components/Toolbar/Toolbar'
 
 
 const defaultValue = {
@@ -43,8 +43,8 @@ const defaultValue = {
 }
 
 function App() {
-
-  const {state, set, setHistory, undo, redo, clear, canUndo, canRedo} = useHistory(defaultValue)
+  const {state, set, undo, redo, clear, canUndo, canRedo} = useHistory(defaultValue)
+  const [scale, setScale] = useState<number>(1)
 
   // const [schema, setSchema] = useState(defaultValue)
   const handleChange = useCallback((value: any) => {
@@ -52,16 +52,12 @@ function App() {
     set(newValue)
   }, [set, state])
 
-  const hanleAddHistory = (value:any) => {
-    const newValue = {...state, ...value}
-    setHistory(newValue)
-  }
 
   return (
     <div className="App">
-      <Diagram schema={state} onChange={handleChange} onAddHistory={hanleAddHistory}/>
-      <Button onClick={undo}>undo</Button>
-      <Button onClick={redo}>redo</Button>
+      <Diagram schema={state} scale={scale} onChange={handleChange}/>
+
+      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={scale} setScale={setScale} canRedo={canRedo}/>
     </div>
   )
 }

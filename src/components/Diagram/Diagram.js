@@ -27,11 +27,6 @@ const Diagram = (props) => {
     }
   }
 
-  const handleAddHistory = (nextNodes) => {
-    if (onAddHistory) {
-      onAddHistory({ nodes: nextNodes })
-    }
-  }
 
   // when a port is registered, save it to the local reference
   const onPortRegister = (portId, portEl) => {
@@ -80,7 +75,6 @@ const Diagram = (props) => {
   return (
     <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} {...rest}>
       <NodesCanvas
-        onAddHistory={handleAddHistory}
         nodes={schema.nodes}
         onChange={onNodesChange}
         onNodeRegister={onNodeRegister}
@@ -104,7 +98,7 @@ Diagram.propTypes = {
    * The callback to be performed every time the model changes
    */
   onChange: PropTypes.func,
-  onAddHistory: PropTypes.func
+  scale: Number
 }
 
 Diagram.defaultProps = {

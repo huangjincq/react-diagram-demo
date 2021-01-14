@@ -11,7 +11,7 @@ import DiagramContext from '../../Context/DiagramContext'
  * allow links to easily access to a the ports coordinates
  */
 const DiagramCanvas = (props) => {
-  const { children, portRefs, nodeRefs, className, ...rest } = props
+  const { children, portRefs, nodeRefs, className, scale, ...rest } = props
   const [bbox, setBoundingBox] = useState(null)
   const canvasRef = useRef()
   const classList = classNames('bi bi-diagram', className)
@@ -34,12 +34,10 @@ const DiagramCanvas = (props) => {
   // useWindowResize(() => calculateBBox(canvasRef.current));
 
   return (
-    <div className={classList} ref={canvasRef} {...rest}>
-      <div className="bi-diagram-canvas">
-        <DiagramContext.Provider value={{ canvas: bbox, ports: portRefs, nodes: nodeRefs, _nodes: {} }}>
-          {children}
-        </DiagramContext.Provider>
-      </div>
+    <div className={classList} ref={canvasRef} {...rest} style={{ transform: `scale(${scale})` }}>
+      <DiagramContext.Provider value={{ canvas: bbox, ports: portRefs, nodes: nodeRefs, _nodes: {} }}>
+        {children}
+      </DiagramContext.Provider>
     </div>
   )
 }
@@ -47,13 +45,13 @@ const DiagramCanvas = (props) => {
 DiagramCanvas.propTypes = {
   portRefs: PropTypes.shape({}),
   nodeRefs: PropTypes.shape({}),
-  className: PropTypes.string,
+  className: PropTypes.string
 }
 
 DiagramCanvas.defaultProps = {
   portRefs: {},
   nodeRefs: {},
-  className: '',
+  className: ''
 }
 
 export default React.memo(DiagramCanvas)

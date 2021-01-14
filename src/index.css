@@ -11,6 +11,9 @@ body {
 body,#root,.App{
   height: 100%;
 }
+.App{
+  position: relative;
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',

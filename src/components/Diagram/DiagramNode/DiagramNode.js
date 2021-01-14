@@ -31,7 +31,7 @@ const DiagramNode = (props) => {
     onSegmentConnect,
     render,
     className,
-    disableDrag, onAddHistory
+    disableDrag
   } = props
 
   const ref = useRef(null)
@@ -56,7 +56,6 @@ const DiagramNode = (props) => {
     })
 
     onDragEnd((event, info) => {
-      onAddHistory(id, dragStartPoint.current)
     })
   }
 

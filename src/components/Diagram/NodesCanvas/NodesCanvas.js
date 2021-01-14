@@ -17,7 +17,6 @@ const NodesCanvas = (props) => {
     onSegmentFail,
     onSegmentConnect,
     onChange,
-    onAddHistory
   } = props
 
   // when a node item update its position updates it within the nodes array
@@ -28,18 +27,11 @@ const NodesCanvas = (props) => {
     }
   }
 
-  const handleAddHistory = (nodeId, newCoordinates) => {
-    if (onAddHistory) {
-      const nextNodes = updateNodeCoordinates(nodeId, newCoordinates, nodes)
-      onAddHistory(nextNodes)
-    }
-  }
 
   return nodes && nodes.length > 0 && nodes.map(({ data, ...node }) => (
     <DiagramNode
       {...node}
       data={data}
-      onAddHistory={handleAddHistory}
       onPositionChange={onNodePositionChange}
       onPortRegister={onPortRegister}
       onNodeRemove={onNodeRemove}
