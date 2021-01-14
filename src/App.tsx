@@ -1,6 +1,8 @@
 import React, {useCallback} from 'react'
 import Diagram from './components/Diagram/Diagram'
 import {useHistory} from './hooks/useHistory'
+import { Button } from 'antd';
+
 
 const defaultValue = {
   nodes: [
@@ -58,8 +60,8 @@ function App() {
   return (
     <div className="App">
       <Diagram schema={state} onChange={handleChange} onAddHistory={hanleAddHistory}/>
-      <button onClick={undo}>undo</button>
-      <button onClick={redo}>redo</button>
+      <Button onClick={undo}>undo</Button>
+      <Button onClick={redo}>redo</Button>
     </div>
   )
 }
