@@ -17,6 +17,7 @@ const NodesCanvas = (props) => {
     onSegmentFail,
     onSegmentConnect,
     onChange,
+    scale,
   } = props
 
   // when a node item update its position updates it within the nodes array
@@ -32,6 +33,7 @@ const NodesCanvas = (props) => {
     <DiagramNode
       {...node}
       data={data}
+      scale={scale}
       onPositionChange={onNodePositionChange}
       onPortRegister={onPortRegister}
       onNodeRemove={onNodeRemove}

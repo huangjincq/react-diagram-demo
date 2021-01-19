@@ -31,7 +31,7 @@ const DiagramNode = (props) => {
     onSegmentConnect,
     render,
     className,
-    disableDrag
+    disableDrag, scale,onAddHistory
   } = props
 
   const ref = useRef(null)
@@ -47,15 +47,17 @@ const DiagramNode = (props) => {
 
     // whilst dragging calculates the next coordinates and perform the `onPositionChange` callback
     onDrag((event, info) => {
+
       if (onPositionChange) {
         event.stopImmediatePropagation()
         event.stopPropagation()
-        const nextCoords = [dragStartPoint.current[0] - info.offset[0], dragStartPoint.current[1] - info.offset[1]]
+        const nextCoords = [dragStartPoint.current[0] - info.offset[0] / scale, dragStartPoint.current[1] - info.offset[1] / scale]
         onPositionChange(id, nextCoords)
       }
     })
 
     onDragEnd((event, info) => {
+      // onAddHistory(id, dragStartPoint.current)
     })
   }
 

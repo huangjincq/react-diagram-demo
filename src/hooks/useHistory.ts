@@ -37,7 +37,16 @@ const reducer = (state: any, action: any) => {
         future: newFuture
       };
     case 'SET':
+      // if (newPresent === present) {
+      //   return state;
+      // }
+      return {
+        past: [...past],
+        present: newPresent,
+        future: []
+      };
 
+    case 'SET_WITH_HISTORY':
       if (newPresent === present) {
         return state;
       }
@@ -90,11 +99,14 @@ export const useHistory = (initialPresent: any) => {
     dispatch
   ]);
 
+  const setWithHistory = useCallback(newPresent => dispatch({type: 'SET_WITH_HISTORY', newPresent}), [
+    dispatch
+  ]);
+
 
   const clear = useCallback(() => dispatch({type: 'CLEAR', initialPresent}), [
     dispatch
   ]);
-  console.log(state);
   // 如果需要，同样可以到处过去和未来的state
-  return {state: state.present, set, undo, redo, clear, canUndo, canRedo};
+  return {state: state.present, set, setWithHistory, undo, redo, clear, canUndo, canRedo};
 };

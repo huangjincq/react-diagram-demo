@@ -15,7 +15,7 @@ import stackGet from 'lodash-es/_stackGet'
  * with the user.
  */
 const Diagram = (props) => {
-  const { schema, onChange, onAddHistory, ...rest } = props
+  const { schema, onChange, onAddHistory, scale, ...rest } = props
   const [segment, setSegment] = useState()
   const { current: portRefs } = useRef({}) // keeps the port elements references
   const { current: nodeRefs } = useRef({}) // keeps the node elements references
@@ -30,12 +30,18 @@ const Diagram = (props) => {
 
   // when a port is registered, save it to the local reference
   const onPortRegister = (portId, portEl) => {
-    portRefs[portId] = portEl
+    portRefs[portId] = portEl.getBoundingClientRect()
   }
 
   // when a node is registered, save it to the local reference
   const onNodeRegister = (nodeId, nodeEl) => {
-    nodeRefs[nodeId] = nodeEl
+    nodeRefs[nodeId] = nodeEl.getBoundingClientRect()
+
+    const findNode = schema.nodes.find(node => node.id === nodeId)
+    findNode.outputs.forEach(port => {
+      portRefs[port.id].offsetX = portRefs[port.id].x - nodeRefs[nodeId].x
+      portRefs[port.id].offsetY = portRefs[port.id].y - nodeRefs[nodeId].y
+    })
   }
 
   // when a node is deleted, remove its references
@@ -73,8 +79,9 @@ const Diagram = (props) => {
   }
 
   return (
-    <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} {...rest}>
+    <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} scale={scale} {...rest}>
       <NodesCanvas
+        scale={scale}
         nodes={schema.nodes}
         onChange={onNodesChange}
         onNodeRegister={onNodeRegister}
