@@ -36,6 +36,7 @@ const DiagramNode = (props) => {
 
   const ref = useRef(null)
   const registerPort = usePortRegistration(inputs, outputs, onPortRegister) // get the port registration method
+
   const { onDragStart, onDrag, onDragEnd } = useDrag({ throttleBy: 14, ref }) // get the drag n drop methods
   const dragStartPoint = useRef(coordinates) // keeps the drag start point in a persistent reference
 
@@ -80,7 +81,7 @@ const DiagramNode = (props) => {
   )
 
   // generate ports
-  const options = { registerPort, onDragNewSegment, onSegmentFail, onSegmentConnect }
+  const options = { registerPort, onDragNewSegment, onSegmentFail, onSegmentConnect, scale }
   const InputPorts = inputs.map(portGenerator(options, 'input'))
   const OutputPorts = outputs.map(portGenerator(options, 'output'))
   const customRenderProps = { id, render, content, type, inputs: InputPorts, outputs: OutputPorts, data, className }

@@ -12,7 +12,18 @@ import getRelativePoint from '../../shared/functions/getRelativePoint'
  */
 const Port = (props) => {
   const ref = useRef(null)
-  const { id, canLink, alignment, onDragNewSegment, onSegmentFail, onSegmentConnect, onMount, type, ...rest } = props
+  const {
+    id,
+    canLink,
+    alignment,
+    onDragNewSegment,
+    onSegmentFail,
+    onSegmentConnect,
+    onMount,
+    type,
+    scale,
+    ...rest
+  } = props
   const canvas = useCanvas()
   const { onDrag, onDragEnd } = useDrag({ ref })
 
@@ -20,7 +31,9 @@ const Port = (props) => {
     if (onDragNewSegment) {
       event.stopImmediatePropagation()
       event.stopPropagation()
-      const from = getRelativePoint(info.start, [canvas.x, canvas.y])
+      console.log(info)
+      // const from = getRelativePoint([info.start[0] * scale, info.start[1] * scale], [canvas.x, canvas.y])
+      const from = [0, 0]
       const to = getRelativePoint([event.clientX, event.clientY], [canvas.x, canvas.y])
 
       onDragNewSegment(id, from, to, alignment)

@@ -11,7 +11,7 @@ const getEntityCoordinates = (entity, portRefs, nodeRefs, canvas) => {
   }
 
   if (portRefs && portRefs[entity.entity.id]) {
-    console.log(entity)
+    // console.log(entity)
     const portEl = portRefs[entity.entity.id]
     const bbox = portEl // .getBoundingClientRect();
 
