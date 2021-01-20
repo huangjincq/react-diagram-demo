@@ -27,21 +27,18 @@ const Diagram = (props) => {
     }
   }
 
-
   // when a port is registered, save it to the local reference
   const onPortRegister = (portId, portEl) => {
-    portRefs[portId] = portEl.getBoundingClientRect()
+    portRefs[portId] = portEl
   }
 
   // when a node is registered, save it to the local reference
   const onNodeRegister = (nodeId, nodeEl) => {
-    nodeRefs[nodeId] = nodeEl.getBoundingClientRect()
-
-    const findNode = schema.nodes.find(node => node.id === nodeId)
-    findNode.outputs.forEach(port => {
-      portRefs[port.id].offsetX = portRefs[port.id].x - nodeRefs[nodeId].x
-      portRefs[port.id].offsetY = portRefs[port.id].y - nodeRefs[nodeId].y
-    })
+    const rect = nodeEl.getBoundingClientRect()
+    nodeRefs[nodeId] = {
+      width: rect.width / scale,
+      height: rect.height / scale,
+    }
   }
 
   // when a node is deleted, remove its references
@@ -92,7 +89,7 @@ const Diagram = (props) => {
         onSegmentConnect={onSegmentConnect}
         onAddHistory={onAddHistory}
       />
-      <LinksCanvas nodes={schema.nodes} links={schema.links} segment={segment} onChange={onLinkDelete}/>
+      <LinksCanvas nodes={schema.nodes} links={schema.links} segment={segment} onChange={onLinkDelete} />
     </DiagramCanvas>
   )
 }
@@ -106,12 +103,12 @@ Diagram.propTypes = {
    * The callback to be performed every time the model changes
    */
   onChange: PropTypes.func,
-  scale: Number
+  scale: Number,
 }
 
 Diagram.defaultProps = {
   schema: { nodes: [], links: [] },
-  onChange: undefined
+  onChange: undefined,
 }
 
 export default React.memo(Diagram)

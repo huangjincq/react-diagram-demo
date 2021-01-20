@@ -20,6 +20,7 @@ const DiagramCanvas = (props) => {
   const calculateBBox = (el) => {
     if (el) {
       const nextBBox = el.getBoundingClientRect()
+      nextBBox.el = el
       if (!isEqual(nextBBox, bbox)) {
         setBoundingBox(nextBBox)
       }
@@ -45,13 +46,13 @@ const DiagramCanvas = (props) => {
 DiagramCanvas.propTypes = {
   portRefs: PropTypes.shape({}),
   nodeRefs: PropTypes.shape({}),
-  className: PropTypes.string
+  className: PropTypes.string,
 }
 
 DiagramCanvas.defaultProps = {
   portRefs: {},
   nodeRefs: {},
-  className: ''
+  className: '',
 }
 
 export default React.memo(DiagramCanvas)

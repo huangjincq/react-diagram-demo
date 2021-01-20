@@ -1,7 +1,7 @@
 /**
  * Given an array of nodes and an id, returns the involved port/node
  */
-const findInvolvedEntity = (nodes, entityId, type = 'node', parentNode = {}) => {
+const findInvolvedEntity = (nodes, entityId, type = 'node', parentNodeInfo = {}) => {
   if (!entityId || !nodes || nodes.length === 0) return undefined
 
   let result
@@ -10,12 +10,13 @@ const findInvolvedEntity = (nodes, entityId, type = 'node', parentNode = {}) => 
   while (index < nodes.length && !result) {
     const node = nodes[index]
 
-
     if (node.id === entityId) {
       // todo  add parentNode in port
-      result = { type, entity: { ...parentNode, ...node } }
+      result = { type, entity: { ...node }, parentNodeInfo }
     } else {
-      result = findInvolvedEntity(node.inputs, entityId, 'port', node) || findInvolvedEntity(node.outputs, entityId, 'port', node)
+      result =
+        findInvolvedEntity(node.inputs, entityId, 'port', node) ||
+        findInvolvedEntity(node.outputs, entityId, 'port', node)
     }
 
     index += 1

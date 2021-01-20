@@ -31,10 +31,12 @@ const Port = (props) => {
     if (onDragNewSegment) {
       event.stopImmediatePropagation()
       event.stopPropagation()
-      console.log(info)
+      const canvasScaleRect = canvas.el.getBoundingClientRect()
       // const from = getRelativePoint([info.start[0] * scale, info.start[1] * scale], [canvas.x, canvas.y])
-      const from = [0, 0]
-      const to = getRelativePoint([event.clientX, event.clientY], [canvas.x, canvas.y])
+      const from = [(info.start[0] - canvasScaleRect.x) / scale, (info.start[1] - canvasScaleRect.y) / scale]
+      // const from = [0, 0]
+      // const to = getRelativePoint([event.clientX, event.clientY], [canvas.x, canvas.y])
+      const to = [(event.clientX - canvasScaleRect.x) / scale, (event.clientY - canvasScaleRect.y) / scale]
 
       onDragNewSegment(id, from, to, alignment)
     }
@@ -42,9 +44,9 @@ const Port = (props) => {
 
   onDragEnd((event) => {
     const targetPort = event.target.getAttribute('data-port-id')
+
     if (targetPort && event.target !== ref.current && canLink(id, targetPort, type) && onSegmentConnect) {
       const args = type === 'input' ? [id, targetPort, type] : [targetPort, id, type]
-
       onSegmentConnect(...args)
       return
     }
@@ -59,7 +61,7 @@ const Port = (props) => {
     }
   }, [ref.current, id, onMount])
 
-  return (<div className="bi bi-diagram-port" data-port-id={id} ref={ref} {...rest} />)
+  return <div className="bi bi-diagram-port" data-port-id={id} ref={ref} {...rest} />
 }
 
 Port.propTypes = {
@@ -70,7 +72,7 @@ Port.propTypes = {
   onSegmentConnect: PropTypes.func,
   canLink: PropTypes.func,
   onMount: PropTypes.func,
-  alignment: PropTypes.oneOf(['right', 'left', 'top', 'bottom'])
+  alignment: PropTypes.oneOf(['right', 'left', 'top', 'bottom']),
 }
 
 Port.defaultProps = {
@@ -79,7 +81,7 @@ Port.defaultProps = {
   onSegmentConnect: undefined,
   canLink: () => true,
   onMount: undefined,
-  alignment: undefined
+  alignment: undefined,
 }
 
 export default React.memo(Port)
