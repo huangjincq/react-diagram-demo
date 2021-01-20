@@ -18,6 +18,7 @@ const NodesCanvas = (props) => {
     onSegmentConnect,
     onChange,
     scale,
+    onAddHistory
   } = props
 
   // when a node item update its position updates it within the nodes array
@@ -25,6 +26,13 @@ const NodesCanvas = (props) => {
     if (onChange) {
       const nextNodes = updateNodeCoordinates(nodeId, newCoordinates, nodes)
       onChange(nextNodes)
+    }
+  }
+
+  const handleAddHistory = (nodeId, newCoordinates) => {
+    if (onAddHistory) {
+      const nextNodes = updateNodeCoordinates(nodeId, newCoordinates, nodes)
+      onAddHistory(nextNodes)
     }
   }
 
@@ -41,6 +49,7 @@ const NodesCanvas = (props) => {
       onSegmentFail={onSegmentFail}
       onSegmentConnect={onSegmentConnect}
       onMount={onNodeRegister}
+      onAddHistory={handleAddHistory}
       key={node.id}
     />
   ))

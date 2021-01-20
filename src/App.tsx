@@ -43,19 +43,26 @@ const defaultValue = {
 }
 
 function App() {
-  const {state, set, undo, redo, clear, canUndo, canRedo} = useHistory(defaultValue)
+  const {state, set, setHistory, undo, redo, clear, canUndo, canRedo} = useHistory(defaultValue)
   const [scale, setScale] = useState<number>(1)
 
   // const [schema, setSchema] = useState(defaultValue)
   const handleChange = useCallback((value: any) => {
     const newValue = {...state, ...value}
     set(newValue)
+
   }, [set, state])
+
+  const handleAddHistory = (nodes: any) => {
+    const newValue = {...state, nodes}
+    setHistory(newValue)
+
+  }
 
 
   return (
     <div className="App">
-      <Diagram schema={state} scale={scale} onChange={handleChange}/>
+      <Diagram schema={state} scale={scale} onChange={handleChange} onAddHistory={handleAddHistory}/>
 
       <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={scale} setScale={setScale} canRedo={canRedo}/>
     </div>

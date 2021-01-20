@@ -44,7 +44,7 @@ const Port = (props) => {
     if (ref.current && onMount) {
       onMount(id, ref.current)
     }
-  }, [ref.current])
+  }, [ref.current, id, onMount])
 
   return (<div className="bi bi-diagram-port" data-port-id={id} ref={ref} {...rest} />)
 }

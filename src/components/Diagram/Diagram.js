@@ -90,6 +90,7 @@ const Diagram = (props) => {
         onDragNewSegment={onDragNewSegment}
         onSegmentFail={onSegmentFail}
         onSegmentConnect={onSegmentConnect}
+        onAddHistory={onAddHistory}
       />
       <LinksCanvas nodes={schema.nodes} links={schema.links} segment={segment} onChange={onLinkDelete}/>
     </DiagramCanvas>
