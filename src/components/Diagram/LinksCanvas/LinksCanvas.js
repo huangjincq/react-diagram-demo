@@ -1,27 +1,28 @@
-import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
-import DiagramLink from '../Link/Link';
-import Segment from '../Segment/Segment';
-import { LinkType, NodeType, PortAlignment } from '../../shared/Types';
-import findInvolvedEntity from './findInvolvedEntity';
-import removeLinkFromArray from './removeLinkFromArray';
+import React, { useCallback } from 'react'
+import PropTypes from 'prop-types'
+import DiagramLink from '../Link/Link'
+import Segment from '../Segment/Segment'
+import { LinkType, NodeType, PortAlignment } from '../../shared/Types'
+import findInvolvedEntity from './findInvolvedEntity'
+import removeLinkFromArray from './removeLinkFromArray'
 
 /**
  * Handles the links' events and business logic, wraps the links within a svg
  */
 const LinksCanvas = (props) => {
-  const { nodes, segment, onChange, links } = props;
+  const { nodes, segment, onChange, links } = props
 
   const removeFromLinksArray = useCallback((link) => {
     if (links.length > 0 && onChange) {
-      const nextLinks = removeLinkFromArray(link, links);
-      onChange(nextLinks);
+      const nextLinks = removeLinkFromArray(link, links)
+      onChange(nextLinks)
     }
-  }, [links, onChange]);
+  }, [links, onChange])
+
 
   return (
     <svg className="bi bi-link-canvas-layer">
-      {links && links.length > 0 && links.map((link) => (
+      {links && links.length > 0 && links.map((link, index) => (
         <DiagramLink
           link={link}
           input={findInvolvedEntity(nodes, link.input)}
@@ -34,8 +35,8 @@ const LinksCanvas = (props) => {
         <Segment {...segment} />
       )}
     </svg>
-  );
-};
+  )
+}
 
 LinksCanvas.propTypes = {
   nodes: PropTypes.arrayOf(NodeType),
@@ -44,16 +45,16 @@ LinksCanvas.propTypes = {
     id: PropTypes.string,
     from: PropTypes.arrayOf(PropTypes.number),
     to: PropTypes.arrayOf(PropTypes.number),
-    alignment: PortAlignment,
+    alignment: PortAlignment
   }),
-  onChange: PropTypes.func,
-};
+  onChange: PropTypes.func
+}
 
 LinksCanvas.defaultProps = {
   nodes: [],
   links: [],
   segment: undefined,
-  onChange: undefined,
-};
+  onChange: undefined
+}
 
-export default React.memo(LinksCanvas);
+export default React.memo(LinksCanvas)

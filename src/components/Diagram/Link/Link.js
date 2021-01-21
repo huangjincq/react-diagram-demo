@@ -31,14 +31,14 @@ const Link = (props) => {
   /* eslint-disable max-len */
   const classList = useMemo(() => classNames('bi-diagram-link', { 'readonly-link': link.readonly }, link.className), [
     link.readonly,
-    link.className,
+    link.className
   ])
   const outputPoint = useMemo(() => getCoords(output, portRefs, nodeRefs, canvas), [output, portRefs, nodeRefs, canvas])
   /* eslint-enable max-len */
   const pathOptions = {
     type: input.type === 'port' || output.type === 'port' ? 'bezier' : 'curve',
     inputAlignment: input.entity.alignment || null,
-    outputAlignment: output.entity.alignment || null,
+    outputAlignment: output.entity.alignment || null
   }
 
   const path = useMemo(() => makeSvgPath(inputPoint, outputPoint, pathOptions), [inputPoint, outputPoint])
@@ -60,9 +60,9 @@ const Link = (props) => {
 
   return (
     <g className={classList}>
-      {!link.readonly && <path d={path} className="bi-link-ghost" onDoubleClick={onDoubleClick} />}
-      <path d={path} ref={pathRef} className="bi-link-path" onDoubleClick={onDoubleClick} />
-      {link.label && labelPosition && <LinkLabel position={labelPosition} label={link.label} />}
+      {!link.readonly && <path d={path} className="bi-link-ghost" onDoubleClick={onDoubleClick}/>}
+      <path d={path} ref={pathRef} className="bi-link-path" onDoubleClick={onDoubleClick}/>
+      {link.label && labelPosition && <LinkLabel position={labelPosition} label={link.label}/>}
     </g>
   )
 }
@@ -70,17 +70,18 @@ const Link = (props) => {
 const InvolvedEntity = PropTypes.exact({
   type: PropTypes.oneOf(['node', 'port']),
   entity: PropTypes.oneOfType([PortType, NodeType]),
+  parentNodeInfo: NodeType
 })
 
 Link.propTypes = {
   link: LinkType.isRequired,
   input: InvolvedEntity.isRequired,
   output: InvolvedEntity.isRequired,
-  onDelete: PropTypes.func,
+  onDelete: PropTypes.func
 }
 
 Link.defaultProps = {
-  onDelete: undefined,
+  onDelete: undefined
 }
 
 export default React.memo(Link)

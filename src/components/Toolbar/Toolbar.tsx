@@ -41,11 +41,12 @@ export const Toolbar: React.FC<ToolbarProps> = ({undo, redo, canUndo, canRedo, s
     <div className="toolbar">
       <Button disabled={!canUndo} onClick={undo}>撤销</Button>
       <Button disabled={!canRedo} onClick={redo}>重做</Button>
-      <Popover visible={visible} placement="right" content={scaleContent} trigger="click"
-               onVisibleChange={(visible) => {
-                 setVisible(visible)
-               }}
-               overlayClassName='scale-popover'>
+      <Popover
+        visible={visible} placement="right" content={scaleContent} trigger="click"
+        onVisibleChange={(visible) => {
+          setVisible(visible)
+        }}
+        overlayClassName='scale-popover'>
         <Button>{displayScale}</Button>
       </Popover>
     </div>

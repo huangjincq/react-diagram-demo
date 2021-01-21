@@ -10,15 +10,14 @@ const getEntityCoordinates = (entity, portRefs, nodeRefs, canvas) => {
 
   if (portRefs && portRefs[entity.entity.id]) {
     const portDom = portRefs[entity.entity.id]
-    console.log(entity)
     const parentNodeCoordinates = entity.parentNodeInfo.coordinates
 
-    const res = [
+    const result = [
       parentNodeCoordinates[0] + portDom.offsetLeft + portDom.offsetWidth / 2,
       parentNodeCoordinates[1] + portDom.offsetTop + portDom.offsetHeight / 2,
     ]
 
-    return res
+    return result
   }
 
   return undefined

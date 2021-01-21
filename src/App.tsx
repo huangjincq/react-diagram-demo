@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from 'react'
+import React, {useCallback, useState} from 'react'
 import Diagram from './components/Diagram/Diagram'
-import { useHistory } from './hooks/useHistory'
-import { Toolbar } from './components/Toolbar/Toolbar'
+import {useHistory} from './hooks/useHistory'
+import {Toolbar} from './components/Toolbar/Toolbar'
+import {NodeList} from "./components/NodeList/NodeList";
 
 const defaultValue = {
   nodes: [
@@ -10,7 +11,7 @@ const defaultValue = {
       content: 'Start',
       coordinates: [100, 150],
       outputs: [
-        { id: 'port-1', alignment: 'right' },
+        {id: 'port-1', alignment: 'right'},
         // {id: 'port-2', alignment: 'right'},
       ],
       disableDrag: false,
@@ -24,8 +25,8 @@ const defaultValue = {
       content: 'Middle',
       coordinates: [300, 150],
       outputs: [
-        { id: 'port-5', alignment: 'right' },
-        { id: 'port-6', alignment: 'right' },
+        {id: 'port-5', alignment: 'right'},
+        {id: 'port-6', alignment: 'right'},
       ],
       data: {
         bar: 'foo',
@@ -41,32 +42,33 @@ const defaultValue = {
     //   ],
     // },
   ],
-  links: [{ input: 'port-1', output: 'node-2' }],
+  links: [{input: 'port-1', output: 'node-2'}],
 }
 
 function App() {
-  const { state, set, setHistory, undo, redo, clear, canUndo, canRedo } = useHistory(defaultValue)
+  const {state, set, setHistory, undo, redo, clear, canUndo, canRedo} = useHistory(defaultValue)
   const [scale, setScale] = useState<number>(1)
 
   // const [schema, setSchema] = useState(defaultValue)
   const handleChange = useCallback(
     (value: any) => {
-      const newValue = { ...state, ...value }
+      const newValue = {...state, ...value}
       set(newValue)
     },
     [set, state]
   )
 
   const handleAddHistory = (nodes: any) => {
-    const newValue = { ...state, nodes }
+    const newValue = {...state, nodes}
     setHistory(newValue)
   }
 
   return (
     <div className="App">
-      <Diagram schema={state} scale={scale} onChange={handleChange} onAddHistory={handleAddHistory} />
+      <Diagram schema={state} scale={scale} onChange={handleChange} onAddHistory={handleAddHistory}/>
+      <NodeList/>
 
-      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={scale} setScale={setScale} canRedo={canRedo} />
+      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={scale} setScale={setScale} canRedo={canRedo}/>
     </div>
   )
 }
