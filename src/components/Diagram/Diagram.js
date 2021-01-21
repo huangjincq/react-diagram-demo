@@ -1,12 +1,9 @@
 import React, { useCallback, useState, useRef } from 'react'
-import PropTypes from 'prop-types'
 import DiagramCanvas from './DiagramCanvas/DiagramCanvas'
 import NodesCanvas from './NodesCanvas/NodesCanvas'
 import LinksCanvas from './LinksCanvas/LinksCanvas'
-import { SchemaType } from '../shared/Types'
 
 import './diagram.scss'
-import stackGet from 'lodash-es/_stackGet'
 
 /**
  * The Diagram component is the root-node of any diagram.<br />
@@ -94,21 +91,6 @@ const Diagram = (props) => {
   )
 }
 
-Diagram.propTypes = {
-  /**
-   * The diagram current schema
-   */
-  schema: SchemaType,
-  /**
-   * The callback to be performed every time the model changes
-   */
-  onChange: PropTypes.func,
-  scale: Number,
-}
 
-Diagram.defaultProps = {
-  schema: { nodes: [], links: [] },
-  onChange: undefined,
-}
 
 export default React.memo(Diagram)
