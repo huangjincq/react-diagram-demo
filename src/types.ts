@@ -16,8 +16,8 @@ export interface INodeType {
 }
 
 export interface ILinkType {
-  start: string,
-  end: string
+  input: string,
+  output: string
 }
 
 export interface IDiagramType {

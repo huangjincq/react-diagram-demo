@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import DiagramLink from '../Link/Link'
+import { Link } from '../Link/Link'
 import Segment from '../Segment/Segment'
 import { LinkType, NodeType, PortAlignment } from '../../shared/Types'
 import findInvolvedEntity from './findInvolvedEntity'
@@ -23,7 +23,7 @@ const LinksCanvas = (props) => {
   return (
     <svg className="bi bi-link-canvas-layer">
       {links && links.length > 0 && links.map((link, index) => (
-        <DiagramLink
+        <Link
           link={link}
           input={findInvolvedEntity(nodes, link.input)}
           output={findInvolvedEntity(nodes, link.output)}
