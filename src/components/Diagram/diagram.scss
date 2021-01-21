@@ -16,7 +16,7 @@
   .bi.bi-diagram-node {
     box-sizing: content-box;
     position: absolute;
-    z-index: 50;
+    z-index: 1;
     user-select: none;
 
     .bi-port-wrapper {
@@ -68,20 +68,16 @@
     }
   }
 
-  // ----------------------------
-  // Link canvas layer
-  // ----------------------------
-  .bi-link-canvas-layer {
+  .bi-diagram-segment-layer {
     pointer-events: none;
     width: 100%;
     height: 100%;
-    z-index: 0;
+    z-index: 3;
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-
     // ----------------------------
     // Segment
     // ----------------------------
@@ -100,6 +96,22 @@
         fill: #88cdff;
       }
     }
+  }
+
+  // ----------------------------
+  // Link canvas layer
+  // ----------------------------
+  .bi-link-canvas-layer {
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
 
     // ----------------------------
     // Link item

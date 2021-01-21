@@ -1,16 +1,12 @@
 import React, { useCallback, useState, useRef } from 'react'
 import DiagramCanvas from './DiagramCanvas/DiagramCanvas'
 import NodesCanvas from './NodesCanvas/NodesCanvas'
-import LinksCanvas from './LinksCanvas/LinksCanvas'
+import { LinksCanvas } from './LinksCanvas/LinksCanvas'
+import { Segment } from './Segment/Segment'
 
 import './diagram.scss'
 
-/**
- * The Diagram component is the root-node of any diagram.<br />
- * It accepts a `schema` prop defining the current state of the diagram and emits its possible changes through the
- * `onChange` prop, allowing the developer to have the best possible control over the diagram and its interactions
- * with the user.
- */
+
 const Diagram = (props) => {
   const { schema, onChange, onAddHistory, scale, ...rest } = props
   const [segment, setSegment] = useState()
@@ -34,7 +30,7 @@ const Diagram = (props) => {
     const rect = nodeEl.getBoundingClientRect()
     nodeRefs[nodeId] = {
       width: rect.width / scale,
-      height: rect.height / scale,
+      height: rect.height / scale
     }
   }
 
@@ -86,11 +82,13 @@ const Diagram = (props) => {
         onSegmentConnect={onSegmentConnect}
         onAddHistory={onAddHistory}
       />
-      <LinksCanvas nodes={schema.nodes} links={schema.links} segment={segment} onChange={onLinkDelete} />
+      <LinksCanvas nodes={schema.nodes} links={schema.links} onChange={onLinkDelete}/>
+      {segment && (
+        <Segment segment={segment}/>
+      )}
     </DiagramCanvas>
   )
 }
-
 
 
 export default React.memo(Diagram)

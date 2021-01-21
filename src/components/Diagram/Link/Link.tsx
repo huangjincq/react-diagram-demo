@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState, useCallback, useMemo} from 'react'
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import usePortRefs from '../../shared/internal_hooks/usePortRefs'
 import useCanvas from '../../shared/internal_hooks/useCanvas'
 import makeSvgPath from '../../shared/functions/makeSvgPath'
@@ -19,7 +19,7 @@ const useContextRefs = () => {
 /**
  * Return the coordinates of a given entity (node or port)
  */
-const getEntityCoordinates = (entity: any, portRefs: any, nodeRefs: any, canvas: any) => {
+const getEntityCoordinates = (entity: any, portRefs: any, nodeRefs: any, canvas: any): ICoordinateType | undefined => {
   if (entity && entity.type === 'node' && nodeRefs[entity.entity.id]) {
     const nodeEl = nodeRefs[entity.entity.id]
     const bbox = nodeEl
@@ -30,12 +30,10 @@ const getEntityCoordinates = (entity: any, portRefs: any, nodeRefs: any, canvas:
     const portDom = portRefs[entity.entity.id]
     const parentNodeCoordinates = entity.parentNodeInfo.coordinates
 
-    const result = [
+    return [
       parentNodeCoordinates[0] + portDom.offsetLeft + portDom.offsetWidth / 2,
       parentNodeCoordinates[1] + portDom.offsetTop + portDom.offsetHeight / 2
     ]
-
-    return result
   }
   return undefined
 }
@@ -68,9 +66,7 @@ export const Link: React.FC<LinkProps> = React.memo((props) => {
 
   // on link delete
   const onDoubleClick = useCallback(() => {
-    if (onDelete && !link.readonly) {
-      onDelete(link)
-    }
+    onDelete(link)
   }, [onDelete, link])
 
   return (

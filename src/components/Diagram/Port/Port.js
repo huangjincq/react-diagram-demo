@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import useDrag from '../../shared/internal_hooks/useDrag'
 import useCanvas from '../../shared/internal_hooks/useCanvas'
-import getRelativePoint from '../../shared/functions/getRelativePoint'
 
 /**
  * Port
@@ -32,10 +31,7 @@ const Port = (props) => {
       event.stopImmediatePropagation()
       event.stopPropagation()
       const canvasScaleRect = canvas.el.getBoundingClientRect()
-      // const from = getRelativePoint([info.start[0] * scale, info.start[1] * scale], [canvas.x, canvas.y])
       const from = [(info.start[0] - canvasScaleRect.x) / scale, (info.start[1] - canvasScaleRect.y) / scale]
-      // const from = [0, 0]
-      // const to = getRelativePoint([event.clientX, event.clientY], [canvas.x, canvas.y])
       const to = [(event.clientX - canvasScaleRect.x) / scale, (event.clientY - canvasScaleRect.y) / scale]
 
       onDragNewSegment(id, from, to, alignment)
