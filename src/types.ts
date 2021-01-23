@@ -24,3 +24,19 @@ export interface IDiagramType {
   nodes: INodeType[],
   links: ILinkType[]
 }
+
+
+export interface ISegmentType {
+  id: string;
+  from: ICoordinateType;
+  to: ICoordinateType;
+}
+
+export interface IPortRefs {
+  [id: string]: HTMLDivElement
+}
+
+export interface INodeRefs {
+  // [id: string]: HTMLDivElement
+  [id: string]: any
+}

@@ -1,33 +1,42 @@
 import React, { useCallback, useState, useRef } from 'react'
-import DiagramCanvas from './DiagramCanvas/DiagramCanvas'
+import { DiagramCanvas } from './DiagramCanvas/DiagramCanvas'
 import { NodesCanvas } from './NodesCanvas/NodesCanvas'
 import { LinksCanvas } from './LinksCanvas/LinksCanvas'
 import { Segment } from './Segment/Segment'
 
 import './diagram.scss'
+import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs } from "../../types"
 
+interface DiagramProps {
+  value: IDiagramType,
+  onChange: (value: IDiagramType) => void;
+  onAddHistory: any;
+  scale: number
+}
 
-const Diagram = (props) => {
-  const { schema, onChange, onAddHistory, scale, ...rest } = props
-  const [segment, setSegment] = useState()
-  const { current: portRefs } = useRef({}) // keeps the port elements references
-  const { current: nodeRefs } = useRef({}) // keeps the node elements references
+export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
+  const {value, onChange, onAddHistory, scale,} = props
+  const [segment, setSegment] = useState<ISegmentType | undefined>()
+  const {current: portRefs} = useRef<IPortRefs>({}) // keeps the port elements references
+  const {current: nodeRefs} = useRef<INodeRefs>({}) // keeps the node elements references
+
 
   // when nodes change, performs the onChange callback with the new incoming data
-  const onNodesChange = (nextNodes) => {
+  const onNodesChange = (nextNodes: any) => {
     if (onChange) {
-      onChange({ nodes: nextNodes })
+      onChange({...value, nodes: nextNodes})
     }
   }
 
   // when a port is registered, save it to the local reference
-  const onPortRegister = (portId, portEl) => {
+  const onPortRegister = (portId: string, portEl: HTMLDivElement) => {
     portRefs[portId] = portEl
   }
 
   // when a node is registered, save it to the local reference
-  const onNodeRegister = (nodeId, nodeEl) => {
+  const onNodeRegister = (nodeId: string, nodeEl: HTMLDivElement) => {
     const rect = nodeEl.getBoundingClientRect()
+    // todo use offsetWidth or clientWidth
     nodeRefs[nodeId] = {
       width: rect.width / scale,
       height: rect.height / scale
@@ -37,13 +46,13 @@ const Diagram = (props) => {
   // when a node is deleted, remove its references
   const onNodeRemove = useCallback((nodeId, inputsPorts, outputsPorts) => {
     delete nodeRefs[nodeId]
-    inputsPorts.forEach((input) => delete portRefs[input])
-    outputsPorts.forEach((output) => delete portRefs[output])
+    inputsPorts.forEach((input: string) => delete portRefs[input])
+    outputsPorts.forEach((output: string) => delete portRefs[output])
   }, [])
 
   // when a new segment is dragged, save it to the local state
-  const onDragNewSegment = useCallback((portId, from, to, alignment) => {
-    setSegment({ id: `segment-${portId}`, from, to, alignment })
+  const onDragNewSegment = useCallback((portId, from, to) => {
+    setSegment({id: `segment-${portId}`, from, to})
   }, [])
 
   // when a segment fails to connect, reset the segment state
@@ -53,26 +62,22 @@ const Diagram = (props) => {
 
   // when a segment connects, update the links schema, perform the onChange callback
   // with the new data, then reset the segment state
-  const onSegmentConnect = (input, output) => {
-    const nextLinks = [...(schema.links || []), { input, output }]
-    if (onChange) {
-      onChange({ links: nextLinks })
-    }
+  const onSegmentConnect = (input: string, output: string) => {
+    const nextLinks = [...value.links, {input, output}]
+    onChange({...value, links: nextLinks})
     setSegment(undefined)
   }
 
   // when links change, performs the onChange callback with the new incoming data
-  const onLinkDelete = (nextLinks) => {
-    if (onChange) {
-      onChange({ links: nextLinks })
-    }
+  const onLinkDelete = (nextLinks: ILinkType[]) => {
+    onChange({...value, links: nextLinks})
   }
 
   return (
-    <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} scale={scale} {...rest}>
+    <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} scale={scale}>
       <NodesCanvas
         scale={scale}
-        nodes={schema.nodes}
+        nodes={value.nodes}
         onChange={onNodesChange}
         onNodeRegister={onNodeRegister}
         onPortRegister={onPortRegister}
@@ -82,13 +87,10 @@ const Diagram = (props) => {
         onSegmentConnect={onSegmentConnect}
         onAddHistory={onAddHistory}
       />
-      <LinksCanvas nodes={schema.nodes} links={schema.links} onChange={onLinkDelete}/>
+      <LinksCanvas nodes={value.nodes} links={value.links} onChange={onLinkDelete}/>
       {segment && (
         <Segment segment={segment}/>
       )}
     </DiagramCanvas>
   )
-}
-
-
-export default React.memo(Diagram)
+})
