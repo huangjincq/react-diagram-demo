@@ -23,7 +23,7 @@ const getEntityCoordinates = (entity: any, portRefs: any, nodeRefs: any, canvas:
   if (entity && entity.type === 'node' && nodeRefs[entity.entity.id]) {
     const nodeEl = nodeRefs[entity.entity.id]
     const bbox = nodeEl
-    return [entity.entity.coordinates[0] + bbox.width / 2, entity.entity.coordinates[1] + bbox.height / 2]
+    return [entity.entity.coordinates[0], entity.entity.coordinates[1] + bbox.height / 2]
   }
 
   if (portRefs && portRefs[entity.entity.id]) {

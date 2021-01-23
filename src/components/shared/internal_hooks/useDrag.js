@@ -95,6 +95,8 @@ const useDrag = (options = defaultOptions) => {
    */
   const onDragStart = useCallback(
     (event) => {
+      event.stopImmediatePropagation()
+      event.stopPropagation()
       if (!info.isDragging && targetRef.current.contains(event.target)) {
         info.isDragging = true
         info.end = null
