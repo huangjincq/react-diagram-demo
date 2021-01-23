@@ -35,12 +35,8 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   // when a node is registered, save it to the local reference
   const onNodeRegister = (nodeId: string, nodeEl: HTMLDivElement) => {
-    const rect = nodeEl.getBoundingClientRect()
-    // todo use offsetWidth or clientWidth
-    nodeRefs[nodeId] = {
-      width: rect.width / scale,
-      height: rect.height / scale
-    }
+    // const rect = nodeEl.getBoundingClientRect()
+    nodeRefs[nodeId] = nodeEl
   }
 
   // when a node is deleted, remove its references

@@ -22,15 +22,12 @@ const useContextRefs = () => {
 const getEntityCoordinates = (entity: any, portRefs: any, nodeRefs: any, canvas: any): ICoordinateType | undefined => {
   if (entity && entity.type === 'node' && nodeRefs[entity.entity.id]) {
     const nodeEl = nodeRefs[entity.entity.id]
-    const bbox = nodeEl
-    return [entity.entity.coordinates[0], entity.entity.coordinates[1] + bbox.height / 2]
+    return [entity.entity.coordinates[0], entity.entity.coordinates[1] + nodeEl.offsetHeight / 2]
   }
 
   if (portRefs && portRefs[entity.entity.id]) {
     const portDom = portRefs[entity.entity.id]
-    const parentNodeCoordinates = entity.parentNodeInfo.coordinates
-
-    console.log(portDom.offsetLeft)
+    const parentNodeCoordinates = entity.entity.coordinates
 
     return [
       parentNodeCoordinates[0] + portDom.offsetLeft + portDom.offsetWidth / 2,

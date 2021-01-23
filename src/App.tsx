@@ -24,7 +24,7 @@ const defaultValue: IDiagramType = {
     {
       id: 'node-2',
       type: 'node-type-select',
-      coordinates: [300, 150],
+      coordinates: [400, 200],
       inputs: [],
       outputs: [
         {id: 'port-5', disabled: false},
