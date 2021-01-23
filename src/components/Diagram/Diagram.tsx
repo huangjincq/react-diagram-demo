@@ -2,7 +2,7 @@ import React, { useCallback, useState, useRef } from 'react'
 import { DiagramCanvas } from './DiagramCanvas/DiagramCanvas'
 import { NodesCanvas } from './NodesCanvas/NodesCanvas'
 import { LinksCanvas } from './LinksCanvas/LinksCanvas'
-import { Segment } from './Segment/Segment'
+import { Segment } from './Segment'
 
 import './diagram.scss'
 import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs } from "../../types"

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
-import makeSvgPath from '../../shared/functions/makeSvgPath'
-import { ISegmentType } from "../../../types"
+import makeSvgPath from '../shared/functions/makeSvgPath'
+import { ISegmentType } from "../../types"
 
 
 export interface SegmentProps {

@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from 'react'
+import React from 'react'
 import { Select } from "antd"
 
 import "./style.scss"
+import { INodeItemProps } from '../../types'
 
-export interface NodeTypeInputProps {
+export interface NodeTypeInputProps extends INodeItemProps<any> {
 
 }
 

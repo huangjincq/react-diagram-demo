@@ -17,8 +17,7 @@ const defaultValue: IDiagramType = {
       ],
       type: 'node-type-input',
       data: {
-        foo: 'bar',
-        count: 0
+        inputValue: 'defaultValue'
       }
     },
     {
@@ -41,6 +40,7 @@ const defaultValue: IDiagramType = {
 function App() {
   const {state, set, setHistory, undo, redo, clear, canUndo, canRedo} = useHistory(defaultValue)
   const [scale, setScale] = useState<number>(1)
+
 
   // const [schema, setSchema] = useState(defaultValue)
   const handleChange = useCallback(

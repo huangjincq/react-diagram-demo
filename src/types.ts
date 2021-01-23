@@ -39,3 +39,8 @@ export interface INodeRefs {
   // [id: string]: HTMLDivElement
   [id: string]: any
 }
+
+export interface INodeItemProps<T> {
+  value: T;
+  onChange: (value: T) => void;
+}

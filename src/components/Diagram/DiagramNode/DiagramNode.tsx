@@ -8,7 +8,8 @@ import { nodesConfig } from '../../NodeTypes/helper'
 
 interface DiagramNodeProps {
   nodeInfo: INodeType;
-  onPositionChange: (id: string, nextCoords: ICoordinateType) => void;
+  onNodePositionChange: (id: string, nextCoords: ICoordinateType) => void;
+  onNodeValueChange: (id: string, nextNodeValue: any) => void;
   onAddHistory: (id: string, nextCoords: ICoordinateType) => void;
   onMount: any;
   onPortRegister: any;
@@ -22,14 +23,16 @@ interface DiagramNodeProps {
 export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   const {
     nodeInfo,
-    onPositionChange,
+    onNodeValueChange,
+    onNodePositionChange,
     onPortRegister,
     onNodeRemove,
     onDragNewSegment,
     onMount,
     onSegmentFail,
     onSegmentConnect,
-    scale, onAddHistory
+    scale,
+    onAddHistory,
   } = props
 
   const {
@@ -37,11 +40,22 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     coordinates,
     type,
     inputs,
+    data,
     outputs
   } = nodeInfo
 
   // nodeType
   const component = nodesConfig[type]?.component
+
+  const handleNodeDataChange = (nextNodeData: any) => {
+    onNodeValueChange(id, nextNodeData)
+  }
+
+  // 传给子组件点 Props
+  const nodeItemProps = {
+    value: data,
+    onChange: handleNodeDataChange
+  }
 
   const ref: any = useRef(null)
   const registerPort = usePortRegistration(inputs, outputs, onPortRegister) // get the port registration method
@@ -54,12 +68,12 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     dragStartPoint.current = coordinates
   })
 
-  // whilst dragging calculates the next coordinates and perform the `onPositionChange` callback
+  // whilst dragging calculates the next coordinates and perform the `onNodePositionChange` callback
   onDrag((event: MouseEvent, info: any) => {
     event.stopImmediatePropagation()
     event.stopPropagation()
     const nextCoords: ICoordinateType = [dragStartPoint.current[0] - info.offset[0] / scale, dragStartPoint.current[1] - info.offset[1] / scale]
-    onPositionChange(id, nextCoords)
+    onNodePositionChange(id, nextCoords)
   })
 
   onDragEnd((event: MouseEvent, info: any) => {
@@ -80,7 +94,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   return (
     <div className={'bi bi-diagram-node bi-diagram-node-default'} ref={ref}
          style={{left: coordinates[0], top: coordinates[1]}}>
-      {component && React.createElement(component, {})}
+      {component && React.createElement(component, nodeItemProps)}
       <div className="bi-port-wrapper">
         <div className="bi-input-ports">{InputPorts}</div>
         <div className="bi-output-ports">{OutputPorts}</div>

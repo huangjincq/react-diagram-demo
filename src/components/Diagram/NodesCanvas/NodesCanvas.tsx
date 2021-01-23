@@ -1,7 +1,7 @@
 import React from 'react'
 import { DiagramNode } from '../DiagramNode/DiagramNode'
-import updateNodeCoordinates from './updateNodeCoordinates'
-import { ICoordinateType, INodeType } from "../../../types"
+import { ICoordinateType, INodeType } from '../../../types'
+import { cloneDeep } from 'lodash-es'
 
 interface NodesCanvasProps {
   nodes: INodeType[];
@@ -31,18 +31,26 @@ export const NodesCanvas: React.FC<NodesCanvasProps> = React.memo((props) => {
   } = props
 
   // when a node item update its position updates it within the nodes array
-  const onNodePositionChange = (nodeId: string, newCoordinates: ICoordinateType) => {
-    if (onChange) {
-      const nextNodes = updateNodeCoordinates(nodeId, newCoordinates, nodes)
-      onChange(nextNodes)
-    }
+  const handleNodePositionChange = (nodeId: string, nextCoordinates: ICoordinateType) => {
+    const nextNodes = [...nodes]
+    const index = nextNodes.findIndex(node => node.id === nodeId)
+    nextNodes[index].coordinates = nextCoordinates
+    onChange(nextNodes)
   }
 
-  const handleAddHistory = (nodeId: string, newCoordinates: ICoordinateType) => {
-    if (onAddHistory) {
-      const nextNodes = updateNodeCoordinates(nodeId, newCoordinates, nodes)
-      onAddHistory(nextNodes)
-    }
+  const handleNodeValueChange = (nodeId: string, nextNodeValue: any) => {
+    // 需要deepClone  历史记录 需要独立的 data
+    const nextNodes = cloneDeep(nodes)
+    const index = nextNodes.findIndex(node => node.id === nodeId)
+    nextNodes[index].data = nextNodeValue
+    onChange(nextNodes)
+  }
+
+  const handleAddHistory = (nodeId: string, nextCoordinates: ICoordinateType) => {
+    const nextNodes = cloneDeep(nodes)
+    const index = nextNodes.findIndex(node => node.id === nodeId)
+    nextNodes[index].coordinates = nextCoordinates
+    onAddHistory(nextNodes)
   }
 
 
@@ -51,7 +59,8 @@ export const NodesCanvas: React.FC<NodesCanvasProps> = React.memo((props) => {
       <DiagramNode
         nodeInfo={node}
         scale={scale}
-        onPositionChange={onNodePositionChange}
+        onNodePositionChange={handleNodePositionChange}
+        onNodeValueChange={handleNodeValueChange}
         onPortRegister={onPortRegister}
         onNodeRemove={onNodeRemove}
         onDragNewSegment={onDragNewSegment}

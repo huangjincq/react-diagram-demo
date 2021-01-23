@@ -1,19 +1,26 @@
-import React, { useMemo, useState } from 'react'
-import { Input } from "antd"
+import React, { ChangeEvent, useMemo, useState } from 'react'
+import { Input } from 'antd'
 
-import "./style.scss"
+import './style.scss'
+import { INodeItemProps } from '../../types'
 
-export interface NodeTypeInputProps {
-
+export interface NodeTypeInputProps extends INodeItemProps<any> {
 }
 
 
-export const NodeTypeInput: React.FC<NodeTypeInputProps> = ({}) => {
+export const NodeTypeInput: React.FC<NodeTypeInputProps> = (props) => {
 
+  const {value, onChange} = props
+  const handleInputChange = (e: any) => {
+    onChange({
+      ...value,
+      inputValue: e.target.value
+    })
+  }
 
   return (
     <>
-      <Input placeholder="Basic usage"/>
+      <Input value={value.inputValue} onChange={handleInputChange} placeholder="Basic usage"/>
     </>
   )
 }
