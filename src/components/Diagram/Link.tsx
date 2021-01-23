@@ -1,11 +1,11 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import usePortRefs from '../../shared/internal_hooks/usePortRefs'
-import useCanvas from '../../shared/internal_hooks/useCanvas'
-import makeSvgPath from '../../shared/functions/makeSvgPath'
-import getPathMidpoint from '../../shared/functions/getPathMidpoint'
-import useNodeRefs from '../../shared/internal_hooks/useNodeRefs'
+import usePortRefs from '../shared/internal_hooks/usePortRefs'
+import useCanvas from '../shared/internal_hooks/useCanvas'
+import makeSvgPath from '../shared/functions/makeSvgPath'
+import getPathMidpoint from '../shared/functions/getPathMidpoint'
+import useNodeRefs from '../shared/internal_hooks/useNodeRefs'
 import {LinkDelete} from './LinkDelete'
-import {ICoordinateType} from "../../../types";
+import {ICoordinateType} from "../../types";
 
 // local hook, returns portRefs & nodeRefs
 const useContextRefs = () => {

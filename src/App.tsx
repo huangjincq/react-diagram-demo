@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Diagram } from './components/Diagram/Diagram'
+import { Diagram } from './components/Diagram'
 import { useHistory } from './hooks/useHistory'
 import { Toolbar } from './components/Toolbar/Toolbar'
 import { NodeList } from './components/NodeList/NodeList'

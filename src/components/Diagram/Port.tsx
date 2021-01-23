@@ -1,7 +1,7 @@
 import React, {useEffect, useRef} from 'react'
-import useDrag from '../../shared/internal_hooks/useDrag'
-import useCanvas from '../../shared/internal_hooks/useCanvas'
-import {ICoordinateType} from "../../../types";
+import useDrag from '../shared/internal_hooks/useDrag'
+import useCanvas from '../shared/internal_hooks/useCanvas'
+import {ICoordinateType} from "../../types";
 
 interface PortProps {
   id: string;

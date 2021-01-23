@@ -1,5 +1,5 @@
 import React from 'react';
-import {ICoordinateType} from "../../../types";
+import {ICoordinateType} from "../../types";
 
 interface LinkDeleteProps {
   position: ICoordinateType

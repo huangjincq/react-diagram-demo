@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useRef } from 'react'
-import { DiagramCanvas } from './DiagramCanvas/DiagramCanvas'
-import { NodesCanvas } from './NodesCanvas/NodesCanvas'
-import { LinksCanvas } from './LinksCanvas/LinksCanvas'
+import { DiagramCanvas } from './DiagramCanvas'
+import { NodesCanvas } from './NodesCanvas'
+import { LinksCanvas } from './LinksCanvas'
 import { Segment } from './Segment'
 
 import './diagram.scss'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Port } from '../Port/Port'
+import { Port } from '../Port'
 
 const portGenerator = ({ registerPort, onDragNewSegment, onSegmentFail, onSegmentConnect, scale }, type) => (port) => (
   <Port

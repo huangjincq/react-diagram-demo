@@ -1,6 +1,6 @@
 import React from 'react'
-import { DiagramNode } from '../DiagramNode/DiagramNode'
-import { ICoordinateType, INodeType } from '../../../types'
+import { DiagramNode } from './DiagramNode/DiagramNode'
+import { ICoordinateType, INodeType } from '../../types'
 import { cloneDeep } from 'lodash-es'
 
 interface NodesCanvasProps {

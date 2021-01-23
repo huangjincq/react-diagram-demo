@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
 // import { useWindowScroll, useWindowResize } from 'beautiful-react-hooks';
 import { isEqual } from 'lodash-es'
-import DiagramContext from '../../Context/DiagramContext'
-import { IPortRefs, INodeRefs } from "../../../types"
+import DiagramContext from '../Context/DiagramContext'
+import { IPortRefs, INodeRefs } from "../../types"
 
 interface DiagramCanvasProps {
   portRefs: IPortRefs;

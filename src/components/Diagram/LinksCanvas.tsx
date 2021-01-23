@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
-import { Link } from '../Link/Link'
-import { ILinkType, INodeType, ICoordinateType } from '../../../types'
+import { Link } from './Link'
+import { ILinkType, INodeType, ICoordinateType } from '../../types'
 import { isEqual } from 'lodash-es'
 
 interface LinkCanvasProps {
