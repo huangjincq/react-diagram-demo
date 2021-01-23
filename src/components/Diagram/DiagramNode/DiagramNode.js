@@ -1,24 +1,17 @@
 import React, { useMemo, useRef } from 'react'
 import PropTypes from 'prop-types'
-import classNames from 'classnames'
-import getDiagramNodeStyle from './getDiagramNodeStyle'
 import { usePortRegistration, useNodeRegistration } from '../../shared/internal_hooks/useContextRegistration'
 import { PortType } from '../../shared/Types'
 import portGenerator from './portGenerator'
 import useDrag from '../../shared/internal_hooks/useDrag'
 import useNodeUnregistration from '../../shared/internal_hooks/useNodeUnregistration'
 
-/**
- * A Diagram Node component displays a single diagram node, handles the drag n drop business logic and fires the
- * related callback. Displays input and output ports if existing and takes care of firing the `onPortRegister` callback
- * when a port is ready (aka rendered),
- */
+
 const DiagramNode = (props) => {
   const {
     id,
     content,
     coordinates,
-    type,
     inputs,
     outputs,
     data,
@@ -29,8 +22,6 @@ const DiagramNode = (props) => {
     onMount,
     onSegmentFail,
     onSegmentConnect,
-    render,
-    className,
     disableDrag, scale, onAddHistory
   } = props
 
@@ -68,36 +59,19 @@ const DiagramNode = (props) => {
   // perform the onMount callback when the node is allowed to register
   useNodeRegistration(ref, onMount, id)
 
-  const classList = useMemo(
-    () =>
-      classNames(
-        'bi bi-diagram-node',
-        {
-          [`bi-diagram-node-${type}`]: !!type && !render
-        },
-        className
-      ),
-    [type, className, render]
-  )
 
-  // generate ports
   const options = { registerPort, onDragNewSegment, onSegmentFail, onSegmentConnect, scale }
   const InputPorts = inputs.map(portGenerator(options, 'input'))
   const OutputPorts = outputs.map(portGenerator(options, 'output'))
-  const customRenderProps = { id, render, content, type, inputs: InputPorts, outputs: OutputPorts, data, className }
 
   return (
-    <div className={classList} ref={ref} style={getDiagramNodeStyle(coordinates, disableDrag)}>
-      {render && typeof render === 'function' && render(customRenderProps)}
-      {!render && (
-        <>
-          {content}
-          <div className="bi-port-wrapper">
-            <div className="bi-input-ports">{InputPorts}</div>
-            <div className="bi-output-ports">{OutputPorts}</div>
-          </div>
-        </>
-      )}
+    <div className={'bi bi-diagram-node bi-diagram-node-default'} ref={ref}
+         style={{ left: coordinates[0], top: coordinates[1] }}>¬
+      {content}
+      <div className="bi-port-wrapper">
+        <div className="bi-input-ports">{InputPorts}</div>
+        <div className="bi-output-ports">{OutputPorts}</div>
+      </div>
     </div>
   )
 }
