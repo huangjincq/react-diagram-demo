@@ -34,7 +34,7 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = React.memo((props) =>
   // useWindowResize(() => calculateBBox(canvasRef.current));
 
   return (
-    <div className={'bi bi-diagram'} ref={canvasRef} style={{transform: `scale(${scale})`}}>
+    <div id='diagram-canvas' className={'bi bi-diagram'} ref={canvasRef} style={{transform: `scale(${scale})`}}>
       <DiagramContext.Provider value={{canvas: bbox, ports: portRefs, nodes: nodeRefs}}>
         {children}
       </DiagramContext.Provider>

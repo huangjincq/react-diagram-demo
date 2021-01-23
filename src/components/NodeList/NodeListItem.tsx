@@ -1,18 +1,25 @@
-import React from 'react'
-import {AppleOutlined} from '@ant-design/icons';
+import React, { useCallback } from 'react'
 
-import "./style.scss"
+import './style.scss'
 
 export interface NodeListItemProps {
-
+  icon: React.FC;
+  label: string;
+  type: string;
 }
 
 
-export const NodeListItem: React.FC<NodeListItemProps> = React.memo(({}) => {
+export const NodeListItem: React.FC<NodeListItemProps> = React.memo(({icon, label, type}) => {
+
+  const handleDragStart = useCallback((event: any) => {
+    if (event.dataTransfer) {
+      event.dataTransfer.setData('nodeType', type)
+    }
+  }, [type])
   return (
-    <div className="node-list-item" draggable>
-      <AppleOutlined className='node-list-icon'/>
-      <div className="node-list-text">你好是啊啊是</div>
+    <div className="node-list-item" draggable onDragStart={handleDragStart}>
+      {icon && React.createElement(icon)}
+      <div className="node-list-text">{label}</div>
     </div>
   )
 })

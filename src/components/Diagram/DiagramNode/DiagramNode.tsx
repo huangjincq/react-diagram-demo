@@ -4,6 +4,7 @@ import portGenerator from './portGenerator'
 import useDrag from '../../shared/internal_hooks/useDrag'
 import useNodeUnregistration from '../../shared/internal_hooks/useNodeUnregistration'
 import { INodeType, ICoordinateType } from '../../../types'
+import { nodesConfig } from '../../NodeTypes/helper'
 
 interface DiagramNodeProps {
   nodeInfo: INodeType;
@@ -34,9 +35,13 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   const {
     id,
     coordinates,
+    type,
     inputs,
-    outputs,
+    outputs
   } = nodeInfo
+
+  // nodeType
+  const component = nodesConfig[type]?.component
 
   const ref: any = useRef(null)
   const registerPort = usePortRegistration(inputs, outputs, onPortRegister) // get the port registration method
@@ -75,7 +80,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   return (
     <div className={'bi bi-diagram-node bi-diagram-node-default'} ref={ref}
          style={{left: coordinates[0], top: coordinates[1]}}>
-      {'content'}
+      {component && React.createElement(component, {})}
       <div className="bi-port-wrapper">
         <div className="bi-input-ports">{InputPorts}</div>
         <div className="bi-output-ports">{OutputPorts}</div>

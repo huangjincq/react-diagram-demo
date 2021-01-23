@@ -1,30 +1,29 @@
 export interface IPointType {
-  id: string,
-  disabled: boolean
+  id: string;
+  disabled?: boolean;
 }
 
-export type ICoordinateType = [number, number]
+export type ICoordinateType = [number, number];
 
 
 export interface INodeType {
-  id: string,
-  type: 'node-type-1' | 'node-type-2',
-  inputs: IPointType[],
-  outputs: IPointType[],
-  coordinates: ICoordinateType,
-  data: any
+  id: string;
+  type: 'node-type-input' | 'node-type-select';
+  inputs: IPointType[];
+  outputs: IPointType[];
+  coordinates: ICoordinateType;
+  data: any;
 }
 
 export interface ILinkType {
-  input: string,
-  output: string
+  input: string;
+  output: string;
 }
 
 export interface IDiagramType {
-  nodes: INodeType[],
-  links: ILinkType[]
+  nodes: INodeType[];
+  links: ILinkType[];
 }
-
 
 export interface ISegmentType {
   id: string;
@@ -33,7 +32,7 @@ export interface ISegmentType {
 }
 
 export interface IPortRefs {
-  [id: string]: HTMLDivElement
+  [id: string]: HTMLDivElement;
 }
 
 export interface INodeRefs {

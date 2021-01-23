@@ -1,0 +1,32 @@
+.node-list {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 200px;
+  height: 100%;
+  background-color: #3F5463;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+
+  &-item {
+    height: 56px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      background-color: #2F3F48;
+    }
+  }
+
+  &-icon {
+    font-size: 20px;
+  }
+
+  &-text {
+    margin-left: 10px;
+  }
+}
+

@@ -2,46 +2,40 @@ import React, { useCallback, useState } from 'react'
 import { Diagram } from './components/Diagram/Diagram'
 import { useHistory } from './hooks/useHistory'
 import { Toolbar } from './components/Toolbar/Toolbar'
-import { NodeList } from "./components/NodeList/NodeList"
+import { NodeList } from './components/NodeList/NodeList'
+import { IDiagramType, ICoordinateType } from './types'
+import { createNode } from './components/NodeTypes/helper'
 
-const defaultValue = {
+const defaultValue: IDiagramType = {
   nodes: [
     {
       id: 'node-1',
-      content: 'Start',
       coordinates: [100, 150],
+      inputs: [],
       outputs: [
-        {id: 'port-1'},
-        // {id: 'port-2', alignment: 'right'},
+        {id: 'port-1', disabled: false}
       ],
+      type: 'node-type-input',
       data: {
         foo: 'bar',
-        count: 0,
-      },
+        count: 0
+      }
     },
     {
       id: 'node-2',
-      content: 'Middle',
+      type: 'node-type-select',
       coordinates: [300, 150],
+      inputs: [],
       outputs: [
-        {id: 'port-5'},
-        {id: 'port-6'},
+        {id: 'port-5', disabled: false},
+        {id: 'port-6', disabled: false}
       ],
       data: {
-        bar: 'foo',
-      },
-    },
-    // {
-    //   id: 'node-3',
-    //   content: 'Middle',
-    //   coordinates: [600, 150],
-    //   outputs: [
-    //     { id: 'port-7', alignment: 'right' },
-    //     { id: 'port-68', alignment: 'right' },
-    //   ],
-    // },
+        bar: 'foo'
+      }
+    }
   ],
-  links: [{input: 'port-1', output: 'node-2'}],
+  links: [{input: 'port-1', output: 'node-2'}]
 }
 
 function App() {
@@ -62,8 +56,32 @@ function App() {
     setHistory(newValue)
   }
 
+  const handleDrop = (event: any) => {
+    if (event) {
+      event = window.event
+    }
+    const nodeType = event.dataTransfer.getData('nodeType')
+    const x = event.clientX
+    const y = event.clientY
+
+    const diagramCanvasRect = document.getElementById('diagram-canvas')?.getBoundingClientRect() || {x: 0, y: 0}
+
+    const coordinates: ICoordinateType = [
+      (x - diagramCanvasRect.x) / scale,
+      (y - diagramCanvasRect.y) / scale
+    ]
+    const newNode = createNode(nodeType, coordinates)
+
+
+    handleChange({nodes: [...state.nodes, newNode]})
+  }
+  const handleDrag = (e: any) => {
+    e.preventDefault()
+  }
+
+
   return (
-    <div className="App">
+    <div className="App" onDrop={handleDrop} onDragEnter={handleDrag} onDragOver={handleDrag}>
       <Diagram value={state} scale={scale} onChange={handleChange} onAddHistory={handleAddHistory}/>
       <NodeList/>
 

@@ -1,22 +1,19 @@
-import React, {useMemo, useState} from 'react'
-import {Button, Popover} from "antd";
-
-import "./style.scss"
-import {NodeListItem} from "./NodeListItem";
+import React from 'react'
+import './style.scss'
+import { NodeListItem } from './NodeListItem'
+import { nodesList } from '../NodeTypes/helper'
 
 export interface NodeListProps {
 
 }
 
-
-export const NodeList: React.FC<NodeListProps> = ({}) => {
-
+export const NodeList: React.FC<NodeListProps> = () => {
 
   return (
     <div className="node-list">
-      <NodeListItem/>
-      <NodeListItem/>
-      <NodeListItem/>
+      {nodesList.map((node) =>
+        <NodeListItem key={node.type} icon={node.icon} type={node.type} label={node.label}/>
+      )}
     </div>
   )
 }
