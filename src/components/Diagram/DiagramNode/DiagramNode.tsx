@@ -1,14 +1,14 @@
-import React, {useRef} from 'react'
-import {usePortRegistration, useNodeRegistration} from '../../shared/internal_hooks/useContextRegistration'
+import React, { useRef } from 'react'
+import { usePortRegistration, useNodeRegistration } from '../../shared/internal_hooks/useContextRegistration'
 import portGenerator from './portGenerator'
 import useDrag from '../../shared/internal_hooks/useDrag'
 import useNodeUnregistration from '../../shared/internal_hooks/useNodeUnregistration'
-import {INodeType} from '../../../types'
+import { INodeType, ICoordinateType } from '../../../types'
 
-// TODO type is not compelete
 interface DiagramNodeProps {
   nodeInfo: INodeType;
-  onPositionChange: any;
+  onPositionChange: (id: string, nextCoords: ICoordinateType) => void;
+  onAddHistory: (id: string, nextCoords: ICoordinateType) => void;
   onMount: any;
   onPortRegister: any;
   onNodeRemove: any;
@@ -16,7 +16,6 @@ interface DiagramNodeProps {
   onSegmentFail: any;
   onSegmentConnect: any;
   scale: number;
-  onAddHistory: any
 }
 
 export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
@@ -52,13 +51,10 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
 
   // whilst dragging calculates the next coordinates and perform the `onPositionChange` callback
   onDrag((event: MouseEvent, info: any) => {
-
-    if (onPositionChange) {
-      event.stopImmediatePropagation()
-      event.stopPropagation()
-      const nextCoords = [dragStartPoint.current[0] - info.offset[0] / scale, dragStartPoint.current[1] - info.offset[1] / scale]
-      onPositionChange(id, nextCoords)
-    }
+    event.stopImmediatePropagation()
+    event.stopPropagation()
+    const nextCoords: ICoordinateType = [dragStartPoint.current[0] - info.offset[0] / scale, dragStartPoint.current[1] - info.offset[1] / scale]
+    onPositionChange(id, nextCoords)
   })
 
   onDragEnd((event: MouseEvent, info: any) => {
@@ -87,3 +83,5 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     </div>
   )
 })
+
+DiagramNode.displayName = 'DiagramNode'
