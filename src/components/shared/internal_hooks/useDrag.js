@@ -6,7 +6,7 @@ const defaultOptions = {
    * A custom ref to be used in place of a new one
    * @default undefined
    */
-  ref: undefined,
+  ref: null,
   /**
    * Throttle the onDrag handler by the given ms
    * @default 0ms

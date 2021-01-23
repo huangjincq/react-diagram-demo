@@ -1,3 +1,3 @@
 import React from 'react';
 
-export default React.createContext({ canvas: null, ports: null, nodes: null });
+export default React.createContext({ canvas: {}, ports: {}, nodes: {} });
