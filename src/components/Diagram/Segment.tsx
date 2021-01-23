@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import makeSvgPath from '../shared/functions/makeSvgPath'
+import makeSvgPath from '../../utils/makeSvgPath'
 import { ISegmentType } from "../../types"
 
 

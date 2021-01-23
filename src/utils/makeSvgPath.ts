@@ -1,7 +1,7 @@
 /**
  * Rounds coordinates
  */
-import {ICoordinateType} from "../../../types";
+import {ICoordinateType} from "../types";
 
 const roundPoint = (point: ICoordinateType) => [Math.floor(point[0]), Math.floor(point[1])]
 
