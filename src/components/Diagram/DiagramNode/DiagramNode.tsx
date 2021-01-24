@@ -5,6 +5,7 @@ import useDrag from '../../../hooks/useDrag'
 import useNodeUnregistration from '../../../hooks/useNodeUnregistration'
 import { INodeType, ICoordinateType } from '../../../types'
 import { nodesConfig } from '../../NodeTypes/helper'
+import { isEqual } from 'lodash-es'
 
 interface DiagramNodeProps {
   nodeInfo: INodeType;
@@ -32,7 +33,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     onSegmentFail,
     onSegmentConnect,
     scale,
-    onAddHistory,
+    onAddHistory
   } = props
 
   const {
@@ -77,7 +78,10 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   })
 
   onDragEnd((event: MouseEvent, info: any) => {
-    onAddHistory(id, dragStartPoint.current)
+    if (!isEqual(dragStartPoint.current, coordinates)) {
+      console.log(dragStartPoint.current, coordinates)
+      onAddHistory(id, dragStartPoint.current)
+    }
   })
 
   // on component unmount, remove its references

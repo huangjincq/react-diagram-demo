@@ -1,22 +1,26 @@
 import React from 'react'
-import { Select } from "antd"
+import { Select } from 'antd'
 
-import "./style.scss"
+import './style.scss'
 import { INodeItemProps } from '../../types'
+
 
 export interface NodeTypeInputProps extends INodeItemProps<any> {
 
 }
 
 
-export const NodeTypeSelect: React.FC<NodeTypeInputProps> = ({}) => {
+export const NodeTypeSelect: React.FC<NodeTypeInputProps> = ({value, onChange}) => {
+
   function handleChange(value: string) {
     console.log(`selected ${value}`)
   }
 
+  console.log(value)
+
   return (
     <>
-      <Select defaultValue="lucy" style={{width: 120}} onChange={handleChange}>
+      <Select style={{width: 120}} value={value.selectValue} onChange={handleChange}>
         <Select.Option value="jack">Jack</Select.Option>
         <Select.Option value="lucy">Lucy</Select.Option>
         <Select.Option value="disabled" disabled>

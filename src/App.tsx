@@ -30,7 +30,7 @@ const defaultValue: IDiagramType = {
         {id: 'port-6', disabled: false}
       ],
       data: {
-        bar: 'foo'
+        selectValue: ''
       }
     }
   ],
@@ -56,7 +56,7 @@ function App() {
     setHistory(newValue)
   }
 
-  const handleDrop = (event: any) => {
+  const handleDrop = useCallback((event: any) => {
     if (event) {
       event = window.event
     }
@@ -71,20 +71,18 @@ function App() {
       (y - diagramCanvasRect.y) / scale
     ]
     const newNode = createNode(nodeType, coordinates)
-
-
     handleChange({nodes: [...state.nodes, newNode]})
-  }
-  const handleDrag = (e: any) => {
+  }, [handleChange, scale, state.nodes])
+
+  const handleDrag = useCallback((e: any) => {
     e.preventDefault()
-  }
+  }, [])
 
 
   return (
     <div className="App" onDrop={handleDrop} onDragEnter={handleDrag} onDragOver={handleDrag}>
       <Diagram value={state} scale={scale} onChange={handleChange} onAddHistory={handleAddHistory}/>
       <NodeList/>
-
       <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={scale} setScale={setScale} canRedo={canRedo}/>
     </div>
   )

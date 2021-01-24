@@ -40,7 +40,7 @@ export const NodesCanvas: React.FC<NodesCanvasProps> = React.memo((props) => {
 
   const handleNodeValueChange = (nodeId: string, nextNodeValue: any) => {
     // 需要deepClone  历史记录 需要独立的 data
-    const nextNodes = cloneDeep(nodes)
+    const nextNodes = [...nodes]
     const index = nextNodes.findIndex(node => node.id === nodeId)
     nextNodes[index].data = nextNodeValue
     onChange(nextNodes)

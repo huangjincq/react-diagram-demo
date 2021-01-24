@@ -1,6 +1,8 @@
 import { throttle } from 'lodash-es'
 import { useRef, useCallback, useEffect } from 'react'
 
+const DISABLED_DRAG_TAGS = ['INPUT', 'TEXTAREA']
+
 const defaultOptions = {
   /**
    * A custom ref to be used in place of a new one
@@ -11,7 +13,7 @@ const defaultOptions = {
    * Throttle the onDrag handler by the given ms
    * @default 0ms
    */
-  throttleBy: 0,
+  throttleBy: 0
 }
 
 /**
@@ -34,7 +36,7 @@ const CreateCallbackRef = (ref) =>
         ref.current = callback
       }
     },
-    [ref.current]
+    [ref]
   )
 
 /**
@@ -97,7 +99,8 @@ const useDrag = (options = defaultOptions) => {
     (event) => {
       event.stopImmediatePropagation()
       event.stopPropagation()
-      if (!info.isDragging && targetRef.current.contains(event.target)) {
+      const targetTagName = event.target.tagName
+      if (!info.isDragging && targetRef.current.contains(event.target) && !DISABLED_DRAG_TAGS.includes(targetTagName)) {
         info.isDragging = true
         info.end = null
         info.offset = null
@@ -173,7 +176,7 @@ const useDrag = (options = defaultOptions) => {
     ref: targetRef,
     onDragStart: CreateCallbackRef(dragStartHandlerRef),
     onDrag: CreateCallbackRef(dragHandlerRef),
-    onDragEnd: CreateCallbackRef(dragEndHandlerRef),
+    onDragEnd: CreateCallbackRef(dragEndHandlerRef)
   }
 }
 
