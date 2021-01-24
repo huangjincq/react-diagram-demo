@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import getNodePortsId from '../functions/getNodePortsId';
+import getNodePortsId from '../utils/getNodePortsId';
 
 /**
  * Takes the inputs and outputs node ports and onNodeRemove callback to be performed when the node is unmounted

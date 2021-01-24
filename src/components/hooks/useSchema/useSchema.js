@@ -1,5 +1,5 @@
 import { useReducer, useCallback } from 'react';
-import ensureNodeId from '../../shared/functions/ensureNodeId';
+import ensureNodeId from '../../../utils/ensureNodeId';
 import schemaReducer from './schemaReducer';
 import { ON_CHANGE, ON_CONNECT, ON_NODE_ADD, ON_NODE_REMOVE } from './actionTypes';
 

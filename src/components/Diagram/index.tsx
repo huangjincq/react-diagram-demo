@@ -4,7 +4,7 @@ import { NodesCanvas } from './NodesCanvas'
 import { LinksCanvas } from './LinksCanvas'
 import { Segment } from './Segment'
 
-import './diagram.scss'
+import './style.scss'
 import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs } from "../../types"
 
 interface DiagramProps {

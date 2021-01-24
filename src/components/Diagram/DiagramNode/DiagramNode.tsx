@@ -1,8 +1,8 @@
 import React, { useRef } from 'react'
-import { usePortRegistration, useNodeRegistration } from '../../shared/internal_hooks/useContextRegistration'
+import { usePortRegistration, useNodeRegistration } from '../../../hooks/useContextRegistration'
 import portGenerator from './portGenerator'
-import useDrag from '../../shared/internal_hooks/useDrag'
-import useNodeUnregistration from '../../shared/internal_hooks/useNodeUnregistration'
+import useDrag from '../../../hooks/useDrag'
+import useNodeUnregistration from '../../../hooks/useNodeUnregistration'
 import { INodeType, ICoordinateType } from '../../../types'
 import { nodesConfig } from '../../NodeTypes/helper'
 

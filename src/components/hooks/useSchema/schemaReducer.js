@@ -1,6 +1,6 @@
 import { findIndex } from 'lodash-es'
 import { ON_CHANGE, ON_CONNECT, ON_NODE_ADD, ON_NODE_REMOVE } from './actionTypes'
-import getNodePortsId from '../../shared/functions/getNodePortsId'
+import getNodePortsId from '../../../utils/getNodePortsId'
 
 /**
  * schema reducer

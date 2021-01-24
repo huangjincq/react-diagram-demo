@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import DiagramContext from '../../Context/DiagramContext';
+import DiagramContext from '../components/Context/DiagramContext';
 
 /**
  * Returns the node references from the DiagramContext
