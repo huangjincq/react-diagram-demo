@@ -1,5 +1,4 @@
-import React, { useRef } from 'react'
-import { usePortRegistration, useNodeRegistration } from '../../../hooks/useContextRegistration'
+import React, { useEffect, useRef } from 'react'
 import portGenerator from './portGenerator'
 import useDrag from '../../../hooks/useDrag'
 import useNodeUnregistration from '../../../hooks/useNodeUnregistration'
@@ -59,7 +58,6 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   }
 
   const ref: any = useRef(null)
-  const registerPort = usePortRegistration(inputs, outputs, onPortRegister) // get the port registration method
 
   const {onDragStart, onDrag, onDragEnd} = useDrag({throttleBy: 14, ref}) // get the drag n drop methods
   const dragStartPoint = useRef(coordinates) // keeps the drag start point in a persistent reference
@@ -87,13 +85,13 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   // on component unmount, remove its references
   useNodeUnregistration(onNodeRemove, inputs, outputs, id)
 
-  // perform the onMount callback when the node is allowed to register
-  useNodeRegistration(ref, onMount, id)
-
-
-  const options = {registerPort, onDragNewSegment, onSegmentFail, onSegmentConnect, scale}
+  const options = {registerPort: onPortRegister, onDragNewSegment, onSegmentFail, onSegmentConnect, scale}
   const InputPorts = inputs?.map(portGenerator(options, 'input')) || []
   const OutputPorts = outputs?.map(portGenerator(options, 'output')) || []
+
+  useEffect(() => {
+    onMount(id, ref.current)
+  }, [id, onMount])
 
   return (
     <div className={'bi bi-diagram-node bi-diagram-node-default'} ref={ref}
