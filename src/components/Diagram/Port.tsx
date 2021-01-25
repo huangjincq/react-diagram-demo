@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import useDrag from '../../hooks/useDrag'
 import useCanvas from '../../hooks/useCanvas'
 import { ICoordinateType } from '../../types'
+import { calculatingCoordinates } from '../../utils'
 
 interface PortProps {
   id: string;
@@ -26,23 +27,23 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
   } = props
   const canvas = useCanvas()
   const ref: any = useRef<React.RefObject<HTMLElement>>(null)
+  const startCoordinatesRef = useRef<ICoordinateType | undefined>()
 
   const {onDragStart, onDrag, onDragEnd} = useDrag({ref, throttleBy: 15})
 
-  onDragStart((event:MouseEvent) => {
+  onDragStart((event: MouseEvent) => {
     event.stopImmediatePropagation()
     event.stopPropagation()
+    startCoordinatesRef.current = calculatingCoordinates(event, (canvas as any).el, scale)
   })
 
-  onDrag((event: MouseEvent, info: any) => {
-    if (onDragNewSegment) {
+  onDrag((event: MouseEvent) => {
+    if (startCoordinatesRef.current) {
       event.stopImmediatePropagation()
       event.stopPropagation()
-      const canvasScaleRect = (canvas as any).el.getBoundingClientRect()
-      const from: ICoordinateType = [(info.start[0] - canvasScaleRect.x) / scale, (info.start[1] - canvasScaleRect.y) / scale]
-      const to: ICoordinateType = [(event.clientX - canvasScaleRect.x) / scale, (event.clientY - canvasScaleRect.y) / scale]
+      const to: ICoordinateType = calculatingCoordinates(event, (canvas as any).el, scale)
 
-      onDragNewSegment(id, from, to)
+      onDragNewSegment(id, startCoordinatesRef.current, to)
     }
   })
 

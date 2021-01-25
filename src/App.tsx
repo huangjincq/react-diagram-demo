@@ -6,6 +6,8 @@ import { NodeList } from './components/NodeList/NodeList'
 import { IDiagramType, ICoordinateType } from './types'
 import { createNode } from './components/NodeTypes/helper'
 
+// const manyNode = new Array(100).fill({}).map()
+
 const defaultValue: IDiagramType = {
   nodes: [
     {
