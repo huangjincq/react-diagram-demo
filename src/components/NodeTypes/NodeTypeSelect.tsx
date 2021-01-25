@@ -12,11 +12,10 @@ export interface NodeTypeInputProps extends INodeItemProps<any> {
 
 export const NodeTypeSelect: React.FC<NodeTypeInputProps> = ({value, onChange}) => {
 
-  function handleChange(value: string) {
-    console.log(`selected ${value}`)
+  function handleChange(e: string) {
+    onChange({...value, selectValue: e})
   }
 
-  console.log(value)
 
   return (
     <>

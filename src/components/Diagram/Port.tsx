@@ -1,7 +1,7 @@
-import React, {useEffect, useRef} from 'react'
+import React, { useEffect, useRef } from 'react'
 import useDrag from '../../hooks/useDrag'
 import useCanvas from '../../hooks/useCanvas'
-import {ICoordinateType} from "../../types";
+import { ICoordinateType } from '../../types'
 
 interface PortProps {
   id: string;
@@ -27,7 +27,12 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
   const canvas = useCanvas()
   const ref: any = useRef<React.RefObject<HTMLElement>>(null)
 
-  const {onDrag, onDragEnd} = useDrag({ref, throttleBy: 15})
+  const {onDragStart, onDrag, onDragEnd} = useDrag({ref, throttleBy: 15})
+
+  onDragStart((event:MouseEvent) => {
+    event.stopImmediatePropagation()
+    event.stopPropagation()
+  })
 
   onDrag((event: MouseEvent, info: any) => {
     if (onDragNewSegment) {

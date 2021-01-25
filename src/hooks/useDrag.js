@@ -97,8 +97,6 @@ const useDrag = (options = defaultOptions) => {
    */
   const onDragStart = useCallback(
     (event) => {
-      event.stopImmediatePropagation()
-      event.stopPropagation()
       const targetTagName = event.target.tagName
       if (!info.isDragging && targetRef.current.contains(event.target) && !DISABLED_DRAG_TAGS.includes(targetTagName)) {
         info.isDragging = true
