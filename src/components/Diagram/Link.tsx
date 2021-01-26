@@ -1,20 +1,10 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import usePortRefs from '../../hooks/usePortRefs'
-import useCanvas from '../../hooks/useCanvas'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import makeSvgPath from '../../utils/makeSvgPath'
 import getPathMidpoint from '../../utils/getPathMidpoint'
-import useNodeRefs from '../../hooks/useNodeRefs'
-import {LinkDelete} from './LinkDelete'
-import {ICoordinateType} from "../../types";
+import { LinkDelete } from './LinkDelete'
+import { ICoordinateType } from '../../types'
+import { useDiagramManager } from '../Context/DiagramManager'
 
-// local hook, returns portRefs & nodeRefs
-const useContextRefs = () => {
-  const canvas = useCanvas()
-  const portRefs = usePortRefs()
-  const nodeRefs = useNodeRefs()
-
-  return {canvas, nodeRefs, portRefs}
-}
 
 /**
  * Return the coordinates of a given entity (node or port)
@@ -48,11 +38,11 @@ export const Link: React.FC<LinkProps> = React.memo((props) => {
   const {input, output, link, onDelete} = props
   const pathRef = useRef<any>(null)
   const [labelPosition, setLabelPosition] = useState<ICoordinateType>()
-  const {canvas, portRefs, nodeRefs} = useContextRefs()
+  const {canvasRef, portRefs, nodeRefs} = useDiagramManager()
 
-  const inputPoint = useMemo(() => getEntityCoordinates(input, portRefs, nodeRefs, canvas), [input, portRefs, nodeRefs, canvas])
+  const inputPoint = useMemo(() => getEntityCoordinates(input, portRefs, nodeRefs, canvasRef), [input, portRefs, nodeRefs, canvasRef])
 
-  const outputPoint = useMemo(() => getEntityCoordinates(output, portRefs, nodeRefs, canvas), [output, portRefs, nodeRefs, canvas])
+  const outputPoint = useMemo(() => getEntityCoordinates(output, portRefs, nodeRefs, canvasRef), [output, portRefs, nodeRefs, canvasRef])
 
   const path = useMemo(() => makeSvgPath(inputPoint, outputPoint), [inputPoint, outputPoint])
 
@@ -61,7 +51,7 @@ export const Link: React.FC<LinkProps> = React.memo((props) => {
       const pos = getPathMidpoint(pathRef.current)
       setLabelPosition(pos as any)
     }
-  }, [pathRef.current, link.label, inputPoint, outputPoint])
+  }, [pathRef, link.label, inputPoint, outputPoint])
 
   // on link delete
   const onDoubleClick = useCallback(() => {

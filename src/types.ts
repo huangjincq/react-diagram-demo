@@ -36,8 +36,7 @@ export interface IPortRefs {
 }
 
 export interface INodeRefs {
-  // [id: string]: HTMLDivElement
-  [id: string]: any
+  [id: string]: HTMLDivElement
 }
 
 export interface INodeItemProps<T> {

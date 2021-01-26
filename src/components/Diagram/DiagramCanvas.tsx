@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import DiagramContext from '../Context/DiagramContext'
+import { DiagramManagerProvider } from '../Context/DiagramManager'
 import { IPortRefs, INodeRefs } from '../../types'
 
 interface DiagramCanvasProps {
@@ -21,9 +21,9 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = React.memo((props) =>
 
   return (
     <div id='diagram-canvas' className={'bi bi-diagram'} ref={canvasRef} style={{transform: `scale(${scale})`}}>
-      <DiagramContext.Provider value={{canvas: canvasDom, ports: portRefs, nodes: nodeRefs, scale}}>
+      <DiagramManagerProvider value={{canvasRef: canvasDom, portRefs, nodeRefs, scale}}>
         {children}
-      </DiagramContext.Provider>
+      </DiagramManagerProvider>
     </div>
   )
 })

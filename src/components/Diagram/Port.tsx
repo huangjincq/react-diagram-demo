@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react'
 import useDrag from '../../hooks/useDrag'
-import useCanvas from '../../hooks/useCanvas'
 import { ICoordinateType } from '../../types'
 import { calculatingCoordinates } from '../../utils'
+import { useDiagramCanvas } from '../Context/DiagramManager'
 
 interface PortProps {
   id: string;
@@ -25,7 +25,7 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
     scale,
     ...rest
   } = props
-  const canvas = useCanvas()
+  const canvasRef = useDiagramCanvas()
   const ref: any = useRef<React.RefObject<HTMLElement>>(null)
   const startCoordinatesRef = useRef<ICoordinateType | undefined>()
 
@@ -35,14 +35,14 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
     event.stopImmediatePropagation()
     event.stopPropagation()
 
-    startCoordinatesRef.current = calculatingCoordinates(event, canvas as HTMLDivElement, scale)
+    startCoordinatesRef.current = calculatingCoordinates(event, canvasRef, scale)
   })
 
   onDrag((event: MouseEvent) => {
     if (startCoordinatesRef.current) {
       event.stopImmediatePropagation()
       event.stopPropagation()
-      const to: ICoordinateType = calculatingCoordinates(event, canvas as HTMLDivElement, scale)
+      const to: ICoordinateType = calculatingCoordinates(event, canvasRef, scale)
 
       onDragNewSegment(id, startCoordinatesRef.current, to)
     }
