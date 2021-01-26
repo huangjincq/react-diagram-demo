@@ -2,12 +2,11 @@ import React, { useEffect, useRef } from 'react'
 import useDrag from '../../hooks/useDrag'
 import { ICoordinateType } from '../../types'
 import { calculatingCoordinates } from '../../utils'
-import { useDiagramCanvas } from '../Context/DiagramManager'
+import { useDiagramCanvas, useScale } from '../Context/DiagramManager'
 
 interface PortProps {
   id: string;
   type: string;
-  scale: number;
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void;
   onSegmentFail: (id: string, type: string) => void;
   onSegmentConnect: (id: string, targetPort: string) => void,
@@ -22,10 +21,10 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
     onSegmentConnect,
     onMount,
     type,
-    scale,
     ...rest
   } = props
   const canvasRef = useDiagramCanvas()
+  const scale = useScale()
   const ref: any = useRef<React.RefObject<HTMLElement>>(null)
   const startCoordinatesRef = useRef<ICoordinateType | undefined>()
 

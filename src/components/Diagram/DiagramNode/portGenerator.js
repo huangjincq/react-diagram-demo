@@ -1,14 +1,13 @@
 import React from 'react'
 import { Port } from '../Port'
 
-const portGenerator = ({ registerPort, onDragNewSegment, onSegmentFail, onSegmentConnect, scale }, type) => (port) => (
+const portGenerator = ({ registerPort, onDragNewSegment, onSegmentFail, onSegmentConnect }, type) => (port) => (
   <Port
     {...port}
     onMount={registerPort}
     onDragNewSegment={onDragNewSegment}
     onSegmentFail={onSegmentFail}
     onSegmentConnect={onSegmentConnect}
-    scale={scale}
     type={type}
     key={port.id}
   />

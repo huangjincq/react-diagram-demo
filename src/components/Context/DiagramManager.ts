@@ -36,3 +36,9 @@ export const usePortRefs = (): INodeRefs => {
   const {portRefs} = useContext(DiagramManagerContext)
   return portRefs
 }
+
+// return  DiagramNode ports 节点
+export const useScale = (): number => {
+  const {scale} = useContext(DiagramManagerContext)
+  return scale
+}

@@ -12,7 +12,6 @@ interface NodesCanvasProps {
   onDragNewSegment: any;
   onSegmentFail: any;
   onSegmentConnect: any;
-  scale: number;
   onAddHistory: any;
 }
 
@@ -26,7 +25,6 @@ export const NodesCanvas: React.FC<NodesCanvasProps> = React.memo((props) => {
     onSegmentFail,
     onSegmentConnect,
     onChange,
-    scale,
     onAddHistory
   } = props
 
@@ -58,7 +56,6 @@ export const NodesCanvas: React.FC<NodesCanvasProps> = React.memo((props) => {
     {nodes && nodes.length > 0 && nodes.map((node) => (
       <DiagramNode
         nodeInfo={node}
-        scale={scale}
         onNodePositionChange={handleNodePositionChange}
         onNodeValueChange={handleNodeValueChange}
         onPortRegister={onPortRegister}

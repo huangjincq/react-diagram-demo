@@ -5,6 +5,7 @@ import useNodeUnregistration from '../../../hooks/useNodeUnregistration'
 import { INodeType, ICoordinateType } from '../../../types'
 import { nodesConfig } from '../../NodeTypes/helper'
 import { isEqual } from 'lodash-es'
+import { useScale } from '../../Context/DiagramManager'
 
 interface DiagramNodeProps {
   nodeInfo: INodeType;
@@ -17,7 +18,6 @@ interface DiagramNodeProps {
   onDragNewSegment: any;
   onSegmentFail: any;
   onSegmentConnect: any;
-  scale: number;
 }
 
 export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
@@ -31,7 +31,6 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     onMount,
     onSegmentFail,
     onSegmentConnect,
-    scale,
     onAddHistory
   } = props
 
@@ -43,6 +42,8 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     data,
     outputs
   } = nodeInfo
+
+  const scale = useScale()
 
   // nodeType
   const component = nodesConfig[type]?.component
@@ -85,7 +86,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   // on component unmount, remove its references
   useNodeUnregistration(onNodeRemove, inputs, outputs, id)
 
-  const options = {registerPort: onPortRegister, onDragNewSegment, onSegmentFail, onSegmentConnect, scale}
+  const options = {registerPort: onPortRegister, onDragNewSegment, onSegmentFail, onSegmentConnect}
   const InputPorts = inputs?.map(portGenerator(options, 'input')) || []
   const OutputPorts = outputs?.map(portGenerator(options, 'output')) || []
 

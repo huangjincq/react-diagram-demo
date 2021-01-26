@@ -72,7 +72,6 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   return (
     <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} scale={scale}>
       <NodesCanvas
-        scale={scale}
         nodes={value.nodes}
         onChange={onNodesChange}
         onNodeRegister={onNodeRegister}
