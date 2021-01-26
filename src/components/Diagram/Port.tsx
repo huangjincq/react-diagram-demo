@@ -34,14 +34,15 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
   onDragStart((event: MouseEvent) => {
     event.stopImmediatePropagation()
     event.stopPropagation()
-    startCoordinatesRef.current = calculatingCoordinates(event, (canvas as any).el, scale)
+
+    startCoordinatesRef.current = calculatingCoordinates(event, canvas as HTMLDivElement, scale)
   })
 
   onDrag((event: MouseEvent) => {
     if (startCoordinatesRef.current) {
       event.stopImmediatePropagation()
       event.stopPropagation()
-      const to: ICoordinateType = calculatingCoordinates(event, (canvas as any).el, scale)
+      const to: ICoordinateType = calculatingCoordinates(event, canvas as HTMLDivElement, scale)
 
       onDragNewSegment(id, startCoordinatesRef.current, to)
     }
