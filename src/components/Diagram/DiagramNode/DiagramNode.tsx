@@ -78,7 +78,6 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
 
   onDragEnd((event: MouseEvent, info: any) => {
     if (!isEqual(dragStartPoint.current, coordinates)) {
-      console.log(dragStartPoint.current, coordinates)
       onAddHistory(id, dragStartPoint.current)
     }
   })
@@ -98,10 +97,8 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     <div className={'bi bi-diagram-node bi-diagram-node-default'} ref={ref}
          style={{left: coordinates[0], top: coordinates[1]}}>
       {component && React.createElement(component, nodeItemProps)}
-      <div className="bi-port-wrapper">
-        <div className="bi-input-ports">{InputPorts}</div>
-        <div className="bi-output-ports">{OutputPorts}</div>
-      </div>
+      <div className="bi-input-ports">{InputPorts}</div>
+      <div className="bi-output-ports">{OutputPorts}</div>
     </div>
   )
 })

@@ -82,7 +82,7 @@ function App() {
 
 
   return (
-    <div className="App" onDrop={handleDrop} onDragEnter={handleDrag} onDragOver={handleDrag}>
+    <div className="app" onDrop={handleDrop} onDragEnter={handleDrag} onDragOver={handleDrag}>
       <Diagram value={state} scale={scale} onChange={handleChange} onAddHistory={handleAddHistory}/>
       <NodeList/>
       <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={scale} setScale={setScale} canRedo={canRedo}/>
