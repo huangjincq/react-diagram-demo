@@ -9,13 +9,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body, #root, .App {
+body, #root, .diagram-panel {
   height: 100%;
 }
 
-.App {
-  position: relative;
+.diagram-panel {
   background-color: #294051;
+  outline: none;
 }
 
 code {

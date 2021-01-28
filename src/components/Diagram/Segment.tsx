@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react'
 import makeSvgPath from '../../utils/makeSvgPath'
-import { ISegmentType } from "../../types"
-
+import { ISegmentType } from '../../types'
 
 export interface SegmentProps {
   segment: ISegmentType
@@ -12,10 +11,10 @@ export const Segment: React.FC<SegmentProps> = React.memo(({segment}) => {
   const path = useMemo(() => makeSvgPath(from, to), [from, to])
 
   return (
-    <svg className="bi bi-diagram-segment-layer">
-      <g className="bi-diagram-segment" id={id}>
+    <svg className="diagram-segment-canvas">
+      <g className="diagram-segment-link" id={id}>
         <path d={path}/>
-        <circle r="6.5" cx={to[0]} cy={to[1]}/>
+        <circle r="5" cx={to[0]} cy={to[1]}/>
       </g>
     </svg>
   )

@@ -55,8 +55,8 @@ export const LinksCanvas: React.FC<LinkCanvasProps> = React.memo((props) => {
 
 
   return (
-    <svg className="bi bi-link-canvas-layer">
-      {links && links.length > 0 && links.map((link) => (
+    <svg className="diagram-link-canvas">
+      {links && links.map((link) => (
         <Link
           link={link}
           input={findInvolvedEntity(nodes, link.input)}

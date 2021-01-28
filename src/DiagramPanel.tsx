@@ -39,7 +39,7 @@ const defaultValue: IDiagramType = {
   links: [{input: 'port-1', output: 'node-2'}]
 }
 
-function App() {
+function DiagramPanel() {
   const {state, set, setHistory, undo, redo, clear, canUndo, canRedo} = useHistory(defaultValue)
   const [scale, setScale] = useState<number>(1)
 
@@ -82,7 +82,7 @@ function App() {
 
 
   return (
-    <div className="app" onDrop={handleDrop} onDragEnter={handleDrag} onDragOver={handleDrag}>
+    <div className="diagram-panel" onDrop={handleDrop} onDragEnter={handleDrag} onDragOver={handleDrag} tabIndex={0}>
       <Diagram value={state} scale={scale} onChange={handleChange} onAddHistory={handleAddHistory}/>
       <NodeList/>
       <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={scale} setScale={setScale} canRedo={canRedo}/>
@@ -90,4 +90,4 @@ function App() {
   )
 }
 
-export default App
+export default DiagramPanel

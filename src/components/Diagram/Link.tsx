@@ -59,8 +59,8 @@ export const Link: React.FC<LinkProps> = React.memo((props) => {
   }, [onDelete, link])
 
   return (
-    <g className={'bi-diagram-link'}>
-      {!link.readonly && <path d={path} className="bi-link-ghost" onDoubleClick={onDoubleClick}/>}
+    <g className={'diagram-link'}>
+      <path d={path} className="bi-link-ghost" onDoubleClick={onDoubleClick}/>
       <path d={path} ref={pathRef} className="bi-link-path" onDoubleClick={onDoubleClick}/>
       {labelPosition && <LinkDelete position={labelPosition}/>}
     </g>

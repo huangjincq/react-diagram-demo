@@ -94,7 +94,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   }, [id, onMount])
 
   return (
-    <div className={'bi bi-diagram-node bi-diagram-node-default'} ref={ref}
+    <div className={'diagram-node bi-diagram-node-default'} ref={ref}
          style={{left: coordinates[0], top: coordinates[1]}}>
       {component && React.createElement(component, nodeItemProps)}
       <div className="bi-input-ports">{InputPorts}</div>
