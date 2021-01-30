@@ -1,12 +1,12 @@
 .node-header {
   background-color: rgba(84, 110, 122, 0.2);
-  height: 32px;
-  line-height: 32px;
+  height: 30px;
+  line-height: 30px;
   position: relative;
 
   &-icon {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     background-color: #0090D0;
     border-radius: 4px;
     position: absolute;
@@ -17,7 +17,7 @@
     justify-content: center;
 
     .anticon {
-      font-size: 24px;
+      font-size: 22px;
       color: #fff;
     }
   }
