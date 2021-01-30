@@ -8,7 +8,7 @@ export type ICoordinateType = [number, number];
 
 export interface INodeType {
   id: string;
-  type: 'node-type-input' | 'node-type-select';
+  type: 'nodeTypeInput' | 'nodeTypeSelect';
   inputs: IPointType[];
   outputs: IPointType[];
   coordinates: ICoordinateType;

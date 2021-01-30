@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 
 export const nodesConfig = {
-  'node-type-input': {
+  'nodeTypeInput': {
     component: NodeTypeInput,
     label: 'Input 节点',
     icon: AppleOutlined,
@@ -13,7 +13,7 @@ export const nodesConfig = {
       inputValue: 'test'
     }
   },
-  'node-type-select': {
+  'nodeTypeSelect': {
     component: NodeTypeSelect,
     label: 'Select 节点',
     icon: WindowsOutlined,

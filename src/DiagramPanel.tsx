@@ -4,7 +4,7 @@ import { useHistory } from './hooks/useHistory'
 import { Toolbar } from './components/Toolbar/Toolbar'
 import { NodeList } from './components/NodeList/NodeList'
 import { IDiagramType, ICoordinateType } from './types'
-import { createNode } from './components/NodeTypes/helper'
+import { createNode } from './components/NodeTypes/config'
 
 // const manyNode = new Array(100).fill({}).map()
 
@@ -17,14 +17,14 @@ const defaultValue: IDiagramType = {
       outputs: [
         {id: 'port-1', disabled: false}
       ],
-      type: 'node-type-input',
+      type: 'nodeTypeInput',
       data: {
         inputValue: 'defaultValue'
       }
     },
     {
       id: 'node-2',
-      type: 'node-type-select',
+      type: 'nodeTypeSelect',
       coordinates: [400, 200],
       inputs: [],
       outputs: [

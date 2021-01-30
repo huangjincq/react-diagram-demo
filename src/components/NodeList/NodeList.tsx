@@ -1,7 +1,7 @@
 import React from 'react'
 import './style.scss'
 import { NodeListItem } from './NodeListItem'
-import { nodesList } from '../NodeTypes/helper'
+import { nodesList } from '../NodeTypes/config'
 
 export interface NodeListProps {
 

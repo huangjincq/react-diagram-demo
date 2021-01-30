@@ -3,7 +3,7 @@ import portGenerator from './portGenerator'
 import useDrag from '../../../hooks/useDrag'
 import useNodeUnregistration from '../../../hooks/useNodeUnregistration'
 import { INodeType, ICoordinateType } from '../../../types'
-import { nodesConfig } from '../../NodeTypes/helper'
+import { nodesConfig } from '../../NodeTypes/config'
 import { isEqual } from 'lodash-es'
 import { useScale } from '../../Context/DiagramManager'
 
