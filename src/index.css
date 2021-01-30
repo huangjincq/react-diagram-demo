@@ -15,6 +15,8 @@ body, #root, .diagram-panel {
 
 .diagram-panel {
   background-color: #294051;
+  background-image: url('./static/background-img-split.png');
+  background-repeat: repeat;
   outline: none;
 }
 
