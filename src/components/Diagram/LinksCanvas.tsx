@@ -4,21 +4,23 @@ import { ILinkType, INodeType, ICoordinateType } from '../../types'
 import { isEqual } from 'lodash-es'
 
 interface LinkCanvasProps {
-  nodes: INodeType[],
-  links: ILinkType[]
-  onChange: (value: ILinkType[]) => void
+  nodes: INodeType[];
+  links: ILinkType[];
+  onChange: (value: ILinkType[]) => void;
 }
 
-/**
- * Given an array of nodes and an id, returns the involved port/node
- */
+/*
+* link 起点终点 数据类型
+* */
 interface EntityPutType {
   type: 'node' | 'port';
   id: string;
   coordinates: ICoordinateType;
 }
 
-// 组装 link 起点终点 的 type 类型 和 父级元素的 坐标位置
+/*
+* 组装 link 起点终点 的 type 类型 和 父级元素的 坐标位置
+* */
 const findPortParentNodeInfo = (nodes: INodeType[], entityId: string): EntityPutType | undefined => {
 
   for (let i = 0; i < nodes.length; i++) {

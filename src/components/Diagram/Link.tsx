@@ -5,7 +5,6 @@ import { LinkDelete } from './LinkDelete'
 import { ICoordinateType } from '../../types'
 import { useDiagramManager } from '../Context/DiagramManager'
 
-
 /**
  * Return the coordinates of a given entity (node or port)
  */
