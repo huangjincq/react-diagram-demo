@@ -10,14 +10,14 @@ import { useDiagramManager } from '../Context/DiagramManager'
  * Return the coordinates of a given entity (node or port)
  */
 const getEntityCoordinates = (entity: any, portRefs: any, nodeRefs: any, canvas: any): ICoordinateType | undefined => {
-  if (entity && entity.type === 'node' && nodeRefs[entity.entity.id]) {
-    const nodeEl = nodeRefs[entity.entity.id]
-    return [entity.entity.coordinates[0], entity.entity.coordinates[1] + nodeEl.offsetHeight / 2]
+  if (entity && entity.type === 'node' && nodeRefs[entity.id]) {
+    const nodeEl = nodeRefs[entity.id]
+    return [entity.coordinates[0], entity.coordinates[1] + nodeEl.offsetHeight / 2]
   }
 
-  if (portRefs && portRefs[entity.entity.id]) {
-    const portDom = portRefs[entity.entity.id]
-    const parentNodeCoordinates = entity.entity.coordinates
+  if (portRefs && portRefs[entity.id]) {
+    const portDom = portRefs[entity.id]
+    const parentNodeCoordinates = entity.coordinates
 
     return [
       parentNodeCoordinates[0] + portDom.offsetLeft + portDom.offsetWidth / 2,

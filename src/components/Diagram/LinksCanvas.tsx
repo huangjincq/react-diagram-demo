@@ -13,34 +13,35 @@ interface LinkCanvasProps {
  * Given an array of nodes and an id, returns the involved port/node
  */
 interface EntityPutType {
-  type: string;
-  entity: {
-    id: string;
-    coordinates: ICoordinateType;
-  }
+  type: 'node' | 'port';
+  id: string;
+  coordinates: ICoordinateType;
 }
 
-const findInvolvedEntity = (nodes: INodeType[], entityId: string, type = 'node', coordinates?: ICoordinateType): EntityPutType | undefined => {
-  if (!entityId || !nodes || nodes.length === 0) return undefined
+// 组装 link 起点终点 的 type 类型 和 父级元素的 坐标位置
+const findPortParentNodeInfo = (nodes: INodeType[], entityId: string): EntityPutType | undefined => {
 
-  let result
-  let index = 0
-
-  while (index < nodes.length && !result) {
-    const node = nodes[index]
+  for (let i = 0; i < nodes.length; i++) {
+    const node = nodes[i]
     if (node.id === entityId) {
-      // todo  add parentNode in port
-      result = {type, entity: {coordinates: coordinates || node.coordinates, id: node.id}}
+      return {type: 'node', coordinates: node.coordinates, id: entityId}
     } else {
-      result =
-        findInvolvedEntity(node.inputs as INodeType[], entityId, 'port', node.coordinates) ||
-        findInvolvedEntity(node.outputs as INodeType[], entityId, 'port', node.coordinates)
+
+      for (let j = 0; j < node.inputs.length; j++) {
+        const input = node.inputs[j]
+        if (input.id === entityId) {
+          return {type: 'port', coordinates: node.coordinates, id: entityId}
+        }
+      }
+
+      for (let k = 0; k < node.outputs.length; k++) {
+        const output = node.outputs[k]
+        if (output.id === entityId) {
+          return {type: 'port', coordinates: node.coordinates, id: entityId}
+        }
+      }
     }
-
-    index += 1
   }
-
-  return result
 }
 
 export const LinksCanvas: React.FC<LinkCanvasProps> = React.memo((props) => {
@@ -59,8 +60,8 @@ export const LinksCanvas: React.FC<LinkCanvasProps> = React.memo((props) => {
       {links && links.map((link) => (
         <Link
           link={link}
-          input={findInvolvedEntity(nodes, link.input)}
-          output={findInvolvedEntity(nodes, link.output)}
+          input={findPortParentNodeInfo(nodes, link.input)}
+          output={findPortParentNodeInfo(nodes, link.output)}
           onDelete={removeFromLinksArray}
           key={`${link.input}-${link.output}`}
         />
