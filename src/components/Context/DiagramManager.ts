@@ -25,19 +25,19 @@ export const useDiagramCanvas = (): HTMLDivElement | null => {
   return canvasRef
 }
 
-// return  DiagramNode dom 节点
+// return  DiagramNodePorts dom 节点
 export const useDiagramNodeRefs = (): IPortRefs => {
   const {nodeRefs} = useContext(DiagramManagerContext)
   return nodeRefs
 }
 
-// return  DiagramNode ports 节点
+// return  DiagramNodePorts ports 节点
 export const usePortRefs = (): INodeRefs => {
   const {portRefs} = useContext(DiagramManagerContext)
   return portRefs
 }
 
-// return  DiagramNode ports 节点
+// return  DiagramNodePorts ports 节点
 export const useScale = (): number => {
   const {scale} = useContext(DiagramManagerContext)
   return scale

@@ -1,5 +1,5 @@
 import React from 'react'
-import { DiagramNode } from './DiagramNode/DiagramNode'
+import { DiagramNode } from './DiagramNode'
 import { ICoordinateType, INodeType } from '../../types'
 import { cloneDeep } from 'lodash-es'
 
