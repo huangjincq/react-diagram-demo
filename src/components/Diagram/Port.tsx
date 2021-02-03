@@ -5,36 +5,31 @@ import { calculatingCoordinates } from '../../utils'
 import { useDiagramCanvas, useScale } from '../Context/DiagramManager'
 
 interface PortProps {
-  id: string;
-  type: string;
-  onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void;
-  onSegmentFail: (id: string, type: string) => void;
-  onSegmentConnect: (id: string, targetPort: string) => void,
-  onMount: (id: string, dom: HTMLElement) => void,
+  id: string
+  type: string
+  onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
+  onSegmentFail: (id: string, type: string) => void
+  onSegmentConnect: (id: string, targetPort: string) => void
+  onMount: (id: string, dom: HTMLElement) => void
 }
 
 export const Port: React.FC<PortProps> = React.memo((props) => {
-  const {
-    id,
-    onDragNewSegment,
-    onSegmentFail,
-    onSegmentConnect,
-    onMount,
-    type,
-    ...rest
-  } = props
+  const { id, onDragNewSegment, onSegmentFail, onSegmentConnect, onMount, type, ...rest } = props
   const canvasRef = useDiagramCanvas()
   const scale = useScale()
   const ref: any = useRef<React.RefObject<HTMLElement>>(null)
   const startCoordinatesRef = useRef<ICoordinateType | undefined>()
 
-  const {onDragStart, onDrag, onDragEnd} = useDrag({ref, throttleBy: 15})
+  const { onDragStart, onDrag, onDragEnd } = useDrag({ ref, throttleBy: 15 })
 
   onDragStart((event: MouseEvent) => {
     event.stopImmediatePropagation()
     event.stopPropagation()
-
-    startCoordinatesRef.current = calculatingCoordinates(event, canvasRef, scale)
+    if (canvasRef && ref.current) {
+      const { x: canvasX, y: canvasY } = canvasRef.getBoundingClientRect()
+      const { x, y, width, height } = ref.current.getBoundingClientRect()
+      startCoordinatesRef.current = [(x - canvasX + width / 2) / scale, (y - canvasY + height / 2) / scale]
+    }
   })
 
   onDrag((event: MouseEvent) => {
