@@ -26,7 +26,7 @@ const defaultValue: IDiagramType = {
       id: 'node-2',
       type: 'nodeTypeSelect',
       coordinates: [400, 200],
-      inputs: [],
+      inputs: [{id: 'input-1', isLinked: false}],
       outputs: [
         {id: 'port-5', isLinked: false},
         {id: 'port-6', isLinked: false}

@@ -39,11 +39,13 @@
     top: 50%;
 
     &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
+      background-color: #209F1A;
     }
 
     &.type-input {
-      left: 0;
+      left: -10px;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
     }
 
     &.type-output {
