@@ -32,10 +32,9 @@
   // ----------------------------
   &-port {
     transition: background-color 0.25s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.08);
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-bottom: 0.25rem;
+    background-color: #6F9CB1;
+    width: 10px;
+    height: 14px;
     position: absolute;
     top: 50%;
 
@@ -48,7 +47,9 @@
     }
 
     &.type-output {
-      right: 0;
+      right: -10px;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
     }
   }
 

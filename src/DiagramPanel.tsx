@@ -15,7 +15,7 @@ const defaultValue: IDiagramType = {
       coordinates: [100, 150],
       inputs: [],
       outputs: [
-        {id: 'port-1', disabled: false}
+        {id: 'port-1', isLinked: false}
       ],
       type: 'nodeTypeInput',
       data: {
@@ -28,8 +28,8 @@ const defaultValue: IDiagramType = {
       coordinates: [400, 200],
       inputs: [],
       outputs: [
-        {id: 'port-5', disabled: false},
-        {id: 'port-6', disabled: false}
+        {id: 'port-5', isLinked: false},
+        {id: 'port-6', isLinked: false}
       ],
       data: {
         selectValue: ''
