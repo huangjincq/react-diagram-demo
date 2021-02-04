@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from 'react'
-import portGenerator from './DiagramNodePorts/portGenerator'
 import useDrag from '../../hooks/useDrag'
 import useNodeUnregistration from '../../hooks/useNodeUnregistration'
 import { INodeType, ICoordinateType } from '../../types'
 import { nodesConfig } from '../NodeTypes/config'
 import { isEqual } from 'lodash-es'
 import { useScale } from '../Context/DiagramManager'
-import { InputPorts } from './DiagramNodePorts/InputPorts'
+import { DiagramNodePorts } from './DiagramNodePorts'
 
 interface DiagramNodeProps {
   nodeInfo: INodeType;
@@ -87,8 +86,6 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   useNodeUnregistration(onNodeRemove, inputs, outputs, id)
 
   const options = {registerPort: onPortRegister, onDragNewSegment, onSegmentFail, onSegmentConnect}
-  // const InputPorts = inputs?.map(portGenerator(options, 'input')) || []
-  const OutputPorts = outputs?.map(portGenerator(options, 'output')) || []
 
   useEffect(() => {
     onMount(id, ref.current)
@@ -98,10 +95,8 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     <div className={'diagram-node bi-diagram-node-default'} ref={ref}
          style={{left: coordinates[0], top: coordinates[1]}}>
       {component && React.createElement(component, nodeItemProps)}
-      <InputPorts
-        inputs={inputs} registerPort={onPortRegister} onDragNewSegment={onDragNewSegment}
-        onSegmentFail={onSegmentFail} onSegmentConnect={onSegmentConnect}/>
-      <div className="bi-output-ports">{OutputPorts}</div>
+      <DiagramNodePorts inputs={inputs} {...options} type='input'/>
+      <DiagramNodePorts inputs={outputs} {...options} type='output'/>
     </div>
   )
 })

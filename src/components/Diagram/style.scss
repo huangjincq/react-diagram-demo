@@ -28,6 +28,32 @@
   }
 
   // ----------------------------
+  // Port
+  // ----------------------------
+  &-port {
+    transition: background-color 0.25s ease-in-out;
+    background-color: rgba(0, 0, 0, 0.08);
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-bottom: 0.25rem;
+    position: absolute;
+    top: 50%;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    &.type-input {
+      left: 0;
+    }
+
+    &.type-output {
+      right: 0;
+    }
+  }
+
+
+  // ----------------------------
   // Segment-canvas
   // ----------------------------
   &-segment-canvas {
@@ -122,35 +148,6 @@
       user-select: none;
       min-width: 3rem;
       transform: translate(-50%, -50%);
-    }
-  }
-}
-
-.diagram-canvas {
-  .bi-diagram-port {
-    transition: background-color 0.25s ease-in-out;
-    background-color: rgba(0, 0, 0, 0.08);
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-bottom: 0.25rem;
-    position: absolute;
-    top: 50%;
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.1);
-    }
-  }
-
-  .bi-input-ports {
-    .bi-diagram-port {
-      left: 0;
-    }
-  }
-
-  .bi-output-ports {
-    .bi-diagram-port {
-      position: absolute;
-      right: 0;
     }
   }
 }

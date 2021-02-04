@@ -1,6 +1,6 @@
 export interface IPointType {
   id: string;
-  disabled?: boolean;
+  isLinked?: boolean;
 }
 
 export type ICoordinateType = [number, number];
