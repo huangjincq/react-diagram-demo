@@ -85,7 +85,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   // on component unmount, remove its references
   useNodeUnregistration(onNodeRemove, inputs, outputs, id)
 
-  const options = {registerPort: onPortRegister, onDragNewSegment, onSegmentFail, onSegmentConnect}
+  const options = {nodeId: id, registerPort: onPortRegister, onDragNewSegment, onSegmentFail, onSegmentConnect}
 
   useEffect(() => {
     onMount(id, ref.current)

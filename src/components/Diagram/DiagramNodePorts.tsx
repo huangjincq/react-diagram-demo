@@ -5,6 +5,7 @@ import { Port } from './Port'
 
 export interface DiagramNodePortsProps {
   inputs: IPointType[];
+  nodeId: string;
   type: 'input' | 'output';
   registerPort: (id: string, dom: HTMLElement) => void;
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void;
@@ -13,7 +14,7 @@ export interface DiagramNodePortsProps {
 }
 
 export const DiagramNodePorts: React.FC<DiagramNodePortsProps> = (props) => {
-  const {inputs, registerPort, onDragNewSegment, onSegmentFail, onSegmentConnect, type} = props
+  const {inputs, registerPort, onDragNewSegment, onSegmentFail, onSegmentConnect, nodeId, type} = props
   return (
     <>
       {
@@ -25,6 +26,7 @@ export const DiagramNodePorts: React.FC<DiagramNodePortsProps> = (props) => {
           type={type}
           key={port.id}
           id={port.id}
+          nodeId={nodeId}
         />)
       }
     </>
