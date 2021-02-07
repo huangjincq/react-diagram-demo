@@ -26,6 +26,7 @@ export const DiagramNodePorts: React.FC<DiagramNodePortsProps> = (props) => {
           type={type}
           key={port.id}
           id={port.id}
+          isLinked={port.isLinked}
           nodeId={nodeId}
         />)
       }
