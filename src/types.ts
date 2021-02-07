@@ -39,6 +39,18 @@ export interface INodeRefs {
   [id: string]: HTMLDivElement
 }
 
+export interface ITranslate {
+  x:number;
+  y:number;
+}
+
+export interface IMousePosition {
+  x:number;
+  y:number;
+}
+
+
+
 export interface INodeItemProps<T> {
   value: T;
   onChange: (value: T) => void;

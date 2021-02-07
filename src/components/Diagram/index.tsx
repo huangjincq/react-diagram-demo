@@ -5,26 +5,26 @@ import { LinksCanvas } from './LinksCanvas'
 import { Segment } from './Segment'
 
 import './style.scss'
-import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs } from "../../types"
+import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs, ITranslate } from '../../types'
 
 interface DiagramProps {
-  value: IDiagramType,
-  onChange: (value: IDiagramType) => void;
-  onAddHistory: any;
+  value: IDiagramType
+  onChange: (value: IDiagramType) => void
+  translate: ITranslate
+  onAddHistory: any
   scale: number
 }
 
 export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
-  const {value, onChange, onAddHistory, scale,} = props
+  const { value, onChange, onAddHistory, scale, translate } = props
   const [segment, setSegment] = useState<ISegmentType | undefined>()
-  const {current: portRefs} = useRef<IPortRefs>({}) // keeps the port elements references
-  const {current: nodeRefs} = useRef<INodeRefs>({}) // keeps the node elements references
-
+  const { current: portRefs } = useRef<IPortRefs>({}) // keeps the port elements references
+  const { current: nodeRefs } = useRef<INodeRefs>({}) // keeps the node elements references
 
   // when nodes change, performs the onChange callback with the new incoming data
   const onNodesChange = (nextNodes: any) => {
     if (onChange) {
-      onChange({...value, nodes: nextNodes})
+      onChange({ ...value, nodes: nextNodes })
     }
   }
 
@@ -48,7 +48,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   // when a new segment is dragged, save it to the local state
   const onDragNewSegment = useCallback((portId, from, to) => {
-    setSegment({id: `segment-${portId}`, from, to})
+    setSegment({ id: `segment-${portId}`, from, to })
   }, [])
 
   // when a segment fails to connect, reset the segment state
@@ -59,18 +59,18 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   // when a segment connects, update the links schema, perform the onChange callback
   // with the new data, then reset the segment state
   const onSegmentConnect = (input: string, output: string) => {
-    const nextLinks = [...value.links, {input, output}]
-    onChange({...value, links: nextLinks})
+    const nextLinks = [...value.links, { input, output }]
+    onChange({ ...value, links: nextLinks })
     setSegment(undefined)
   }
 
   // when links change, performs the onChange callback with the new incoming data
   const onLinkDelete = (nextLinks: ILinkType[]) => {
-    onChange({...value, links: nextLinks})
+    onChange({ ...value, links: nextLinks })
   }
 
   return (
-    <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} scale={scale}>
+    <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} scale={scale} translate={translate}>
       <NodesCanvas
         nodes={value.nodes}
         onChange={onNodesChange}
@@ -82,10 +82,8 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         onSegmentConnect={onSegmentConnect}
         onAddHistory={onAddHistory}
       />
-      <LinksCanvas nodes={value.nodes} links={value.links} onChange={onLinkDelete}/>
-      {segment && (
-        <Segment segment={segment}/>
-      )}
+      <LinksCanvas nodes={value.nodes} links={value.links} onChange={onLinkDelete} />
+      {segment && <Segment segment={segment} />}
     </DiagramCanvas>
   )
 })
