@@ -18,7 +18,7 @@ export const DiagramNodePorts: React.FC<DiagramNodePortsProps> = (props) => {
   return (
     <>
       {
-        inputs.map((port) => <Port
+        inputs.map((port, index) => <Port
           onMount={registerPort}
           onDragNewSegment={onDragNewSegment}
           onSegmentFail={onSegmentFail}
@@ -26,6 +26,7 @@ export const DiagramNodePorts: React.FC<DiagramNodePortsProps> = (props) => {
           type={type}
           key={port.id}
           id={port.id}
+          index={index}
           isLinked={port.isLinked}
           nodeId={nodeId}
         />)

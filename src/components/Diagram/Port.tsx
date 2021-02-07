@@ -8,6 +8,7 @@ import classnames from 'classnames'
 interface PortProps extends IPointType {
   nodeId: string;
   type: 'input' | 'output';
+  index: number;
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void;
   onSegmentFail: (id: string, type: string) => void;
   onSegmentConnect: (id: string, targetPort: string) => void;
@@ -15,7 +16,7 @@ interface PortProps extends IPointType {
 }
 
 export const Port: React.FC<PortProps> = React.memo((props) => {
-  const {id, isLinked, nodeId, onDragNewSegment, onSegmentFail, onSegmentConnect, onMount, type} = props
+  const {id, isLinked, index, nodeId, onDragNewSegment, onSegmentFail, onSegmentConnect, onMount, type} = props
   const canvasRef = useDiagramCanvas()
   const scale = useScale()
   const ref: any = useRef<React.RefObject<HTMLElement>>(null)
@@ -24,7 +25,7 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
   const className = classnames('diagram-port', {
     'type-input': type === 'input',
     'type-output': type === 'output',
-    'is-linked':isLinked
+    'is-linked': isLinked
   })
 
   const {onDragStart, onDrag, onDragEnd} = useDrag({ref, throttleBy: 15})
@@ -72,5 +73,6 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
     onMount(id, ref.current)
   }, [id, onMount])
 
-  return <div className={className} id={id} ref={ref}/>
+  return <div className={className} id={id} ref={ref}
+              style={{top: index === 0 ? '45%' : `calc(45% + ${index * 18}px)`}}/>
 })
