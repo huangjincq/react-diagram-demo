@@ -5,7 +5,7 @@ import { Toolbar } from './components/Toolbar/Toolbar'
 import { NodeList } from './components/NodeList/NodeList'
 import { IDiagramType, ICoordinateType, ITranslate, IMousePosition } from './types'
 import { createNode } from './components/NodeTypes/config'
-import { STATUS_CODES } from 'http'
+import { throttle } from 'lodash-es'
 
 // const manyNode = new Array(100).fill({}).map()
 
@@ -118,7 +118,10 @@ function DiagramPanel() {
 
   const handleMouseMove = useCallback((event) => {}, [])
 
-  const handleThrottleSetTranslate = useCallback(() => {}, [])
+  const handleThrottleSetTranslate = useCallback(
+    throttle(() => {}, 20),
+    []
+  )
 
   const handleKeyDown = useCallback(
     (event) => {
