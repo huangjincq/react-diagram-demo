@@ -12,10 +12,11 @@ interface DiagramProps {
   onChange: (value: IDiagramType) => void
   onAddHistory: any
   transform: ITransform
+  activeNodeIds: string[]
 }
 
 export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
-  const { value, onChange, onAddHistory, transform } = props
+  const { value, onChange, onAddHistory, transform, activeNodeIds } = props
   const [segment, setSegment] = useState<ISegmentType | undefined>()
   const { current: portRefs } = useRef<IPortRefs>({}) // keeps the port elements references
   const { current: nodeRefs } = useRef<INodeRefs>({}) // keeps the node elements references
@@ -80,6 +81,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         onSegmentFail={onSegmentFail}
         onSegmentConnect={onSegmentConnect}
         onAddHistory={onAddHistory}
+        activeNodeIds={activeNodeIds}
       />
       <LinksCanvas nodes={value.nodes} links={value.links} onChange={onLinkDelete} />
       {segment && <Segment segment={segment} />}

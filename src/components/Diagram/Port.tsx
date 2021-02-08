@@ -6,17 +6,17 @@ import { useDiagramCanvas, useScale } from '../Context/DiagramManager'
 import classnames from 'classnames'
 
 interface PortProps extends IPointType {
-  nodeId: string;
-  type: 'input' | 'output';
-  index: number;
-  onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void;
-  onSegmentFail: (id: string, type: string) => void;
-  onSegmentConnect: (id: string, targetPort: string) => void;
-  onMount: (id: string, dom: HTMLElement) => void;
+  nodeId: string
+  type: 'input' | 'output'
+  index: number
+  onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
+  onSegmentFail: (id: string, type: string) => void
+  onSegmentConnect: (id: string, targetPort: string) => void
+  onMount: (id: string, dom: HTMLElement) => void
 }
 
 export const Port: React.FC<PortProps> = React.memo((props) => {
-  const {id, isLinked, index, nodeId, onDragNewSegment, onSegmentFail, onSegmentConnect, onMount, type} = props
+  const { id, isLinked, index, nodeId, onDragNewSegment, onSegmentFail, onSegmentConnect, onMount, type } = props
   const canvasRef = useDiagramCanvas()
   const scale = useScale()
   const ref: any = useRef<React.RefObject<HTMLElement>>(null)
@@ -25,17 +25,17 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
   const className = classnames('diagram-port', {
     'type-input': type === 'input',
     'type-output': type === 'output',
-    'is-linked': isLinked
+    'is-linked': isLinked,
   })
 
-  const {onDragStart, onDrag, onDragEnd} = useDrag({ref, throttleBy: 15})
+  const { onDragStart, onDrag, onDragEnd } = useDrag({ ref, throttleBy: 15 })
 
   onDragStart((event: MouseEvent) => {
     event.stopImmediatePropagation()
     event.stopPropagation()
     if (canvasRef && ref.current) {
-      const {x: canvasX, y: canvasY} = canvasRef.getBoundingClientRect()
-      const {x, y, width, height} = ref.current.getBoundingClientRect()
+      const { x: canvasX, y: canvasY } = canvasRef.getBoundingClientRect()
+      const { x, y, width, height } = ref.current.getBoundingClientRect()
       startCoordinatesRef.current = [(x - canvasX + width / 2) / scale, (y - canvasY + height / 2) / scale]
     }
   })
@@ -73,6 +73,7 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
     onMount(id, ref.current)
   }, [id, onMount])
 
-  return <div className={className} id={id} ref={ref}
-              style={{top: index === 0 ? '45%' : `calc(45% + ${index * 18}px)`}}/>
+  return (
+    <div className={className} id={id} ref={ref} style={{ top: index === 0 ? '45%' : `calc(45% + ${index * 18}px)` }} />
+  )
 })

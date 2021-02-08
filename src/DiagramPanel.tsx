@@ -6,7 +6,7 @@ import { NodeList } from './components/NodeList/NodeList'
 import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionArea } from './types'
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
-import { checkMouseDownTargetIsDrawPanel } from './utils'
+import { checkMouseDownTargetIsDrawPanel, collideCheck } from './utils'
 
 // const manyNode = new Array(100).fill({}).map()
 
@@ -66,8 +66,11 @@ function DiagramPanel() {
   const [selectionArea, setSelectionArea] = useState<ISelectionArea | undefined>()
   const [dragState, setDragState] = useState<string>(DRAG_STATE.DEFAULT)
   const mouseDownStartPosition = useRef<IMousePosition | undefined>()
+  const [activeNodeIds, setActiveNodeIds] = useState<string[]>([])
+
   const scaleRef = useRef<number>(1)
   const panelRef = useRef<HTMLDivElement>(null)
+  const selectionAreaRef = useRef<HTMLDivElement>(null)
 
   // const [schema, setSchema] = useState(defaultValue)
   const handleChange = useCallback(
@@ -181,9 +184,17 @@ function DiagramPanel() {
           width: Math.abs(e.clientX - mouseDownStartPosition.current.x),
           height: Math.abs(e.clientY - mouseDownStartPosition.current.y),
         })
+        const selectAreaDom = selectionAreaRef.current
+        const activeNodeIds = (state as IDiagramType).nodes
+          .map((v) => v.id)
+          .filter((id) => {
+            return collideCheck(selectAreaDom, document.getElementById(id))
+          })
+
+        setActiveNodeIds(activeNodeIds)
       }
     }, 20),
-    [transform]
+    [transform, state]
   )
 
   const handleMouseUp = useCallback(
@@ -249,10 +260,17 @@ function DiagramPanel() {
       onKeyUp={handleKeyUp}
       style={{ cursor }}
     >
-      <Diagram value={state} transform={transform} onChange={handleChange} onAddHistory={handleAddHistory} />
+      <Diagram
+        value={state}
+        transform={transform}
+        onChange={handleChange}
+        onAddHistory={handleAddHistory}
+        activeNodeIds={activeNodeIds}
+      />
       <NodeList />
       <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={transform.scale} canRedo={canRedo} />
       <div
+        ref={selectionAreaRef}
         className="diagram-selection-area"
         hidden={hideSelectionArea}
         style={{

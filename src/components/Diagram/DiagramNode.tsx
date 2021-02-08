@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import useDrag from '../../hooks/useDrag'
 import useNodeUnregistration from '../../hooks/useNodeUnregistration'
 import { INodeType, ICoordinateType } from '../../types'
@@ -6,6 +6,7 @@ import { nodesConfig } from '../NodeTypes/config'
 import { isEqual } from 'lodash-es'
 import { useScale } from '../Context/DiagramManager'
 import { DiagramNodePorts } from './DiagramNodePorts'
+import classnames from 'classnames'
 
 interface DiagramNodeProps {
   nodeInfo: INodeType
@@ -18,6 +19,7 @@ interface DiagramNodeProps {
   onDragNewSegment: any
   onSegmentFail: any
   onSegmentConnect: any
+  activeNodeIds: string[]
 }
 
 export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
@@ -32,6 +34,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     onSegmentFail,
     onSegmentConnect,
     onAddHistory,
+    activeNodeIds,
   } = props
 
   const { id, coordinates, type, inputs, data, outputs } = nodeInfo
@@ -87,13 +90,14 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     onMount(id, ref.current)
   }, [id, onMount])
 
+  const className = useMemo(() => {
+    return classnames('diagram-node', {
+      active: activeNodeIds.includes(id),
+    })
+  }, [activeNodeIds, id])
+
   return (
-    <div
-      id={id}
-      className={'diagram-node bi-diagram-node-default active'}
-      ref={ref}
-      style={{ left: coordinates[0], top: coordinates[1] }}
-    >
+    <div id={id} className={className} ref={ref} style={{ left: coordinates[0], top: coordinates[1] }}>
       {component && React.createElement(component, nodeItemProps)}
       <DiagramNodePorts inputs={inputs} {...options} type="input" />
       <DiagramNodePorts inputs={outputs} {...options} type="output" />
