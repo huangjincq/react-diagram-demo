@@ -13,7 +13,7 @@ const defaultOptions = {
    * Throttle the onDrag handler by the given ms
    * @default 0ms
    */
-  throttleBy: 0
+  throttleBy: 0,
 }
 
 /**
@@ -174,7 +174,7 @@ const useDrag = (options = defaultOptions) => {
     ref: targetRef,
     onDragStart: CreateCallbackRef(dragStartHandlerRef),
     onDrag: CreateCallbackRef(dragHandlerRef),
-    onDragEnd: CreateCallbackRef(dragEndHandlerRef)
+    onDragEnd: CreateCallbackRef(dragEndHandlerRef),
   }
 }
 

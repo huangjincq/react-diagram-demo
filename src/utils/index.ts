@@ -42,3 +42,13 @@ export const collideCheck = (dom1: HTMLElement | null, dom2: HTMLElement | null)
   }
   return false
 }
+
+export const getPathMidpoint = (pathElement: SVGPathElement): ICoordinateType => {
+  if (pathElement.getTotalLength && pathElement.getPointAtLength) {
+    const midpoint = pathElement.getTotalLength() / 2
+    const { x, y } = pathElement.getPointAtLength(midpoint)
+    return [x, y]
+  }
+
+  return [0, 0]
+}
