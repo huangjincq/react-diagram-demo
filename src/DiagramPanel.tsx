@@ -106,7 +106,6 @@ function DiagramPanel() {
       let { x, y } = translate
       const mouseX = (event.clientX - translate.x) / scale
       const mouseY = (event.clientY - translate.y) / scale
-      console.log(mouseY * SCALE_STEP)
 
       if (wheelDelta < 0) {
         newScale = newScale - SCALE_STEP
@@ -118,8 +117,8 @@ function DiagramPanel() {
         x = x - mouseX * SCALE_STEP
         y = y - mouseY * SCALE_STEP
       }
-      if (newScale > 1 || newScale <= 0.1) return
-      scaleRef.current = newScale
+      if (newScale > 1 || newScale < 0.1) return
+      scaleRef.current = Number(newScale.toFixed(2))
       setScale(scaleRef.current)
       setTranslate({ x, y })
     },
@@ -210,7 +209,7 @@ function DiagramPanel() {
         onAddHistory={handleAddHistory}
       />
       <NodeList />
-      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={scale} setScale={setScale} canRedo={canRedo} />
+      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={scale} canRedo={canRedo} />
     </div>
   )
 }
