@@ -5,11 +5,12 @@ import { LinksCanvas } from './LinksCanvas'
 import { Segment } from './Segment'
 
 import './style.scss'
-import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs, ITransform } from '../../types'
+import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs, ITransform, ICoordinateType } from '../../types'
+import { cloneDeep } from 'lodash-es'
 
 interface DiagramProps {
   value: IDiagramType
-  onChange: (value: IDiagramType) => void
+  onChange: (value: IDiagramType, notAddHistory?: boolean) => void
   onAddHistory: any
   transform: ITransform
   activeNodeIds: string[]
@@ -18,14 +19,30 @@ interface DiagramProps {
 export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   const { value, onChange, onAddHistory, transform, activeNodeIds } = props
   const [segment, setSegment] = useState<ISegmentType | undefined>()
-  const { current: portRefs } = useRef<IPortRefs>({}) // keeps the port elements references
-  const { current: nodeRefs } = useRef<INodeRefs>({}) // keeps the node elements references
+  const { current: portRefs } = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
+  const { current: nodeRefs } = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
 
-  // when nodes change, performs the onChange callback with the new incoming data
-  const onNodesChange = (nextNodes: any) => {
-    if (onChange) {
-      onChange({ ...value, nodes: nextNodes })
-    }
+  const handleNodePositionChange = (nodeId: string, nextCoordinates: ICoordinateType) => {
+    const nextNodes = [...value.nodes]
+    const index = nextNodes.findIndex((node) => node.id === nodeId)
+    nextNodes[index].coordinates = nextCoordinates
+    onChange({ ...value, nodes: nextNodes }, true)
+  }
+
+  const handleNodeValueChange = (nodeId: string, nextNodeValue: any) => {
+    // 需要 deepClone  历史记录 需要独立的 data
+    const nextNodes = cloneDeep(value.nodes)
+    const index = nextNodes.findIndex((node) => node.id === nodeId)
+    nextNodes[index].data = nextNodeValue
+    onChange({ ...value, nodes: nextNodes })
+  }
+
+  const handleAddHistory = (nodeId: string, nextCoordinates: ICoordinateType) => {
+    // 需要 deepClone  历史记录 需要独立的 data
+    const nextNodes = cloneDeep(value.nodes)
+    const index = nextNodes.findIndex((node) => node.id === nodeId)
+    nextNodes[index].coordinates = nextCoordinates
+    onAddHistory(nextNodes)
   }
 
   // when a port is registered, save it to the local reference
@@ -73,14 +90,15 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} transform={transform}>
       <NodesCanvas
         nodes={value.nodes}
-        onChange={onNodesChange}
-        onNodeRegister={onNodeRegister}
+        onNodeMount={onNodeRegister}
         onPortRegister={onPortRegister}
         onNodeRemove={onNodeRemove}
         onDragNewSegment={onDragNewSegment}
         onSegmentFail={onSegmentFail}
+        onNodePositionChange={handleNodePositionChange}
+        onNodeValueChange={handleNodeValueChange}
         onSegmentConnect={onSegmentConnect}
-        onAddHistory={onAddHistory}
+        onAddHistory={handleAddHistory}
         activeNodeIds={activeNodeIds}
       />
       <LinksCanvas nodes={value.nodes} links={value.links} onChange={onLinkDelete} />

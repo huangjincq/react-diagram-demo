@@ -5,71 +5,25 @@ import { cloneDeep } from 'lodash-es'
 
 interface NodesCanvasProps {
   nodes: INodeType[]
-  onChange: any
-  onNodeRegister: any
+  onNodeMount: any
   onPortRegister: any
   onNodeRemove: any
   onDragNewSegment: any
   onSegmentFail: any
   onSegmentConnect: any
-  onAddHistory: any
   activeNodeIds: string[]
+  onNodePositionChange: (id: string, nextCoords: ICoordinateType) => void
+  onNodeValueChange: (id: string, nextNodeValue: any) => void
+  onAddHistory: (id: string, nextCoords: ICoordinateType) => void
 }
 
 export const NodesCanvas: React.FC<NodesCanvasProps> = React.memo((props) => {
-  const {
-    nodes,
-    onPortRegister,
-    onNodeRegister,
-    onNodeRemove,
-    onDragNewSegment,
-    onSegmentFail,
-    onSegmentConnect,
-    onChange,
-    onAddHistory,
-    activeNodeIds,
-  } = props
-
-  // when a node item update its position updates it within the nodes array
-  const handleNodePositionChange = (nodeId: string, nextCoordinates: ICoordinateType) => {
-    const nextNodes = [...nodes]
-    const index = nextNodes.findIndex((node) => node.id === nodeId)
-    nextNodes[index].coordinates = nextCoordinates
-    onChange(nextNodes)
-  }
-
-  const handleNodeValueChange = (nodeId: string, nextNodeValue: any) => {
-    // 需要deepClone  历史记录 需要独立的 data
-    const nextNodes = [...nodes]
-    const index = nextNodes.findIndex((node) => node.id === nodeId)
-    nextNodes[index].data = nextNodeValue
-    onChange(nextNodes)
-  }
-
-  const handleAddHistory = (nodeId: string, nextCoordinates: ICoordinateType) => {
-    const nextNodes = cloneDeep(nodes)
-    const index = nextNodes.findIndex((node) => node.id === nodeId)
-    nextNodes[index].coordinates = nextCoordinates
-    onAddHistory(nextNodes)
-  }
+  const { nodes } = props
 
   return (
     <>
       {nodes.map((node) => (
-        <DiagramNode
-          nodeInfo={node}
-          onNodePositionChange={handleNodePositionChange}
-          onNodeValueChange={handleNodeValueChange}
-          onPortRegister={onPortRegister}
-          onNodeRemove={onNodeRemove}
-          onDragNewSegment={onDragNewSegment}
-          onSegmentFail={onSegmentFail}
-          onSegmentConnect={onSegmentConnect}
-          onMount={onNodeRegister}
-          onAddHistory={handleAddHistory}
-          activeNodeIds={activeNodeIds}
-          key={node.id}
-        />
+        <DiagramNode nodeInfo={node} key={node.id} {...props} />
       ))}
     </>
   )

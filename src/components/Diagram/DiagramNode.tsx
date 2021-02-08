@@ -13,7 +13,7 @@ interface DiagramNodeProps {
   onNodePositionChange: (id: string, nextCoords: ICoordinateType) => void
   onNodeValueChange: (id: string, nextNodeValue: any) => void
   onAddHistory: (id: string, nextCoords: ICoordinateType) => void
-  onMount: any
+  onNodeMount: any
   onPortRegister: any
   onNodeRemove: any
   onDragNewSegment: any
@@ -30,7 +30,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     onPortRegister,
     onNodeRemove,
     onDragNewSegment,
-    onMount,
+    onNodeMount,
     onSegmentFail,
     onSegmentConnect,
     onAddHistory,
@@ -87,8 +87,8 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   const options = { nodeId: id, registerPort: onPortRegister, onDragNewSegment, onSegmentFail, onSegmentConnect }
 
   useEffect(() => {
-    onMount(id, ref.current)
-  }, [id, onMount])
+    onNodeMount(id, ref.current)
+  }, [id, onNodeMount])
 
   const className = useMemo(() => {
     return classnames('diagram-node', {

@@ -3,7 +3,7 @@ import { Diagram } from './components/Diagram'
 import { useHistory } from './hooks/useHistory'
 import { Toolbar } from './components/Toolbar/Toolbar'
 import { NodeList } from './components/NodeList/NodeList'
-import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionArea } from './types'
+import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionArea, INodeType } from './types'
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
 import { checkMouseDownTargetIsDrawPanel, collideCheck } from './utils'
@@ -57,7 +57,7 @@ const CURSOR_MAP = {
 }
 
 function DiagramPanel() {
-  const { state, set, setHistory, undo, redo, clear, canUndo, canRedo } = useHistory(defaultValue)
+  const { value, set, setWithHistory, addAHistory, undo, redo, clear, canUndo, canRedo } = useHistory(defaultValue)
   const [transform, setTransform] = useState<ITransform>({
     scale: 1,
     translateX: 0,
@@ -72,18 +72,20 @@ function DiagramPanel() {
   const panelRef = useRef<HTMLDivElement>(null)
   const selectionAreaRef = useRef<HTMLDivElement>(null)
 
-  // const [schema, setSchema] = useState(defaultValue)
   const handleChange = useCallback(
-    (value: any) => {
-      const newValue = { ...state, ...value }
-      set(newValue)
+    (newValue: IDiagramType, notAddHistory?: boolean) => {
+      if (notAddHistory) {
+        set({ ...value, ...newValue })
+      } else {
+        setWithHistory({ ...value, ...newValue })
+      }
     },
-    [set, state]
+    [set, value]
   )
 
-  const handleAddHistory = (nodes: any) => {
-    const newValue = { ...state, nodes }
-    setHistory(newValue)
+  const handleAddHistory = (nodes: INodeType) => {
+    const newValue = { ...value, nodes }
+    addAHistory(newValue)
   }
 
   const handleDrop = useCallback(
@@ -102,9 +104,9 @@ function DiagramPanel() {
         (y - diagramCanvasRect.y) / transform.scale,
       ]
       const newNode = createNode(nodeType, coordinates)
-      handleChange({ nodes: [...state.nodes, newNode] })
+      handleChange({ ...value, nodes: [...value.nodes, newNode] })
     },
-    [handleChange, transform, state.nodes]
+    [handleChange, transform, value]
   )
 
   const handleDrag = useCallback((e: any) => {
@@ -185,7 +187,7 @@ function DiagramPanel() {
           height: Math.abs(e.clientY - mouseDownStartPosition.current.y),
         })
         const selectAreaDom = selectionAreaRef.current
-        const activeNodeIds = (state as IDiagramType).nodes
+        const activeNodeIds = (value as IDiagramType).nodes
           .map((v) => v.id)
           .filter((id) => {
             return collideCheck(selectAreaDom, document.getElementById(id))
@@ -194,7 +196,7 @@ function DiagramPanel() {
         setActiveNodeIds(activeNodeIds)
       }
     }, 20),
-    [transform, state]
+    [transform, value]
   )
 
   const handleMouseUp = useCallback(
@@ -261,7 +263,7 @@ function DiagramPanel() {
       style={{ cursor }}
     >
       <Diagram
-        value={state}
+        value={value}
         transform={transform}
         onChange={handleChange}
         onAddHistory={handleAddHistory}
