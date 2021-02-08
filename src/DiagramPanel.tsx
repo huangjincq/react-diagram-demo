@@ -59,6 +59,7 @@ function DiagramPanel() {
   const [translate, setTranslate] = useState<ITranslate>({ x: 0, y: 0 })
   const [dragState, setDragState] = useState<string>(DRAG_STATE.DEFAULT)
   const mouseDownStartPosition = useRef<IMousePosition>({ x: 0, y: 0 })
+  const scaleRef = useRef<number>(1)
 
   // const [schema, setSchema] = useState(defaultValue)
   const handleChange = useCallback(
@@ -98,34 +99,78 @@ function DiagramPanel() {
 
   const handleWheel = useCallback(
     (event: any) => {
+      if (!event) event = window.event
       const wheelDelta = event.nativeEvent.wheelDelta
-      if (wheelDelta < 0 && scale > 0) {
-        setScale(scale - SCALE_STEP)
+      let newScale = scaleRef.current
+
+      let { x, y } = translate
+      const mouseX = (event.clientX - translate.x) / scale
+      const mouseY = (event.clientY - translate.y) / scale
+      console.log(mouseY * SCALE_STEP)
+
+      if (wheelDelta < 0) {
+        newScale = newScale - SCALE_STEP
+        x = x + mouseX * SCALE_STEP
+        y = y + mouseY * SCALE_STEP
       }
-      if (wheelDelta > 0 && scale < 1) {
-        setScale(scale + SCALE_STEP)
+      if (wheelDelta > 0) {
+        newScale = newScale + SCALE_STEP
+        x = x - mouseX * SCALE_STEP
+        y = y - mouseY * SCALE_STEP
       }
+      if (newScale > 1 || newScale <= 0.1) return
+      scaleRef.current = newScale
+      setScale(scaleRef.current)
+      setTranslate({ x, y })
     },
-    [scale]
+    [scale, translate]
   )
 
-  const handleMouseDown = useCallback((event) => {
-    mouseDownStartPosition.current = {
-      x: event.clientY,
-      y: event.clientY,
-    }
-  }, [])
+  const handleMouseDown = useCallback(
+    (event) => {
+      if (dragState === DRAG_STATE.START) {
+        setDragState(DRAG_STATE.MOVE)
+      }
+      mouseDownStartPosition.current = {
+        x: event.clientX,
+        y: event.clientY,
+      }
+    },
+    [dragState]
+  )
 
-  const handleMouseMove = useCallback((event) => {}, [])
+  const handleMouseMove = useCallback(
+    (event) => {
+      if (dragState === DRAG_STATE.MOVE) {
+        handleThrottleSetTranslate(event)
+      }
+    },
+    [dragState]
+  )
+
+  const handleMouseUp = useCallback(
+    (event) => {
+      if (dragState === DRAG_STATE.MOVE) {
+        setDragState(DRAG_STATE.START)
+      }
+    },
+    [dragState]
+  )
 
   const handleThrottleSetTranslate = useCallback(
-    throttle(() => {}, 20),
-    []
+    throttle((e) => {
+      const newTranslate: ITranslate = {
+        x: e.clientX - mouseDownStartPosition.current.x + translate.x,
+        y: e.clientY - mouseDownStartPosition.current.y + translate.y,
+      }
+      setTranslate(newTranslate)
+    }, 20),
+    [translate]
   )
 
   const handleKeyDown = useCallback(
     (event) => {
-      if (event.keyCode === 32) {
+      if (event.keyCode === 32 && dragState === DRAG_STATE.DEFAULT) {
         setDragState(DRAG_STATE.START)
       }
     },
@@ -148,10 +193,11 @@ function DiagramPanel() {
       onDrop={handleDrop}
       onDragEnter={handleDrag}
       onDragOver={handleDrag}
-      tabIndex={0}
+      tabIndex={1}
       onWheel={handleWheel}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
       style={{ cursor }}

@@ -1,15 +1,16 @@
 @import '~antd/dist/antd.css';
-@import "~normalize.css";
+@import '~normalize.css';
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-  sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-body, #root, .diagram-panel {
+body,
+#root,
+.diagram-panel {
   height: 100%;
 }
 
@@ -18,9 +19,9 @@ body, #root, .diagram-panel {
   background-image: url('./static/background-img-split.png');
   background-repeat: repeat;
   outline: none;
+  overflow: hidden;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-  monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }

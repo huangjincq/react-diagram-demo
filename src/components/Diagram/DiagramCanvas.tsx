@@ -24,7 +24,7 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = React.memo((props) =>
       id="diagram-canvas"
       className="diagram-canvas"
       ref={canvasRef}
-      style={{ transform: `scale(${scale}) translate(${translate.x}px,${translate.y}px)` }}
+      style={{ transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})` }}
     >
       <DiagramManagerProvider value={{ canvasRef: canvasDom, portRefs, nodeRefs, scale }}>
         {children}

@@ -6,6 +6,8 @@
     width: 100%;
     height: 100%;
     position: relative;
+    transform-origin: 0 0 0;
+    // border: 1px solid red;
   }
 
   // ----------------------------
@@ -15,7 +17,7 @@
     position: absolute;
     z-index: 1;
     user-select: none;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.2);
     border-radius: 4px;
     min-width: 100px;
@@ -32,7 +34,7 @@
   // ----------------------------
   &-port {
     transition: background-color 0.25s ease-in-out;
-    background-image: url("../../static/linked-port.png");
+    background-image: url('../../static/linked-port.png');
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     background-size: 100% 100%;
@@ -53,17 +55,13 @@
 
     &.type-output {
       right: -10px;
-
     }
 
     &.is-linked {
-      background-color: #6F9CB1;
+      background-color: #6f9cb1;
       background-image: none;
     }
-
-
   }
-
 
   // ----------------------------
   // Segment-canvas
