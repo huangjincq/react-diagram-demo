@@ -51,6 +51,12 @@ export interface IMousePosition {
   y:number;
 }
 
+export interface ISelectionArea {
+  left:number;
+  top:number;
+  width:number;
+  height:number;
+}
 
 
 export interface INodeItemProps<T> {

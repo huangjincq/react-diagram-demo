@@ -20,8 +20,19 @@ body,
   background-repeat: repeat;
   outline: none;
   overflow: hidden;
+  position: relative;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.diagram-selection-area {
+  position: absolute;
+  transition: background-color 0.25s eas-in-out;
+  background-color: rgba(100, 107, 153, 0.2);
+  background-color: rgba(100, 107, 153, 0.2);
+  border: 1px solid rgba(100, 107, 235, 0.5);
+  border: 1px solid rgba(100, 107, 235, 0.5);
+  z-index: 99;
 }

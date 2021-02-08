@@ -3,9 +3,10 @@ import { Diagram } from './components/Diagram'
 import { useHistory } from './hooks/useHistory'
 import { Toolbar } from './components/Toolbar/Toolbar'
 import { NodeList } from './components/NodeList/NodeList'
-import { IDiagramType, ICoordinateType, IMousePosition, ITransform } from './types'
+import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionArea } from './types'
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
+import { checkMouseDownTargetIsDrawPanel } from './utils'
 
 // const manyNode = new Array(100).fill({}).map()
 
@@ -45,10 +46,12 @@ const DRAG_STATE = {
   START: 'START',
   MOVE: 'MOVE',
   END: 'END',
+  SELECTION: 'SELECTION',
 }
 
 const CURSOR_MAP = {
   [DRAG_STATE.DEFAULT]: 'default',
+  [DRAG_STATE.SELECTION]: 'default',
   [DRAG_STATE.START]: 'grab',
   [DRAG_STATE.MOVE]: 'grabbing',
 }
@@ -60,8 +63,9 @@ function DiagramPanel() {
     translateX: 0,
     translateY: 0,
   })
+  const [selectionArea, setSelectionArea] = useState<ISelectionArea | undefined>()
   const [dragState, setDragState] = useState<string>(DRAG_STATE.DEFAULT)
-  const mouseDownStartPosition = useRef<IMousePosition>({ x: 0, y: 0 })
+  const mouseDownStartPosition = useRef<IMousePosition | undefined>()
   const scaleRef = useRef<number>(1)
   const panelRef = useRef<HTMLDivElement>(null)
 
@@ -140,15 +144,16 @@ function DiagramPanel() {
 
   const handleMouseDown = useCallback(
     (event) => {
-      if (
-        dragState === DRAG_STATE.START &&
-        (event.target === panelRef.current || event.target === panelRef.current?.firstChild)
-      ) {
-        setDragState(DRAG_STATE.MOVE)
-      }
       mouseDownStartPosition.current = {
         x: event.clientX,
         y: event.clientY,
+      }
+      if (checkMouseDownTargetIsDrawPanel(event, panelRef.current)) {
+        if (dragState === DRAG_STATE.START) {
+          setDragState(DRAG_STATE.MOVE)
+        } else {
+          setDragState(DRAG_STATE.SELECTION)
+        }
       }
     },
     [dragState]
@@ -159,26 +164,50 @@ function DiagramPanel() {
       if (dragState === DRAG_STATE.MOVE) {
         handleThrottleSetTransform(event)
       }
+      if (dragState === DRAG_STATE.SELECTION) {
+        handleThrottleSetSelectionArea(event)
+      }
     },
     [dragState]
+  )
+
+  const handleThrottleSetSelectionArea = useCallback(
+    throttle((e) => {
+      if (mouseDownStartPosition.current && panelRef.current) {
+        const panelRect = panelRef.current.getBoundingClientRect()
+        setSelectionArea({
+          left: Math.min(e.clientX, mouseDownStartPosition.current.x) - panelRect.x,
+          top: Math.min(e.clientY, mouseDownStartPosition.current.y) - panelRect.y,
+          width: Math.abs(e.clientX - mouseDownStartPosition.current.x),
+          height: Math.abs(e.clientY - mouseDownStartPosition.current.y),
+        })
+      }
+    }, 20),
+    [transform]
   )
 
   const handleMouseUp = useCallback(
     (event) => {
       if (dragState === DRAG_STATE.MOVE) {
         setDragState(DRAG_STATE.START)
+      } else {
+        setDragState(DRAG_STATE.DEFAULT)
       }
+      setSelectionArea(undefined)
+      mouseDownStartPosition.current = undefined
     },
     [dragState]
   )
 
   const handleThrottleSetTransform = useCallback(
     throttle((e) => {
-      setTransform({
-        ...transform,
-        translateX: e.clientX - mouseDownStartPosition.current.x + transform.translateX,
-        translateY: e.clientY - mouseDownStartPosition.current.y + transform.translateY,
-      })
+      if (mouseDownStartPosition.current) {
+        setTransform({
+          ...transform,
+          translateX: e.clientX - mouseDownStartPosition.current.x + transform.translateX,
+          translateY: e.clientY - mouseDownStartPosition.current.y + transform.translateY,
+        })
+      }
     }, 20),
     [transform]
   )
@@ -202,6 +231,8 @@ function DiagramPanel() {
     return CURSOR_MAP[dragState]
   }, [dragState])
 
+  const hideSelectionArea = useMemo(() => dragState !== DRAG_STATE.SELECTION, [dragState])
+
   return (
     <div
       ref={panelRef}
@@ -221,6 +252,16 @@ function DiagramPanel() {
       <Diagram value={state} transform={transform} onChange={handleChange} onAddHistory={handleAddHistory} />
       <NodeList />
       <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={transform.scale} canRedo={canRedo} />
+      <div
+        className="diagram-selection-area"
+        hidden={hideSelectionArea}
+        style={{
+          left: selectionArea?.left,
+          top: selectionArea?.top,
+          width: selectionArea?.width,
+          height: selectionArea?.height,
+        }}
+      ></div>
     </div>
   )
 }
