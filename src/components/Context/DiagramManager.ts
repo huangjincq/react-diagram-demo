@@ -2,13 +2,13 @@ import { createContext, useContext } from 'react'
 import { IPortRefs, INodeRefs } from '../../types'
 
 export interface DiagramManager {
-  canvasRef: HTMLDivElement | null;
-  portRefs: IPortRefs;
-  nodeRefs: INodeRefs;
+  canvasRef: HTMLDivElement | null
+  portRefs: IPortRefs
+  nodeRefs: INodeRefs
   scale: number
 }
 
-const defaultValue: DiagramManager = {canvasRef: null, portRefs: {}, nodeRefs: {}, scale: 1}
+const defaultValue: DiagramManager = { canvasRef: null, portRefs: {}, nodeRefs: {}, scale: 1 }
 
 const DiagramManagerContext = createContext(defaultValue)
 
@@ -21,24 +21,24 @@ export const useDiagramManager = (): DiagramManager => {
 
 // export DiagramCanvas Context
 export const useDiagramCanvas = (): HTMLDivElement | null => {
-  const {canvasRef} = useContext(DiagramManagerContext)
+  const { canvasRef } = useContext(DiagramManagerContext)
   return canvasRef
 }
 
-// return  DiagramNodePorts dom 节点
-export const useDiagramNodeRefs = (): IPortRefs => {
-  const {nodeRefs} = useContext(DiagramManagerContext)
+// return  DiagramNod dom 节点
+export const useDiagramNodeRefs = (): INodeRefs => {
+  const { nodeRefs } = useContext(DiagramManagerContext)
   return nodeRefs
 }
 
 // return  DiagramNodePorts ports 节点
-export const usePortRefs = (): INodeRefs => {
-  const {portRefs} = useContext(DiagramManagerContext)
+export const usePortRefs = (): IPortRefs => {
+  const { portRefs } = useContext(DiagramManagerContext)
   return portRefs
 }
 
-// return  DiagramNodePorts ports 节点
+// return scale
 export const useScale = (): number => {
-  const {scale} = useContext(DiagramManagerContext)
+  const { scale } = useContext(DiagramManagerContext)
   return scale
 }
