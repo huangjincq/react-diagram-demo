@@ -90,7 +90,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   return (
     <div
       id={id}
-      className={'diagram-node bi-diagram-node-default'}
+      className={'diagram-node bi-diagram-node-default active'}
       ref={ref}
       style={{ left: coordinates[0], top: coordinates[1] }}
     >
