@@ -2,24 +2,23 @@ import React from 'react'
 import { ICoordinateType, IPointType } from '../../types'
 import { Port } from './Port'
 
-
 export interface DiagramNodePortsProps {
-  inputs: IPointType[];
-  nodeId: string;
-  type: 'input' | 'output';
-  registerPort: (id: string, dom: HTMLElement) => void;
-  onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void;
-  onSegmentFail: (id: string, type: string) => void;
-  onSegmentConnect: (id: string, targetPort: string) => void;
+  inputs: IPointType[]
+  nodeId: string
+  type: 'input' | 'output'
+  onPortMount: (id: string, dom: HTMLElement) => void
+  onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
+  onSegmentFail: (id: string, type: string) => void
+  onSegmentConnect: (id: string, targetPort: string) => void
 }
 
 export const DiagramNodePorts: React.FC<DiagramNodePortsProps> = (props) => {
-  const {inputs, registerPort, onDragNewSegment, onSegmentFail, onSegmentConnect, nodeId, type} = props
+  const { inputs, onPortMount, onDragNewSegment, onSegmentFail, onSegmentConnect, nodeId, type } = props
   return (
     <>
-      {
-        inputs.map((port, index) => <Port
-          onMount={registerPort}
+      {inputs.map((port, index) => (
+        <Port
+          onPortMount={onPortMount}
           onDragNewSegment={onDragNewSegment}
           onSegmentFail={onSegmentFail}
           onSegmentConnect={onSegmentConnect}
@@ -29,8 +28,8 @@ export const DiagramNodePorts: React.FC<DiagramNodePortsProps> = (props) => {
           index={index}
           isLinked={port.isLinked}
           nodeId={nodeId}
-        />)
-      }
+        />
+      ))}
     </>
   )
 }

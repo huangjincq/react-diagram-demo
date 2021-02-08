@@ -1,16 +1,15 @@
 import React from 'react'
 import { DiagramNode } from './DiagramNode'
 import { ICoordinateType, INodeType } from '../../types'
-import { cloneDeep } from 'lodash-es'
 
 interface NodesCanvasProps {
   nodes: INodeType[]
-  onNodeMount: any
-  onPortRegister: any
+  onNodeMount: (id: string, dom: HTMLDivElement) => void
+  onPortMount: (id: string, dom: HTMLElement) => void
   onNodeRemove: any
-  onDragNewSegment: any
-  onSegmentFail: any
-  onSegmentConnect: any
+  onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
+  onSegmentFail: (id: string, type: string) => void
+  onSegmentConnect: (id: string, targetPort: string) => void
   activeNodeIds: string[]
   onNodePositionChange: (id: string, nextCoords: ICoordinateType) => void
   onNodeValueChange: (id: string, nextNodeValue: any) => void

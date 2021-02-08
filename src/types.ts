@@ -1,65 +1,62 @@
 export interface IPointType {
-  id: string;
-  isLinked?: boolean;
+  id: string
+  isLinked?: boolean
 }
 
-export type ICoordinateType = [number, number];
-
+export type ICoordinateType = [number, number]
 
 export interface INodeType {
-  id: string;
-  type: 'nodeTypeInput' | 'nodeTypeSelect';
-  inputs: IPointType[];
-  outputs: IPointType[];
-  coordinates: ICoordinateType;
-  data: any;
+  id: string
+  type: 'nodeTypeInput' | 'nodeTypeSelect'
+  inputs: IPointType[]
+  outputs: IPointType[]
+  coordinates: ICoordinateType
+  data: any
 }
 
 export interface ILinkType {
-  input: string;
-  output: string;
+  input: string
+  output: string
 }
 
 export interface IDiagramType {
-  nodes: INodeType[];
-  links: ILinkType[];
+  nodes: INodeType[]
+  links: ILinkType[]
 }
 
 export interface ISegmentType {
-  id: string;
-  from: ICoordinateType;
-  to: ICoordinateType;
+  id: string
+  from: ICoordinateType
+  to: ICoordinateType
 }
 
 export interface IPortRefs {
-  [id: string]: HTMLDivElement;
+  [id: string]: HTMLElement
 }
 
 export interface INodeRefs {
   [id: string]: HTMLDivElement
 }
 
-
 export interface ITransform {
-  scale: number;
-  translateX: number;
-  translateY: number;
+  scale: number
+  translateX: number
+  translateY: number
 }
 
 export interface IMousePosition {
-  x:number;
-  y:number;
+  x: number
+  y: number
 }
 
 export interface ISelectionArea {
-  left:number;
-  top:number;
-  width:number;
-  height:number;
+  left: number
+  top: number
+  width: number
+  height: number
 }
 
-
 export interface INodeItemProps<T> {
-  value: T;
-  onChange: (value: T) => void;
+  value: T
+  onChange: (value: T) => void
 }

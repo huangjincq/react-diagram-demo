@@ -46,7 +46,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   }
 
   // when a port is registered, save it to the local reference
-  const onPortRegister = (portId: string, portEl: HTMLDivElement) => {
+  const onPortRegister = (portId: string, portEl: HTMLElement) => {
     portRefs[portId] = portEl
   }
 
@@ -91,7 +91,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
       <NodesCanvas
         nodes={value.nodes}
         onNodeMount={onNodeRegister}
-        onPortRegister={onPortRegister}
+        onPortMount={onPortRegister}
         onNodeRemove={onNodeRemove}
         onDragNewSegment={onDragNewSegment}
         onSegmentFail={onSegmentFail}

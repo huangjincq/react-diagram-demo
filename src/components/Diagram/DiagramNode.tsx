@@ -13,12 +13,12 @@ interface DiagramNodeProps {
   onNodePositionChange: (id: string, nextCoords: ICoordinateType) => void
   onNodeValueChange: (id: string, nextNodeValue: any) => void
   onAddHistory: (id: string, nextCoords: ICoordinateType) => void
-  onNodeMount: any
-  onPortRegister: any
+  onNodeMount: (id: string, dom: HTMLDivElement) => void
+  onPortMount: (id: string, dom: HTMLElement) => void
   onNodeRemove: any
-  onDragNewSegment: any
-  onSegmentFail: any
-  onSegmentConnect: any
+  onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
+  onSegmentFail: (id: string, type: string) => void
+  onSegmentConnect: (id: string, targetPort: string) => void
   activeNodeIds: string[]
 }
 
@@ -27,7 +27,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     nodeInfo,
     onNodeValueChange,
     onNodePositionChange,
-    onPortRegister,
+    onPortMount,
     onNodeRemove,
     onDragNewSegment,
     onNodeMount,
@@ -81,10 +81,10 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     }
   })
 
-  // on component unmount, remove its references
+  // todo to test
   useNodeUnregistration(onNodeRemove, inputs, outputs, id)
 
-  const options = { nodeId: id, registerPort: onPortRegister, onDragNewSegment, onSegmentFail, onSegmentConnect }
+  const options = { nodeId: id, onPortMount, onDragNewSegment, onSegmentFail, onSegmentConnect }
 
   useEffect(() => {
     onNodeMount(id, ref.current)

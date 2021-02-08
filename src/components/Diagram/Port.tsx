@@ -12,11 +12,11 @@ interface PortProps extends IPointType {
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
-  onMount: (id: string, dom: HTMLElement) => void
+  onPortMount: (id: string, dom: HTMLElement) => void
 }
 
 export const Port: React.FC<PortProps> = React.memo((props) => {
-  const { id, isLinked, index, nodeId, onDragNewSegment, onSegmentFail, onSegmentConnect, onMount, type } = props
+  const { id, isLinked, index, nodeId, onDragNewSegment, onSegmentFail, onSegmentConnect, onPortMount, type } = props
   const canvasRef = useDiagramCanvas()
   const scale = useScale()
   const ref: any = useRef<React.RefObject<HTMLElement>>(null)
@@ -70,8 +70,8 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
   })
 
   useEffect(() => {
-    onMount(id, ref.current)
-  }, [id, onMount])
+    onPortMount(id, ref.current)
+  }, [id, onPortMount])
 
   return (
     <div className={className} id={id} ref={ref} style={{ top: index === 0 ? '45%' : `calc(45% + ${index * 18}px)` }} />
