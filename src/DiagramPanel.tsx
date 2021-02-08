@@ -3,7 +3,7 @@ import { Diagram } from './components/Diagram'
 import { useHistory } from './hooks/useHistory'
 import { Toolbar } from './components/Toolbar/Toolbar'
 import { NodeList } from './components/NodeList/NodeList'
-import { IDiagramType, ICoordinateType, ITranslate, IMousePosition } from './types'
+import { IDiagramType, ICoordinateType, IMousePosition, ITransform } from './types'
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
 
@@ -55,11 +55,15 @@ const CURSOR_MAP = {
 
 function DiagramPanel() {
   const { state, set, setHistory, undo, redo, clear, canUndo, canRedo } = useHistory(defaultValue)
-  const [scale, setScale] = useState<number>(1)
-  const [translate, setTranslate] = useState<ITranslate>({ x: 0, y: 0 })
+  const [transform, setTransform] = useState<ITransform>({
+    scale: 1,
+    translateX: 0,
+    translateY: 0,
+  })
   const [dragState, setDragState] = useState<string>(DRAG_STATE.DEFAULT)
   const mouseDownStartPosition = useRef<IMousePosition>({ x: 0, y: 0 })
   const scaleRef = useRef<number>(1)
+  const panelRef = useRef<HTMLDivElement>(null)
 
   // const [schema, setSchema] = useState(defaultValue)
   const handleChange = useCallback(
@@ -86,11 +90,14 @@ function DiagramPanel() {
 
       const diagramCanvasRect = document.getElementById('diagram-canvas')?.getBoundingClientRect() || { x: 0, y: 0 }
 
-      const coordinates: ICoordinateType = [(x - diagramCanvasRect.x) / scale, (y - diagramCanvasRect.y) / scale]
+      const coordinates: ICoordinateType = [
+        (x - diagramCanvasRect.x) / transform.scale,
+        (y - diagramCanvasRect.y) / transform.scale,
+      ]
       const newNode = createNode(nodeType, coordinates)
       handleChange({ nodes: [...state.nodes, newNode] })
     },
-    [handleChange, scale, state.nodes]
+    [handleChange, transform, state.nodes]
   )
 
   const handleDrag = useCallback((e: any) => {
@@ -101,33 +108,42 @@ function DiagramPanel() {
     (event: any) => {
       if (!event) event = window.event
       const wheelDelta = event.nativeEvent.wheelDelta
+
+      let { scale, translateX, translateY } = transform
       let newScale = scaleRef.current
 
-      let { x, y } = translate
-      const mouseX = (event.clientX - translate.x) / scale
-      const mouseY = (event.clientY - translate.y) / scale
+      const mouseX = (event.clientX - translateX) / scale
+      const mouseY = (event.clientY - translateY) / scale
 
       if (wheelDelta < 0) {
         newScale = newScale - SCALE_STEP
-        x = x + mouseX * SCALE_STEP
-        y = y + mouseY * SCALE_STEP
+        translateX = translateX + mouseX * SCALE_STEP
+        translateY = translateY + mouseY * SCALE_STEP
       }
       if (wheelDelta > 0) {
         newScale = newScale + SCALE_STEP
-        x = x - mouseX * SCALE_STEP
-        y = y - mouseY * SCALE_STEP
+        translateX = translateX - mouseX * SCALE_STEP
+        translateY = translateY - mouseY * SCALE_STEP
       }
+
       if (newScale > 1 || newScale < 0.1) return
       scaleRef.current = Number(newScale.toFixed(2))
-      setScale(scaleRef.current)
-      setTranslate({ x, y })
+
+      setTransform({
+        scale: scaleRef.current,
+        translateX,
+        translateY,
+      })
     },
-    [scale, translate]
+    [transform]
   )
 
   const handleMouseDown = useCallback(
     (event) => {
-      if (dragState === DRAG_STATE.START) {
+      if (
+        dragState === DRAG_STATE.START &&
+        (event.target === panelRef.current || event.target === panelRef.current?.firstChild)
+      ) {
         setDragState(DRAG_STATE.MOVE)
       }
       mouseDownStartPosition.current = {
@@ -141,7 +157,7 @@ function DiagramPanel() {
   const handleMouseMove = useCallback(
     (event) => {
       if (dragState === DRAG_STATE.MOVE) {
-        handleThrottleSetTranslate(event)
+        handleThrottleSetTransform(event)
       }
     },
     [dragState]
@@ -156,15 +172,15 @@ function DiagramPanel() {
     [dragState]
   )
 
-  const handleThrottleSetTranslate = useCallback(
+  const handleThrottleSetTransform = useCallback(
     throttle((e) => {
-      const newTranslate: ITranslate = {
-        x: e.clientX - mouseDownStartPosition.current.x + translate.x,
-        y: e.clientY - mouseDownStartPosition.current.y + translate.y,
-      }
-      setTranslate(newTranslate)
+      setTransform({
+        ...transform,
+        translateX: e.clientX - mouseDownStartPosition.current.x + transform.translateX,
+        translateY: e.clientY - mouseDownStartPosition.current.y + transform.translateY,
+      })
     }, 20),
-    [translate]
+    [transform]
   )
 
   const handleKeyDown = useCallback(
@@ -188,6 +204,7 @@ function DiagramPanel() {
 
   return (
     <div
+      ref={panelRef}
       className="diagram-panel"
       onDrop={handleDrop}
       onDragEnter={handleDrag}
@@ -201,15 +218,9 @@ function DiagramPanel() {
       onKeyUp={handleKeyUp}
       style={{ cursor }}
     >
-      <Diagram
-        value={state}
-        scale={scale}
-        translate={translate}
-        onChange={handleChange}
-        onAddHistory={handleAddHistory}
-      />
+      <Diagram value={state} transform={transform} onChange={handleChange} onAddHistory={handleAddHistory} />
       <NodeList />
-      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={scale} canRedo={canRedo} />
+      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={transform.scale} canRedo={canRedo} />
     </div>
   )
 }

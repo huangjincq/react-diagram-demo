@@ -39,9 +39,11 @@ export interface INodeRefs {
   [id: string]: HTMLDivElement
 }
 
-export interface ITranslate {
-  x:number;
-  y:number;
+
+export interface ITransform {
+  scale: number;
+  translateX: number;
+  translateY: number;
 }
 
 export interface IMousePosition {

@@ -5,18 +5,17 @@ import { LinksCanvas } from './LinksCanvas'
 import { Segment } from './Segment'
 
 import './style.scss'
-import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs, ITranslate } from '../../types'
+import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs, ITransform } from '../../types'
 
 interface DiagramProps {
   value: IDiagramType
   onChange: (value: IDiagramType) => void
-  translate: ITranslate
   onAddHistory: any
-  scale: number
+  transform: ITransform
 }
 
 export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
-  const { value, onChange, onAddHistory, scale, translate } = props
+  const { value, onChange, onAddHistory, transform } = props
   const [segment, setSegment] = useState<ISegmentType | undefined>()
   const { current: portRefs } = useRef<IPortRefs>({}) // keeps the port elements references
   const { current: nodeRefs } = useRef<INodeRefs>({}) // keeps the node elements references
@@ -70,7 +69,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   }
 
   return (
-    <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} scale={scale} translate={translate}>
+    <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} transform={transform}>
       <NodesCanvas
         nodes={value.nodes}
         onChange={onNodesChange}
