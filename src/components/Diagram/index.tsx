@@ -11,7 +11,7 @@ import { cloneDeep } from 'lodash-es'
 interface DiagramProps {
   value: IDiagramType
   onChange: (value: IDiagramType, notAddHistory?: boolean) => void
-  onAddHistory: any
+  onAddHistory: (value: IDiagramType) => void
   transform: ITransform
   activeNodeIds: string[]
 }
@@ -42,7 +42,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     const nextNodes = cloneDeep(value.nodes)
     const index = nextNodes.findIndex((node) => node.id === nodeId)
     nextNodes[index].coordinates = nextCoordinates
-    onAddHistory(nextNodes)
+    onAddHistory({ ...value, nodes: nextNodes })
   }
 
   // when a port is registered, save it to the local reference

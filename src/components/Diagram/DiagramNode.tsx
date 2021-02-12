@@ -75,7 +75,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     onNodePositionChange(id, nextCoords)
   })
 
-  onDragEnd((event: MouseEvent, info: any) => {
+  onDragEnd((event: MouseEvent) => {
     if (!isEqual(dragStartPoint.current, coordinates)) {
       onAddHistory(id, dragStartPoint.current)
     }

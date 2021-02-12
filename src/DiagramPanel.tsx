@@ -3,7 +3,7 @@ import { Diagram } from './components/Diagram'
 import { useHistory } from './hooks/useHistory'
 import { Toolbar } from './components/Toolbar/Toolbar'
 import { NodeList } from './components/NodeList/NodeList'
-import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionArea, INodeType } from './types'
+import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionArea } from './types'
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
 import { checkMouseDownTargetIsDrawPanel, collideCheck } from './utils'
@@ -75,18 +75,20 @@ function DiagramPanel() {
   const handleChange = useCallback(
     (newValue: IDiagramType, notAddHistory?: boolean) => {
       if (notAddHistory) {
-        set({ ...value, ...newValue })
+        set(newValue)
       } else {
-        setWithHistory({ ...value, ...newValue })
+        setWithHistory(newValue)
       }
     },
-    [set, value, setWithHistory]
+    [set, setWithHistory]
   )
 
-  const handleAddHistory = (nodes: INodeType) => {
-    const newValue = { ...value, nodes }
-    addAHistory(newValue)
-  }
+  const handleAddHistory = useCallback(
+    (newValue: IDiagramType) => {
+      addAHistory(newValue)
+    },
+    [addAHistory]
+  )
 
   const handleDrop = useCallback(
     (event: any) => {
