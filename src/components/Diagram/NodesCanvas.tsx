@@ -6,7 +6,6 @@ interface NodesCanvasProps {
   nodes: INodeType[]
   onNodeMount: (id: string, dom: HTMLDivElement) => void
   onPortMount: (id: string, dom: HTMLElement) => void
-  onNodeRemove: any
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void

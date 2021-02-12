@@ -56,13 +56,6 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     nodeRefs[nodeId] = nodeEl
   }
 
-  // when a node is deleted, remove its references
-  const onNodeRemove = useCallback((nodeId, inputsPorts, outputsPorts) => {
-    delete nodeRefs[nodeId]
-    inputsPorts.forEach((input: string) => delete portRefs[input])
-    outputsPorts.forEach((output: string) => delete portRefs[output])
-  }, [])
-
   // when a new segment is dragged, save it to the local state
   const onDragNewSegment = useCallback((portId, from, to) => {
     setSegment({ id: `segment-${portId}`, from, to })
@@ -92,7 +85,6 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         nodes={value.nodes}
         onNodeMount={onNodeRegister}
         onPortMount={onPortRegister}
-        onNodeRemove={onNodeRemove}
         onDragNewSegment={onDragNewSegment}
         onSegmentFail={onSegmentFail}
         onNodePositionChange={handleNodePositionChange}

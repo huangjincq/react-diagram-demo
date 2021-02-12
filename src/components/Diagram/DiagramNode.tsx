@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react'
 import useDrag from '../../hooks/useDrag'
-import useNodeUnregistration from '../../hooks/useNodeUnregistration'
 import { INodeType, ICoordinateType } from '../../types'
 import { nodesConfig } from '../NodeTypes/config'
 import { isEqual } from 'lodash-es'
@@ -15,7 +14,6 @@ interface DiagramNodeProps {
   onAddHistory: (id: string, nextCoords: ICoordinateType) => void
   onNodeMount: (id: string, dom: HTMLDivElement) => void
   onPortMount: (id: string, dom: HTMLElement) => void
-  onNodeRemove: any
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
@@ -28,7 +26,6 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     onNodeValueChange,
     onNodePositionChange,
     onPortMount,
-    onNodeRemove,
     onDragNewSegment,
     onNodeMount,
     onSegmentFail,
@@ -80,9 +77,6 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
       onAddHistory(id, dragStartPoint.current)
     }
   })
-
-  // todo to test
-  useNodeUnregistration(onNodeRemove, inputs, outputs, id)
 
   const options = { nodeId: id, onPortMount, onDragNewSegment, onSegmentFail, onSegmentConnect }
 
