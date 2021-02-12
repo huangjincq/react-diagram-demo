@@ -57,7 +57,7 @@ const CURSOR_MAP = {
 }
 
 function DiagramPanel() {
-  const { value, set, setWithHistory, addAHistory, undo, redo, clear, canUndo, canRedo } = useHistory(defaultValue)
+  const { value, set, setWithHistory, addAHistory, undo, redo, canUndo, canRedo } = useHistory(defaultValue)
   const [transform, setTransform] = useState<ITransform>({
     scale: 1,
     translateX: 0,
@@ -80,7 +80,7 @@ function DiagramPanel() {
         setWithHistory({ ...value, ...newValue })
       }
     },
-    [set, value]
+    [set, value, setWithHistory]
   )
 
   const handleAddHistory = (nodes: INodeType) => {
@@ -164,18 +164,7 @@ function DiagramPanel() {
     [dragState]
   )
 
-  const handleMouseMove = useCallback(
-    (event) => {
-      if (dragState === DRAG_STATE.MOVE) {
-        handleThrottleSetTransform(event)
-      }
-      if (dragState === DRAG_STATE.SELECTION) {
-        handleThrottleSetSelectionArea(event)
-      }
-    },
-    [dragState]
-  )
-
+  // eslint-disable-next-line
   const handleThrottleSetSelectionArea = useCallback(
     throttle((e) => {
       if (mouseDownStartPosition.current && panelRef.current) {
@@ -212,6 +201,7 @@ function DiagramPanel() {
     [dragState]
   )
 
+  // eslint-disable-next-line
   const handleThrottleSetTransform = useCallback(
     throttle((e) => {
       if (mouseDownStartPosition.current) {
@@ -222,7 +212,19 @@ function DiagramPanel() {
         })
       }
     }, 20),
-    [transform]
+    [transform, setTransform]
+  )
+
+  const handleMouseMove = useCallback(
+    (event) => {
+      if (dragState === DRAG_STATE.MOVE) {
+        handleThrottleSetTransform(event)
+      }
+      if (dragState === DRAG_STATE.SELECTION) {
+        handleThrottleSetSelectionArea(event)
+      }
+    },
+    [dragState, handleThrottleSetSelectionArea, handleThrottleSetTransform]
   )
 
   const handleKeyDown = useCallback(
