@@ -1,96 +1,50 @@
 import { throttle } from 'lodash-es'
 import { useRef, useCallback, useEffect } from 'react'
+import { ICoordinateType } from '../types'
 
 const DISABLED_DRAG_TAGS = ['INPUT', 'TEXTAREA']
 
-const defaultOptions = {
-  /**
-   * A custom ref to be used in place of a new one
-   * @default undefined
-   */
+interface DefaultOptions {
+  ref: React.RefObject<any> | null
+  throttleBy: number
+}
+
+interface InfoType {
+  isDragging: boolean
+  start: ICoordinateType
+  end: ICoordinateType
+  offset: ICoordinateType
+}
+
+const defaultOptions: DefaultOptions = {
   ref: null,
-  /**
-   * Throttle the onDrag handler by the given ms
-   * @default 0ms
-   */
   throttleBy: 0,
 }
 
-/**
- * Returns the click coordinates of a MouseEvent
- * @param event
- * @returns {*[]}
- */
-const getEventCoordinates = (event) => [event.clientX, event.clientY]
+const getEventCoordinates = (event: MouseEvent): ICoordinateType => [event.clientX, event.clientY]
 
 /**
  * Create a persistent callback reference that will live trough a component lifecycle
  * @param ref
  * @returns {Function}
  */
-const CreateCallbackRef = (ref) =>
+const CreateCallbackRef = (ref: any) =>
   useCallback(
     (callback) => {
       if (!ref.current || callback !== ref.current) {
-        // eslint-disable-next-line no-param-reassign
         ref.current = callback
       }
     },
     [ref]
   )
 
-/**
- * A custom hook exposing handlers and ref for developing draggable React elements.
- *
- * ## Basic Usage:
- *
- * ```
- * const DraggableItem = () => {
- *    const { ref, isDragging, onDragStart, onDrag, onDragEnd } = useDrag();
- *
- *    onDragStart(dragStartHandler);
- *
- *    onDrag(dragHandler);
- *
- *    onDragEnd(dragEndHandler);
- *
- *    return (
- *      <div ref={ref}>
- *        Drag me!
- *      </div>
- *    );
- * }
- * ```
- *
- * ## Options:
- *
- * ```
- * const DraggingItem = () => {
- *    const ref = useRef();
- *    const options = { ref, throttleBy: 60 };
- *    const { isDragging, onDragStart, onDrag, onDragEnd } = useDrag(options);
- *
- *    onDragStart(dragStartHandler);
- *
- *    onDrag(dragHandler);
- *
- *    onDragEnd(dragEndHandler);
- *
- *    return (
- *      <div ref={ref}>
- *        Drag me!
- *      </div>
- *    );
- * }
- * ```
- */
 const useDrag = (options = defaultOptions) => {
   const targetRef = options.ref // the target draggable element
-  const dragStartHandlerRef = useRef() // a ref to user's onDragStart handler
-  const dragHandlerRef = useRef() // a ref to user's onDrag handler
-  const dragEndHandlerRef = useRef() // a ref to user's onDragEnd handler
+  const dragStartHandlerRef = useRef<any>() // a ref to user's onDragStart handler
+  const dragHandlerRef = useRef<any>() // a ref to user's onDrag handler
+  const dragEndHandlerRef = useRef<any>() // a ref to user's onDragEnd handler
   // the dragging state is created from a useRef rather than a useState to avoid rendering during the dragging process
-  const { current: info } = useRef({ isDragging: false, start: null, end: null, offset: null })
+  const { current: info } = useRef<InfoType>({ isDragging: false, start: [0, 0], end: [0, 0], offset: [0, 0] })
 
   /**
    * When the dragging starts, updates the state then perform the user's onDragStart handler if exists
@@ -98,10 +52,14 @@ const useDrag = (options = defaultOptions) => {
   const onDragStart = useCallback(
     (event) => {
       const targetTagName = event.target.tagName
-      if (!info.isDragging && targetRef.current.contains(event.target) && !DISABLED_DRAG_TAGS.includes(targetTagName)) {
+      if (
+        !info.isDragging &&
+        targetRef?.current.contains(event.target) &&
+        !DISABLED_DRAG_TAGS.includes(targetTagName)
+      ) {
         info.isDragging = true
-        info.end = null
-        info.offset = null
+        info.end = [0, 0]
+        info.offset = [0, 0]
         info.start = getEventCoordinates(event)
 
         if (dragStartHandlerRef.current) {
@@ -109,7 +67,7 @@ const useDrag = (options = defaultOptions) => {
         }
       }
     },
-    [targetRef.current, info, dragStartHandlerRef.current]
+    [targetRef, info, dragStartHandlerRef.current]
   )
 
   /**
@@ -125,7 +83,7 @@ const useDrag = (options = defaultOptions) => {
         }
       }
     }, options.throttleBy),
-    [targetRef.current, info, dragHandlerRef.current]
+    [targetRef, info, dragHandlerRef.current]
   )
 
   /**
@@ -142,33 +100,31 @@ const useDrag = (options = defaultOptions) => {
         }
       }
     },
-    [targetRef.current, info, dragEndHandlerRef.current]
+    [targetRef, info, dragEndHandlerRef.current]
   )
 
   /**
    * When the layout renders the target item, assign the dragging events
    */
   useEffect(() => {
-    /* eslint-disable no-underscore-dangle */
-    const _onDragStart = (e) => onDragStart(e)
-    const _onDrag = (e) => onDrag(e)
-    const _onDragEnd = (e) => onDragEnd(e)
-    /* eslint-enable no-underscore-dangle */
+    const _onDragStart = (e: any) => onDragStart(e)
+    const _onDrag = (e: any) => onDrag(e)
+    const _onDragEnd = (e: any) => onDragEnd(e)
 
-    if (targetRef.current) {
+    if (targetRef?.current) {
       targetRef.current.addEventListener('mousedown', _onDragStart)
       document.addEventListener('mousemove', _onDrag)
       document.addEventListener('mouseup', _onDragEnd)
     }
 
     return () => {
-      if (targetRef.current) {
+      if (targetRef?.current) {
         targetRef.current.removeEventListener('mousedown', _onDragStart)
         document.removeEventListener('mousemove', _onDrag)
         document.removeEventListener('mouseup', _onDragEnd)
       }
     }
-  }, [targetRef.current])
+  }, [targetRef])
 
   return {
     ref: targetRef,
