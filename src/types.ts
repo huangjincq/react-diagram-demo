@@ -7,7 +7,7 @@ export type ICoordinateType = [number, number]
 
 export interface INodeType {
   id: string
-  type: 'nodeTypeInput' | 'nodeTypeSelect'
+  type: 'nodeTypeInput' | 'nodeTypeSelect' | 'nodeTypeButton'
   inputs: IPointType[]
   outputs: IPointType[]
   coordinates: ICoordinateType

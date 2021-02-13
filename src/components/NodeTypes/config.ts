@@ -1,35 +1,42 @@
 import { NodeTypeInput } from './NodeTypeInput'
 import { NodeTypeSelect } from './NodeTypeSelect'
+import { NodeTypeButton } from './NodeTypeButton'
 import { AppleOutlined, WindowsOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
 
-
 export const nodesConfig = {
-  'nodeTypeInput': {
+  nodeTypeInput: {
     component: NodeTypeInput,
     label: 'Input 节点',
     icon: AppleOutlined,
     defaultData: {
-      inputValue: 'test'
-    }
+      inputValue: 'test',
+    },
   },
-  'nodeTypeSelect': {
+  nodeTypeSelect: {
     component: NodeTypeSelect,
     label: 'Select 节点',
     icon: WindowsOutlined,
     defaultData: {
-      selectValue: ''
-    }
-  }
+      selectValue: '',
+    },
+  },
+  nodeTypeButton: {
+    component: NodeTypeButton,
+    label: 'Button 节点',
+    icon: WindowsOutlined,
+    defaultData: {
+      selectValue: '',
+    },
+  },
 }
 
 export const nodesList = Object.entries(nodesConfig).map(([key, value]) => {
   return {
     ...value,
-    type: key
+    type: key,
   }
 })
-
 
 export const createNode = (nodeType: string, coordinates = [0, 0]) => {
   return {
@@ -37,9 +44,7 @@ export const createNode = (nodeType: string, coordinates = [0, 0]) => {
     coordinates,
     type: nodeType,
     inputs: [],
-    outputs: [
-      {id: uuidv4(), disabled: false}
-    ],
-    data: (nodesConfig as any)[nodeType]?.defaultData || {}
+    outputs: [{ id: uuidv4(), disabled: false }],
+    data: (nodesConfig as any)[nodeType]?.defaultData || {},
   }
 }

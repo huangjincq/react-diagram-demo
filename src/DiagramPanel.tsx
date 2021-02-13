@@ -27,12 +27,25 @@ const defaultValue: IDiagramType = {
       type: 'nodeTypeSelect',
       coordinates: [400, 200],
       inputs: [{ id: 'input-1', isLinked: false }],
-      outputs: [
-        { id: 'port-5', isLinked: false },
-        { id: 'port-6', isLinked: false },
-      ],
+      outputs: [{ id: 'port-5', isLinked: false }],
       data: {
         selectValue: '',
+      },
+    },
+    {
+      id: 'node-3',
+      type: 'nodeTypeButton',
+      coordinates: [700, 300],
+      inputs: [],
+      outputs: [
+        { id: 'port-6', isLinked: false },
+        { id: 'port-7', isLinked: false },
+      ],
+      data: {
+        buttonList: [
+          { text: 'button-1', id: 'port-6' },
+          { text: 'button-2', id: 'port-7' },
+        ],
       },
     },
   ],
