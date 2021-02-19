@@ -14,7 +14,8 @@ import { getPathMidpoint } from '../../utils'
 const getEntityCoordinates = (
   entity: EntityPutType | undefined,
   portRefs: IPortRefs,
-  nodeRefs: INodeRefs
+  nodeRefs: INodeRefs,
+  canvasRef: HTMLDivElement | null
 ): ICoordinateType | undefined => {
   if (entity && entity.type === 'node' && nodeRefs[entity.id]) {
     const nodeEl = nodeRefs[entity.id]
@@ -27,7 +28,7 @@ const getEntityCoordinates = (
 
     return [
       parentNodeCoordinates[0] + portDom.offsetLeft + portDom.offsetWidth / 2,
-      parentNodeCoordinates[1] + portDom.offsetTop + portDom.offsetHeight / 2,
+      parentNodeCoordinates[1] + portDom.offsetTop + portDom.offsetHeight / 2
     ]
   }
   return undefined
@@ -41,31 +42,31 @@ interface LinkProps {
 }
 
 export const Link: React.FC<LinkProps> = React.memo((props) => {
-  const { input, output, link, onDelete } = props
+  const {input, output, link, onDelete} = props
   const pathRef = useRef<SVGPathElement>(null)
   const [labelPosition, setLabelPosition] = useState<ICoordinateType>()
-  const { canvasRef, portRefs, nodeRefs } = useDiagramManager()
+  const {canvasRef, portRefs, nodeRefs} = useDiagramManager()
 
   /*
    * 计算 起点的 坐标
    * 为啥要 依赖 canvasRef 呢
    * 因为：子节点 会比父节点 先 mount， 渲染link的时候port可能还未渲染 ，所以等 canvas层渲染完成后 重新绘制一次线
    * */
-  const inputPoint = useMemo(() => getEntityCoordinates(input, portRefs, nodeRefs), [
+  const inputPoint = useMemo(() => getEntityCoordinates(input, portRefs, nodeRefs, canvasRef), [
     input,
     portRefs,
     nodeRefs,
-    canvasRef,
+    canvasRef
   ])
 
   /*
    * 计算 终点的 坐标
    * */
-  const outputPoint = useMemo(() => getEntityCoordinates(output, portRefs, nodeRefs), [
+  const outputPoint = useMemo(() => getEntityCoordinates(output, portRefs, nodeRefs, canvasRef), [
     output,
     portRefs,
     nodeRefs,
-    canvasRef,
+    canvasRef
   ])
 
   /*
@@ -85,9 +86,9 @@ export const Link: React.FC<LinkProps> = React.memo((props) => {
 
   return (
     <g className={'diagram-link'}>
-      <path d={path} className="bi-link-ghost" onDoubleClick={onDoubleClick} />
-      <path d={path} ref={pathRef} className="bi-link-path" onDoubleClick={onDoubleClick} />
-      {labelPosition && <LinkDelete position={labelPosition} />}
+      <path d={path} className="bi-link-ghost" onDoubleClick={onDoubleClick}/>
+      <path d={path} ref={pathRef} className="bi-link-path" onDoubleClick={onDoubleClick}/>
+      {labelPosition && <LinkDelete position={labelPosition}/>}
     </g>
   )
 })
