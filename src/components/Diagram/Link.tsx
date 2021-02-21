@@ -80,15 +80,15 @@ export const Link: React.FC<LinkProps> = React.memo((props) => {
     }
   }, [pathRef, inputPoint, outputPoint])
 
-  const onDoubleClick = useCallback(() => {
+  const handleDelete = useCallback(() => {
     onDelete(link)
   }, [onDelete, link])
 
   return (
     <g className={'diagram-link'}>
-      <path d={path} className="bi-link-ghost" onDoubleClick={onDoubleClick}/>
-      <path d={path} ref={pathRef} className="bi-link-path" onDoubleClick={onDoubleClick}/>
-      {labelPosition && <LinkDelete position={labelPosition}/>}
+      <path d={path} className="bi-link-ghost" />
+      <path d={path} ref={pathRef} className="bi-link-path" />
+      {labelPosition && <LinkDelete position={labelPosition} onDelete={handleDelete}/>}
     </g>
   )
 })
