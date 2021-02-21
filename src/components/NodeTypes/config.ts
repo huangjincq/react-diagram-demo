@@ -1,7 +1,7 @@
 import { NodeTypeInput } from './NodeTypeInput'
 import { NodeTypeSelect } from './NodeTypeSelect'
 import { NodeTypeButton } from './NodeTypeButton'
-import { AppleOutlined, WindowsOutlined } from '@ant-design/icons'
+import { AppleOutlined, WindowsOutlined, GithubOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
 
 export enum NodeTypes {
@@ -24,7 +24,7 @@ export const nodesConfig = {
   [NodeTypes.nodeTypeButton]: {
     component: NodeTypeButton,
     label: 'Button 节点',
-    icon: WindowsOutlined
+    icon: GithubOutlined
   }
 }
 
