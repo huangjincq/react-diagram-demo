@@ -7,6 +7,7 @@ import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionAr
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
 import { checkMouseDownTargetIsDrawPanel, collideCheck } from './utils'
+import { useThrottleFn } from 'react-use'
 
 // const manyNode = new Array(100).fill({}).map()
 
@@ -179,6 +180,7 @@ function DiagramPanel() {
     [dragState]
   )
 
+  // TODO throttle 不生效 因为有依赖  transform value
   // eslint-disable-next-line
   const handleThrottleSetSelectionArea = useCallback(
     throttle((e) => {
@@ -215,7 +217,7 @@ function DiagramPanel() {
     },
     [dragState]
   )
-
+  // TODO throttle 不生效 因为有依赖  transform setTransform
   // eslint-disable-next-line
   const handleThrottleSetTransform = useCallback(
     throttle((e) => {
