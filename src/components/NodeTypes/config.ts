@@ -4,47 +4,71 @@ import { NodeTypeButton } from './NodeTypeButton'
 import { AppleOutlined, WindowsOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
 
+export enum NodeTypes {
+  nodeTypeInput = 'nodeTypeInput',
+  nodeTypeSelect = 'nodeTypeSelect',
+  nodeTypeButton = 'nodeTypeButton'
+}
+
 export const nodesConfig = {
-  nodeTypeInput: {
+  [NodeTypes.nodeTypeInput]: {
     component: NodeTypeInput,
     label: 'Input 节点',
-    icon: AppleOutlined,
-    defaultData: {
-      inputValue: 'test',
-    },
+    icon: AppleOutlined
   },
-  nodeTypeSelect: {
+  [NodeTypes.nodeTypeSelect]: {
     component: NodeTypeSelect,
     label: 'Select 节点',
-    icon: WindowsOutlined,
-    defaultData: {
-      selectValue: '',
-    },
+    icon: WindowsOutlined
   },
-  nodeTypeButton: {
+  [NodeTypes.nodeTypeButton]: {
     component: NodeTypeButton,
     label: 'Button 节点',
-    icon: WindowsOutlined,
-    defaultData: {
-      selectValue: '',
-    },
-  },
+    icon: WindowsOutlined
+  }
 }
 
 export const nodesList = Object.entries(nodesConfig).map(([key, value]) => {
   return {
     ...value,
-    type: key,
+    type: key
   }
 })
 
 export const createNode = (nodeType: string, coordinates = [0, 0]) => {
-  return {
+  const nodeData = {
     id: uuidv4(),
     coordinates,
     type: nodeType,
     inputs: [],
-    outputs: [{ id: uuidv4(), disabled: false }],
-    data: (nodesConfig as any)[nodeType]?.defaultData || {},
+    outputs: [{id: uuidv4(), disabled: false}],
+    data: {}
   }
+  switch (nodeType) {
+    case NodeTypes.nodeTypeInput:
+      nodeData.data = {
+        inputValue: 'test'
+      }
+      break
+    case NodeTypes.nodeTypeSelect:
+      nodeData.data = {
+        inputValue: ''
+      }
+      break
+    case NodeTypes.nodeTypeButton:
+      nodeData.data = {
+        buttonList: [
+          {text: 'button-1', id: uuidv4()},
+          {text: 'button-2', id: uuidv4()}
+        ]
+      }
+      nodeData.outputs = (nodeData.data as any).buttonList.map((item: any) => ({
+        id: item.id,
+        disable: false
+      }))
+
+      break
+  }
+
+  return nodeData
 }
