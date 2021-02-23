@@ -18,13 +18,13 @@ interface InfoType {
 
 const defaultOptions: DefaultOptions = {
   ref: null,
-  throttleBy: 0
+  throttleBy: 0,
 }
 
 const getEventCoordinates = (event: MouseEvent): ICoordinateType => [event.clientX, event.clientY]
 
 /**
- * Create a persistent callback reference that will live trough a component lifecycle
+ * 创建一个持久回调引用
  * @param ref
  * @returns {Function}
  */
@@ -39,16 +39,12 @@ const CreateCallbackRef = (ref: any) =>
   )
 
 const useDrag = (options = defaultOptions) => {
-  const targetRef = options.ref // the target draggable element
-  const dragStartHandlerRef = useRef<any>() // a ref to user's onDragStart handler
-  const dragHandlerRef = useRef<any>() // a ref to user's onDrag handler
-  const dragEndHandlerRef = useRef<any>() // a ref to user's onDragEnd handler
-  // the dragging state is created from a useRef rather than a useState to avoid rendering during the dragging process
-  const {current: info} = useRef<InfoType>({isDragging: false, start: [0, 0], end: [0, 0], offset: [0, 0]})
+  const targetRef = options.ref
+  const dragStartHandlerRef = useRef<any>()
+  const dragHandlerRef = useRef<any>()
+  const dragEndHandlerRef = useRef<any>()
+  const { current: info } = useRef<InfoType>({ isDragging: false, start: [0, 0], end: [0, 0], offset: [0, 0] })
 
-  /**
-   * When the dragging starts, updates the state then perform the user's onDragStart handler if exists
-   */
   const onDragStart = useCallback(
     (event) => {
       const targetTagName = event.target.tagName
@@ -63,16 +59,13 @@ const useDrag = (options = defaultOptions) => {
         info.start = getEventCoordinates(event)
 
         if (dragStartHandlerRef.current) {
-          dragStartHandlerRef.current(event, {...info})
+          dragStartHandlerRef.current(event, { ...info })
         }
       }
     },
     [targetRef, info, dragStartHandlerRef]
   )
 
-  /**
-   * Whilst dragging the element, updates the state then perform the user's onDrag handler if exists
-   */
   // eslint-disable-next-line
   const onDrag = useCallback(
     throttle((event) => {
@@ -80,16 +73,13 @@ const useDrag = (options = defaultOptions) => {
         info.offset = [info.start[0] - event.clientX, info.start[1] - event.clientY]
 
         if (dragHandlerRef.current) {
-          dragHandlerRef.current(event, {...info})
+          dragHandlerRef.current(event, { ...info })
         }
       }
     }, options.throttleBy),
     [targetRef, info, dragHandlerRef]
-    )
+  )
 
-  /**
-   * When the dragging ends, updates the state then perform the user's onDragEnd handler if exists
-   */
   const onDragEnd = useCallback(
     (event) => {
       if (info.isDragging) {
@@ -97,16 +87,13 @@ const useDrag = (options = defaultOptions) => {
         info.end = getEventCoordinates(event)
 
         if (dragEndHandlerRef.current) {
-          dragEndHandlerRef.current(event, {...info})
+          dragEndHandlerRef.current(event, { ...info })
         }
       }
     },
     [info, dragEndHandlerRef]
   )
 
-  /**
-   * When the layout renders the target item, assign the dragging events
-   */
   useEffect(() => {
     const _onDragStart = (e: any) => onDragStart(e)
     const _onDrag = (e: any) => onDrag(e)
@@ -132,7 +119,7 @@ const useDrag = (options = defaultOptions) => {
     ref: targetRef,
     onDragStart: CreateCallbackRef(dragStartHandlerRef),
     onDrag: CreateCallbackRef(dragHandlerRef),
-    onDragEnd: CreateCallbackRef(dragEndHandlerRef)
+    onDragEnd: CreateCallbackRef(dragEndHandlerRef),
   }
 }
 

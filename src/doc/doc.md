@@ -76,7 +76,7 @@ return (
 )
 ```
 
-3.  `onDrop` 在目标区域释放的时候获取携带数据、生成一个 `node` 对象，并且添加到 `nodes` 中 [源代码](http://www.juejin.com)
+3.  `onDrop` 在目标区域释放的时候,获取携带数据根据鼠标所在位置生成一个 `node` 对象，并且添加到 `nodes` 中 [源代码](http://www.juejin.com)
 
 ```typescript
 // 伪代码
@@ -99,6 +99,13 @@ return <div onDrop={handleDrop}></div>
 ```
 
 ## 4.移动 node
+
+1. 将画布设为相对定位 position: relative，然后把每个 `node` 设为绝对定位 position: absolute。
+2. `mousedown` 记录 鼠标按下的起点位置 `info.start = [event.clientX, event.clientY]`
+3. `mousemove` 计算出移动的偏移量 `offset = [info.start[0] - event.clientX, info.start[1] - event.clientY]`
+4. 通过 `offset` 偏移量 更新 `node` 的 `coordinates`
+
+为了复用 移动的逻辑 把 mouse 移动 事件封装成 [`useDrag`]() hook
 
 ## 5.点和 node 点关系
 
