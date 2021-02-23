@@ -66,9 +66,16 @@ function DiagramPanel() {
   const mouseDownStartPosition = useRef<IMousePosition | undefined>()
   const [activeNodeIds, setActiveNodeIds] = useState<string[]>([])
 
-  const scaleRef = useRef<number>(1)
   const panelRef = useRef<HTMLDivElement>(null)
   const selectionAreaRef = useRef<HTMLDivElement>(null)
+
+  // eslint-disable-next-line
+  const handleThrottleSetTransform = useCallback(
+    throttle((transform) => {
+      setTransform(transform)
+    }, 20),
+    []
+  )
 
   const handleChange = useCallback(
     (newValue: IDiagramType, notAddHistory?: boolean) => {
@@ -119,32 +126,30 @@ function DiagramPanel() {
       const wheelDelta = event.nativeEvent.wheelDelta
 
       let { scale, translateX, translateY } = transform
-      let newScale = scaleRef.current
 
       const offsetX = ((event.clientX - translateX) * SCALE_STEP) / scale
       const offsetY = ((event.clientY - translateY) * SCALE_STEP) / scale
 
       if (wheelDelta < 0) {
-        newScale = newScale - SCALE_STEP
+        scale = scale - SCALE_STEP
         translateX = translateX + offsetX
         translateY = translateY + offsetY
       }
       if (wheelDelta > 0) {
-        newScale = newScale + SCALE_STEP
+        scale = scale + SCALE_STEP
         translateX = translateX - offsetX
         translateY = translateY - offsetY
       }
 
-      if (newScale > 1 || newScale < 0.1) return
-      scaleRef.current = Number(newScale.toFixed(2))
+      if (scale > 1 || scale < 0.1) return
 
-      setTransform({
-        scale: scaleRef.current,
+      handleThrottleSetTransform({
+        scale: Number(scale.toFixed(2)),
         translateX,
         translateY,
       })
     },
-    [transform]
+    [handleThrottleSetTransform, transform]
   )
 
   const handleMouseDown = useCallback(
@@ -166,7 +171,6 @@ function DiagramPanel() {
     [dragState, transform]
   )
 
-  // TODO throttle 不生效 因为有依赖  transform value
   // eslint-disable-next-line
   const handleThrottleSetSelectionArea = useCallback(
     throttle((e) => {
@@ -202,14 +206,6 @@ function DiagramPanel() {
       mouseDownStartPosition.current = undefined
     },
     [dragState]
-  )
-
-  // eslint-disable-next-line
-  const handleThrottleSetTransform = useCallback(
-    throttle((transform) => {
-      setTransform(transform)
-    }, 20),
-    []
   )
 
   const handleMouseMove = useCallback(
