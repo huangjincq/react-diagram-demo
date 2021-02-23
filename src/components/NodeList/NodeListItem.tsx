@@ -3,19 +3,18 @@ import React, { useCallback } from 'react'
 import './style.scss'
 
 export interface NodeListItemProps {
-  icon: React.FC;
-  label: string;
-  type: string;
+  icon: React.FC
+  label: string
+  type: string
 }
 
-
-export const NodeListItem: React.FC<NodeListItemProps> = React.memo(({icon, label, type}) => {
-
-  const handleDragStart = useCallback((event: any) => {
-    if (event.dataTransfer) {
-      event.dataTransfer.setData('nodeType', type)
-    }
-  }, [type])
+export const NodeListItem: React.FC<NodeListItemProps> = React.memo(({ icon, label, type }) => {
+  const handleDragStart = useCallback(
+    (event: any) => {
+      event.dataTransfer?.setData('nodeType', type)
+    },
+    [type]
+  )
   return (
     <div className="node-list-item" draggable onDragStart={handleDragStart}>
       {icon && React.createElement(icon)}
@@ -25,4 +24,3 @@ export const NodeListItem: React.FC<NodeListItemProps> = React.memo(({icon, labe
 })
 
 NodeListItem.displayName = 'NodeListItem'
-
