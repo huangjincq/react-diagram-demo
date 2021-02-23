@@ -1,39 +1,39 @@
 /*
-* 坐标 数据类型
-* */
+ * 坐标 数据类型
+ * */
 export type ICoordinateType = [number, number]
 
 /*
-* port 数据类型
-* */
+ * port 数据类型
+ * */
 export interface IPointType {
   id: string
   isLinked?: boolean // 该点 是否已经被连接
 }
 
 /*
-* node 数据类型
-* */
+ * node 数据类型
+ * */
 export interface INodeType {
   id: string
   type: 'nodeTypeInput' | 'nodeTypeSelect' | 'nodeTypeButton' // node 类型
   inputs: IPointType[] // node 输入点
   outputs: IPointType[] // node 输出点
-  coordinates: ICoordinateType  // [node left 值，node top 值]
+  coordinates: ICoordinateType // [node left 值，node top 值]
   data: any // node 携带数据
 }
 
 /*
-* link 数据类型
-* */
+ * link 数据类型
+ * */
 export interface ILinkType {
   input: string // 起点 id
   output: string // 终点 id
 }
 
 /*
-*  数据类型
-* */
+ *  数据类型
+ * */
 export interface IDiagramType {
   nodes: INodeType[] // 所有 node
   links: ILinkType[] // 所有 link
@@ -62,6 +62,8 @@ export interface ITransform {
 export interface IMousePosition {
   x: number
   y: number
+  relativeX: number
+  relativeY: number
 }
 
 export interface ISelectionArea {

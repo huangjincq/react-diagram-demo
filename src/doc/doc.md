@@ -9,7 +9,7 @@ highlight:
 
 ## 前言
 
-> 最近做了一个 svg 图表项目记录总结一下项目中遇到的问题和技术要点
+> 最近做了一个 svg 图表项目 记录总结一下项目中遇到的问题和技术要点
 
 ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1068f6b37be7424aa995242d79605c66~tplv-k3u1fbpfcp-watermark.image)
 
@@ -49,12 +49,12 @@ highlight:
 
 ## 2.数据结构分析
 
-根据功能我们定义一下数据类型如下：![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e141176ce3e34173b56ea5c48692aed7~tplv-k3u1fbpfcp-watermark.image)
+根据功能我们定义一下数据结构如下：
 
 ![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ff40cc6f20454cdb946021ea6b440448~tplv-k3u1fbpfcp-watermark.image)
 
-nodes 用来渲染 页面所有的 node
-links 用来根据 起点终点 的 id 渲染 svg 曲线
+`nodes` 用来渲染 页面所有的 节点
+`links` 用来渲染连线
 
 ## 3.拖拽元素到画布
 
@@ -98,7 +98,7 @@ const handleDrop = useCallback(
 return <div onDrop={handleDrop}></div>
 ```
 
-## 4.移动 node
+## 4.移动 `node`
 
 1. 将画布设为相对定位 position: relative，然后把每个 `node` 设为绝对定位 position: absolute。
 2. `mousedown` 记录 鼠标按下的起点位置 `info.start = [event.clientX, event.clientY]`
@@ -109,9 +109,18 @@ return <div onDrop={handleDrop}></div>
 
 在 `DiagramNode` 组件中 更新 新的 `coordinates` [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/components/Diagram/DiagramNode.tsx#L65)
 
-## 5.点和 node 点关系
+## 5.`node` 、`port` 、`link` 的关系
 
-一个 `node` 内可能有多个输入和输出的点，我们移动的是 `node` ，修改的是 `node` 的 `left` 和 `top` 值，我们在移动的同时也要更新由 `port` 生成的 `link`。所以我们需要遵循一个约定。`port` 是 position:relative 定位在 `node` 内，我们通过 `node` 的 `left` 和 `top` 值，加上 `offsetLeft`/`offsetTop` 就可以实时获取 `port` 当前所在的坐标。（这里需要注意的是 `offsetLeft`/`offsetTop` 是找最近的父元素，然后获取偏移量，要保证找到最近的父元素是 `node` 而不是其他定位元素）
+- 一个 `node` 内可能有多个输入和输出的 `port`
+- 一条 `link` 是 `port` 或者 `node` 所对应在 `svg` 内的坐标生成
+
+- 我们移动的是 `node` 修改的是 `node` 的 `left` 和 `top`
+
+- 我们在移动的同时也要更新由 `port` 生成的 `link`。
+
+所以我们需要遵循一个约定：`port` 是 position:relative 定位在 `node` 内，我们通过 `node` 的 `left` 和 `top` 加上 `offsetLeft`/`offsetTop` 就可以实时获取 `port` 当前所在的坐标。
+
+_这里需要注意的是 `offsetLeft`/`offsetTop` 是找最近的父元素，然后获取偏移量，要保证找到最近的父元素是 `node` 而不是其他定位元素_
 
 ## 6.默认连线原理
 
@@ -124,6 +133,8 @@ return <div onDrop={handleDrop}></div>
 ```
 
 该代码可以在 `svg` 元素下 生成起点 坐标 (0,0) 终点为 (50,80) 的红色直线，**注意 坐标的 原点是 svg 元素的左上角**
+
+![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7e582ccf124543fb8380bdfed9d0a100~tplv-k3u1fbpfcp-watermark.image)
 
 而连线是根据 `links` 数据生成，一条 `link` 由 `input`(起点) `output` (终点) 组成，所以我们只需要知道 起点元素 在 svg 内的坐标，即可把线画出来。
 
@@ -144,32 +155,134 @@ return <div className="node" ref={ref}></div>
 
 3. 然后我们将分成两种情况
 
-1. 情况一：起点是 `port`, 终点是 `node` 例: `[{input: 'port-1', output: 'node-1'}]`
+   1. 情况一：起点是 `port`, 终点是 `node` 例: `[{input: 'port-1', output: 'node-1'}]`
 
-   起点 `port-1` 的位置计算方法:
+      起点 `port-1` 的位置计算方法:
 
-   1. 找到 `port-1` 父元素 `node` 的 `coordinates` 坐标
-   2. 找到 `port-1` 的 dom 节点 `port1Dom`
-   3. 得出 `port-1` 的坐标 为 `[coordinates[0] + port1Dom.offsetLeft + port1Dom.offsetWidth / 2, coordinates[1] + port1Dom.offsetTop + port1Dom.offsetHeight / 2]`
+      1. 找到 `port-1` 父元素 `node` 的 `coordinates` 坐标 [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/components/Diagram/LinksCanvas.tsx#L24)
+      2. 找到 `port-1` 的 dom 节点 `port1Dom`
+      3. 得出 `port-1` 的坐标 为 `[coordinates[0] + port1Dom.offsetLeft + port1Dom.offsetWidth / 2, coordinates[1] + port1Dom.offsetTop + port1Dom.offsetHeight / 2]` [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/components/Diagram/Link.tsx#L14)
 
-   终点 `node-1` 的位置计算方法(node 连接位置为左边的中间):
+      终点 `node-1` 的位置计算方法(node 连接位置为左边的中间):
 
-   1. 找到 `node-1` 父元素 `node` 的 `coordinates` 坐标
-   2. 找到 `node-1` 的 dom 节点 `node1Dom`
-   3. 得出 `node-1` 的坐标 为 `[coordinates[0], coordinates[1] + node1Dom.offsetHeight / 2]`
+      1. 找到 `node-1` 父元素 `node` 的 `coordinates` 坐标
+      2. 找到 `node-1` 的 dom 节点 `node1Dom`
+      3. 得出 `node-1` 的坐标 为 `[coordinates[0], coordinates[1] + node1Dom.offsetHeight / 2]`
 
-   拿到起点终点坐标后 设置 `svg` 的 `d` 就自动生成了一条 `link` `link` 位置也会时时随着 `node` 的位置更新
+      拿到起点终点坐标后 设置 `svg` 的 `d` 就自动生成了一条 `link` `link` 位置也会时时随着 `node` 的位置更新
 
-1. 情况二：起点是 `port`, 终点是 `port` 同上 `port-1` 计算
+   1. 情况二：起点是 `port`, 终点是 `port` 同上 `port-1` 计算
 
-到这一步骤后就可生成直线，我们通过改变 `path` d 的算法可生成曲线 [曲线算法源代码]()
+到这一步骤后就可生成直线，我们通过改变 `path` d 的算法可生成曲线 [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/utils/makeSvgPath.ts#L41)
 
 ## 7.新增连线原理
 
+1. 建立 `svg` 画布大小等同 `link` 画布，层级高于 `node画布`，默认隐藏该层画布。
+2. 在我们已经有了 `useDrag` hook 的前提，使每个 `port` 拥有相应的鼠标事件。
+3. `mousedown` 换算 `port` portDom 的中心位置 在 `svg` 内的坐标值 并且显示该层 `svg` 画布
+4. `mousemove` 换算 当前鼠标所在 位置 在 `svg` 内的坐标值,根据 起点坐标,终点坐标在 `svg` 内 绘制线条
+5. `mouseup` 检测鼠标松开的落点如果 `node` 或者 `port`，往 `links` push 新的 `link`
+
+```javascript
+  onDragStart((event: MouseEvent) => {
+    if (canvasRef && ref.current) {
+      // 这里通过 getBoundingClientRect
+      const { x, y, width, height } = ref.current.getBoundingClientRect()
+      // 设置连线起点为 port 中心位置
+      startCoordinatesRef.current = [(x + width / 2), (y + height / 2)]
+    }
+  })
+
+  onDrag((event: MouseEvent) => {
+    if (startCoordinatesRef.current) {
+      event.stopImmediatePropagation()
+      event.stopPropagation()
+      const to: ICoordinateType = calculatingCoordinates(event, canvasRef)
+
+      onDragNewSegment(id, startCoordinatesRef.current, to)
+    }
+  })
+
+  onDragEnd((event: MouseEvent) => {
+    const targetDom = event.target as HTMLElement
+    const targetIsPort = targetDom.classList.contains('diagram-port')
+    // 如果目标元素是 port 区域 并且不是起点port
+    if (targetIsPort && targetDom.id !== id) {
+      onSegmentConnect(id, targetDom.id)
+      return
+    }
+
+    // 如果目标元素是 node 区域 并非不是起点node
+    const targetNode = findEventTargetParentNodeId(event.target as HTMLElement)
+    if (targetNode && targetNode !== nodeId) {
+      onSegmentConnect(id, targetNode)
+      return
+    }
+    // 否则在空白区域松开 释放
+    onSegmentFail && onSegmentFail(id, type)
+  })
+```
+
+[源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/components/Diagram/Port.tsx)
+
 ## 8.平移画布
+
+    原理： 给整个外层容器 设置 `CSS transform translateX translateY` 属性
+
+    1. 绑定键盘事件当按下 空格键 开启点击空白区域可拖动画布
+    2. 鼠标按下时候检测是否在空白画布区域，如果是记录按下时候的位置
+    3. 鼠标移动的时候计算偏移量 同步更新 transform
+
+
+    这部分代码比较简单直接看源码即可：[源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/DiagramPanel.tsx#L219)
 
 ## 9.鼠标中心缩放画布
 
-## 10.撤销重做
+    原理： 给整个外层容器 设置 `CSS transform rotate` 属性
+
+    1. 滚动滚轮 实现缩放 只需要 根据 `event.nativeEvent.wheelDelta` 大于还是小于0 判断是放到还是缩小即可
+    2. 根据鼠标 所在区域 进行放大缩小 需要在 更新 `rotate` 的同时修改 translateX translateY的值
+    3. 首先设置 缩放元素的 `css transform-origin: 0 0 0`
+
+
+    ```typescript
+
+const handleWheel =(event: any) => {
+if (!event) event = window.event
+const wheelDelta = event.nativeEvent.wheelDelta
+
+      let {scale, translateX, translateY} = transform
+      let newScale = scaleRef.current
+
+      const mouseX = (event.clientX - translateX) / scale
+      const mouseY = (event.clientY - translateY) / scale
+
+      if (wheelDelta < 0) {
+        newScale = newScale - SCALE_STEP
+        translateX = translateX + mouseX * SCALE_STEP
+        translateY = translateY + mouseY * SCALE_STEP
+      }
+      if (wheelDelta > 0) {
+        newScale = newScale + SCALE_STEP
+        translateX = translateX - mouseX * SCALE_STEP
+        translateY = translateY - mouseY * SCALE_STEP
+      }
+
+      if (newScale > 1 || newScale < 0.1) return
+      scaleRef.current = Number(newScale.toFixed(2))
+
+      setTransform({
+        scale: scaleRef.current,
+        translateX,
+        translateY
+      })
+    }
+
+```
 
 ## 11.辅助线
+
+## 11.框选
+
+## 10.撤销重做
+```
