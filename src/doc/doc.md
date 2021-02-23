@@ -103,13 +103,66 @@ return <div onDrop={handleDrop}></div>
 1. 将画布设为相对定位 position: relative，然后把每个 `node` 设为绝对定位 position: absolute。
 2. `mousedown` 记录 鼠标按下的起点位置 `info.start = [event.clientX, event.clientY]`
 3. `mousemove` 计算出移动的偏移量 `offset = [info.start[0] - event.clientX, info.start[1] - event.clientY]`
-4. 通过 `offset` 偏移量 更新 `node` 的 `coordinates`
+4. 通过 `offset` 偏移量 更新该 `node` 的 `coordinates`
 
-为了复用 移动的逻辑 把 mouse 移动 事件封装成 [`useDrag`]() hook
+为了复用 移动的逻辑 把 mouse 移动 事件封装成 [`useDrag`](https://github.com/huangjincq/react-diagram-demo/blob/master/src/hooks/useDrag.ts) hook
+
+在 `DiagramNode` 组件中 更新 新的 `coordinates` [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/components/Diagram/DiagramNode.tsx#L65)
 
 ## 5.点和 node 点关系
 
+一个 `node` 内可能有多个输入和输出的点，我们移动的是 `node` ，修改的是 `node` 的 `left` 和 `top` 值，我们在移动的同时也要更新由 `port` 生成的 `link`。所以我们需要遵循一个约定。`port` 是 position:relative 定位在 `node` 内，我们通过 `node` 的 `left` 和 `top` 值，加上 `offsetLeft`/`offsetTop` 就可以实时获取 `port` 当前所在的坐标。（这里需要注意的是 `offsetLeft`/`offsetTop` 是找最近的父元素，然后获取偏移量，要保证找到最近的父元素是 `node` 而不是其他定位元素）
+
 ## 6.默认连线原理
+
+在此之前我们先复习一下 `svg` 画线条的原理：在 `svg` 画布中，只需要 起点 `start = "x,y"` 和终点 `end = "x,y"` 坐标 通过 `<path />` 标签设置 `d` 属性 `M ${start}, ${end}` 就可以生成一条直线
+
+```html
+<svg>
+  <path d="M 0,0, 50,80" stroke="red" />
+</svg>
+```
+
+该代码可以在 `svg` 元素下 生成起点 坐标 (0,0) 终点为 (50,80) 的红色直线，**注意 坐标的 原点是 svg 元素的左上角**
+
+而连线是根据 `links` 数据生成，一条 `link` 由 `input`(起点) `output` (终点) 组成，所以我们只需要知道 起点元素 在 svg 内的坐标，即可把线画出来。
+
+1. 建立 `svg` 画布大小等同 `node` 画布，层级小于 `node画布`，这个简单在 同一个 div 容器下，都用相对定位宽高 100% 即可。（这样才能保证不在同一容器内的线和点，计算位置是相同的）
+2. 第一步：在每个 `node` 和 `port` `Mount` 后把 `dom` 根据 `id` 储存起来
+
+```javascript
+// 伪代码 存储 node dom 节点  存储 port 同理
+const nodeRefs = useRef({})
+const ref = useRef()
+
+useEffect(() => {
+  nodeRefs[nodeId] = ref.current
+}, [nodeId, ref])
+
+return <div className="node" ref={ref}></div>
+```
+
+3. 然后我们将分成两种情况
+
+1. 情况一：起点是 `port`, 终点是 `node` 例: `[{input: 'port-1', output: 'node-1'}]`
+
+   起点 `port-1` 的位置计算方法:
+
+   1. 找到 `port-1` 父元素 `node` 的 `coordinates` 坐标
+   2. 找到 `port-1` 的 dom 节点 `port1Dom`
+   3. 得出 `port-1` 的坐标 为 `[coordinates[0] + port1Dom.offsetLeft + port1Dom.offsetWidth / 2, coordinates[1] + port1Dom.offsetTop + port1Dom.offsetHeight / 2]`
+
+   终点 `node-1` 的位置计算方法(node 连接位置为左边的中间):
+
+   1. 找到 `node-1` 父元素 `node` 的 `coordinates` 坐标
+   2. 找到 `node-1` 的 dom 节点 `node1Dom`
+   3. 得出 `node-1` 的坐标 为 `[coordinates[0], coordinates[1] + node1Dom.offsetHeight / 2]`
+
+   拿到起点终点坐标后 设置 `svg` 的 `d` 就自动生成了一条 `link` `link` 位置也会时时随着 `node` 的位置更新
+
+1. 情况二：起点是 `port`, 终点是 `port` 同上 `port-1` 计算
+
+到这一步骤后就可生成直线，我们通过改变 `path` d 的算法可生成曲线 [曲线算法源代码]()
 
 ## 7.新增连线原理
 
