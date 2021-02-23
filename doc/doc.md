@@ -90,7 +90,7 @@ const defaultValue = {
 ## 3.拖拽元素到画布
 
 1. 给元素设置 `draggable` 属性
-2. `onDragStart` 拖拽开始事件携带数据 
+2. `onDragStart` 拖拽开始事件携带数据
 
 ```typescript
 // 伪代码
@@ -107,6 +107,7 @@ onDragStart = {handleDragStart} >
   < /div>
 )
 ```
+
 [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/components/NodeList/NodeListItem.tsx)
 
 3. `onDrop` 在目标区域释放的时候,获取携带数据根据鼠标所在位置生成一个 `node` 对象，并且添加到 `nodes` 中
@@ -130,7 +131,8 @@ const handleDrop = useCallback(
 
 return <div onDrop = {handleDrop} > </div>
 ```
-[源代码](http://www.juejin.com)
+
+[源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/DiagramPanel.tsx#L98)
 
 ## 4.移动 `node`
 
@@ -333,9 +335,45 @@ const handleWheel = useCallback(
 
 ## 11.框选
 
+原理： 鼠标移动的时候绘制框选的 `div` ，并且检测页面其他 `node` 和选框 `div` 是否相交
+
+1. 绘制选框核心代码
+
+```javascript
+setSelectionArea({
+  left: Math.min(e.clientX, mouseDownStartPosition.current.x) - panelRect.x,
+  top: Math.min(e.clientY, mouseDownStartPosition.current.y) - panelRect.y,
+  width: Math.abs(e.clientX - mouseDownStartPosition.current.x),
+  height: Math.abs(e.clientY - mouseDownStartPosition.current.y)
+})
+```
+
+2.碰撞检测 检测两个div 是否相交
+原理:
+
+![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15f604a6f8e343be88d8e370a4aa4aea~tplv-k3u1fbpfcp-watermark.image)
+
+```javascript
+export const collideCheck = (dom1: HTMLElement | null, dom2: HTMLElement | null) => {
+  if (dom1 && dom2) {
+    const rect1 = dom1.getBoundingClientRect()
+    const rect2 = dom2.getBoundingClientRect()
+    const maxX: number = Math.max(rect1.x + rect1.width, rect2.x + rect2.width)
+    const maxY: number = Math.max(rect1.y + rect1.height, rect2.y + rect2.height)
+    const minX: number = Math.min(rect1.x, rect2.x)
+    const minY: number = Math.min(rect1.y, rect2.y)
+    return maxX - minX <= rect1.width + rect2.width && maxY - minY <= rect1.height + rect2.height
+  }
+  return false
+}
+```
+3. 在鼠标 `moving` 时候遍历 所有 `node` `进行碰撞检测，追加到 `activeId`
+
+[源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/DiagramPanel.tsx#L174)
+
 ## 10.撤销重做
+原理：在 `onChange` 事件到时候，把 `value` 推入 `past` 数组，在撤销的时候把 `value` 推入 `feature` 数组
 
-
-## 11.辅助线
+[源代码：useHistory](https://github.com/huangjincq/react-diagram-demo/blob/master/src/hooks/useHistory.ts) hook
 
 ```
