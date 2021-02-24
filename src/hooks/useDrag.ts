@@ -70,7 +70,7 @@ const useDrag = (options = defaultOptions) => {
   const onDrag = useCallback(
     throttle((event) => {
       if (info.isDragging) {
-        info.offset = [info.start[0] - event.clientX, info.start[1] - event.clientY]
+        info.offset = [event.clientX - info.start[0], event.clientY - info.start[1]]
 
         if (dragHandlerRef.current) {
           dragHandlerRef.current(event, { ...info })

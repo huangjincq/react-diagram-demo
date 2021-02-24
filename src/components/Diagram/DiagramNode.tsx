@@ -66,9 +66,11 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     event.stopImmediatePropagation()
     event.stopPropagation()
     const nextCoords: ICoordinateType = [
-      dragStartPoint.current[0] - info.offset[0] / scale,
-      dragStartPoint.current[1] - info.offset[1] / scale,
+      dragStartPoint.current[0] + info.offset[0] / scale,
+      dragStartPoint.current[1] + info.offset[1] / scale,
     ]
+    console.log(info)
+
     onNodePositionChange(id, nextCoords)
   })
 
