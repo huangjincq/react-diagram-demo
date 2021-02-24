@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { DiagramManagerProvider } from '../Context/DiagramManager'
 import { IPortRefs, INodeRefs, ITransform } from '../../types'
 
@@ -20,6 +20,16 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = React.memo((props) =>
     setBoundingBox(canvasRef.current)
   }, [])
 
+  const contextValue = useMemo(
+    () => ({
+      canvasRef: canvasDom,
+      portRefs,
+      nodeRefs,
+      scale,
+    }),
+    [canvasDom, portRefs, nodeRefs, scale]
+  )
+
   return (
     <div
       id="diagram-canvas"
@@ -28,9 +38,7 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = React.memo((props) =>
       // style={{ transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})` }}
       style={{ transform: `matrix(${scale},0,0,${scale},${translateX},${translateY})` }}
     >
-      <DiagramManagerProvider value={{ canvasRef: canvasDom, portRefs, nodeRefs, scale }}>
-        {children}
-      </DiagramManagerProvider>
+      <DiagramManagerProvider value={contextValue}>{children}</DiagramManagerProvider>
     </div>
   )
 })
