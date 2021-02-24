@@ -16,7 +16,7 @@ const scaleList = [
   { text: '空格 + 鼠标拖动', value: 2 },
 ]
 
-export const Toolbar: React.FC<ToolbarProps> = ({ undo, redo, canUndo, canRedo, scale }) => {
+export const Toolbar: React.FC<ToolbarProps> = React.memo(({ undo, redo, canUndo, canRedo, scale }) => {
   const scaleContent = useMemo(() => {
     return (
       <div>
@@ -43,4 +43,4 @@ export const Toolbar: React.FC<ToolbarProps> = ({ undo, redo, canUndo, canRedo, 
       <Button>{scale * 100}%</Button>
     </div>
   )
-}
+})
