@@ -7,8 +7,8 @@ import { Test } from './testComponent/Test'
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <DiagramPanel/> */}
-    <Test />
+    <DiagramPanel />
+    {/* <Test /> */}
   </React.StrictMode>,
   document.getElementById('root')
 )
