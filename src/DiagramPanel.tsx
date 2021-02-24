@@ -17,24 +17,24 @@ const defaultValue: IDiagramType = {
       id: 'node-1',
       coordinates: [100, 150],
       inputs: [],
-      outputs: [{ id: 'port-1', isLinked: true }],
+      outputs: [{id: 'port-1', isLinked: true}],
       type: 'nodeTypeInput',
       data: {
-        inputValue: 'defaultValue',
-      },
+        inputValue: 'defaultValue'
+      }
     },
     {
       id: 'node-2',
       type: 'nodeTypeSelect',
       coordinates: [400, 200],
-      inputs: [{ id: 'input-1', isLinked: false }],
-      outputs: [{ id: 'port-5', isLinked: false }],
+      inputs: [{id: 'input-1', isLinked: false}],
+      outputs: [{id: 'port-5', isLinked: false}],
       data: {
-        selectValue: '',
-      },
-    },
+        selectValue: ''
+      }
+    }
   ],
-  links: [{ input: 'port-1', output: 'node-2' }],
+  links: [{input: 'port-1', output: 'node-2'}]
 }
 
 const SCALE_STEP = 0.1
@@ -44,22 +44,22 @@ const DRAG_STATE = {
   START: 'START',
   MOVE: 'MOVE',
   END: 'END',
-  SELECTION: 'SELECTION',
+  SELECTION: 'SELECTION'
 }
 
 const CURSOR_MAP = {
   [DRAG_STATE.DEFAULT]: 'default',
   [DRAG_STATE.SELECTION]: 'default',
   [DRAG_STATE.START]: 'grab',
-  [DRAG_STATE.MOVE]: 'grabbing',
+  [DRAG_STATE.MOVE]: 'grabbing'
 }
 
 function DiagramPanel() {
-  const { value, set, setWithHistory, addAHistory, undo, redo, canUndo, canRedo } = useHistory(defaultValue)
+  const {value, set, setWithHistory, addAHistory, undo, redo, canUndo, canRedo} = useHistory(defaultValue)
   const [transform, setTransform] = useState<ITransform>({
     scale: 1,
     translateX: 0,
-    translateY: 0,
+    translateY: 0
   })
   const [selectionArea, setSelectionArea] = useState<ISelectionArea | undefined>()
   const [dragState, setDragState] = useState<string>(DRAG_STATE.DEFAULT)
@@ -104,14 +104,14 @@ function DiagramPanel() {
       const x = event.clientX
       const y = event.clientY
 
-      const diagramCanvasRect = document.getElementById('diagram-canvas')?.getBoundingClientRect() || { x: 0, y: 0 }
+      const diagramCanvasRect = document.getElementById('diagram-canvas')?.getBoundingClientRect() || {x: 0, y: 0}
 
       const coordinates: ICoordinateType = [
         (x - diagramCanvasRect.x) / transform.scale,
-        (y - diagramCanvasRect.y) / transform.scale,
+        (y - diagramCanvasRect.y) / transform.scale
       ]
       const newNode = createNode(nodeType, coordinates)
-      handleChange({ ...value, nodes: [...value.nodes, newNode] })
+      handleChange({...value, nodes: [...value.nodes, newNode]})
     },
     [handleChange, transform, value]
   )
@@ -124,7 +124,7 @@ function DiagramPanel() {
     (event: any) => {
       const wheelDelta = event.nativeEvent.wheelDelta
 
-      let { scale, translateX, translateY } = transform
+      let {scale, translateX, translateY} = transform
 
       const offsetX = ((event.clientX - translateX) * SCALE_STEP) / scale
       const offsetY = ((event.clientY - translateY) * SCALE_STEP) / scale
@@ -145,7 +145,7 @@ function DiagramPanel() {
       handleThrottleSetTransform({
         scale: Number(scale.toFixed(2)),
         translateX,
-        translateY,
+        translateY
       })
     },
     [handleThrottleSetTransform, transform]
@@ -157,7 +157,7 @@ function DiagramPanel() {
         x: event.clientX,
         y: event.clientY,
         relativeX: event.clientX - transform.translateX,
-        relativeY: event.clientY - transform.translateY,
+        relativeY: event.clientY - transform.translateY
       }
       if (checkMouseDownTargetIsDrawPanel(event, panelRef.current)) {
         if (dragState === DRAG_STATE.START) {
@@ -179,7 +179,7 @@ function DiagramPanel() {
           left: Math.min(e.clientX, mouseDownStartPosition.current.x) - panelRect.x,
           top: Math.min(e.clientY, mouseDownStartPosition.current.y) - panelRect.y,
           width: Math.abs(e.clientX - mouseDownStartPosition.current.x),
-          height: Math.abs(e.clientY - mouseDownStartPosition.current.y),
+          height: Math.abs(e.clientY - mouseDownStartPosition.current.y)
         })
         const selectAreaDom = selectionAreaRef.current
         const activeNodeIds = (value as IDiagramType).nodes
@@ -213,7 +213,7 @@ function DiagramPanel() {
         handleThrottleSetTransform({
           ...transform,
           translateX: event.clientX - mouseDownStartPosition.current.relativeX,
-          translateY: event.clientY - mouseDownStartPosition.current.relativeY,
+          translateY: event.clientY - mouseDownStartPosition.current.relativeY
         })
       }
       if (dragState === DRAG_STATE.SELECTION) {
@@ -249,7 +249,7 @@ function DiagramPanel() {
       left: selectionArea?.left,
       top: selectionArea?.top,
       width: selectionArea?.width,
-      height: selectionArea?.height,
+      height: selectionArea?.height
     }),
     [selectionArea]
   )
@@ -268,7 +268,7 @@ function DiagramPanel() {
       onMouseUp={handleMouseUp}
       onKeyDown={handleKeyDown}
       onKeyUp={handleKeyUp}
-      style={{ cursor }}
+      style={{cursor}}
     >
       <Diagram
         value={value}
@@ -277,8 +277,8 @@ function DiagramPanel() {
         onAddHistory={handleAddHistory}
         activeNodeIds={activeNodeIds}
       />
-      <NodeList />
-      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={transform.scale} canRedo={canRedo} />
+      <NodeList/>
+      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={transform.scale} canRedo={canRedo}/>
       <div
         ref={selectionAreaRef}
         className="diagram-selection-area"

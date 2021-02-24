@@ -69,7 +69,6 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
       dragStartPoint.current[0] + info.offset[0] / scale,
       dragStartPoint.current[1] + info.offset[1] / scale,
     ]
-    console.log(info)
 
     onNodePositionChange(id, nextCoords)
   })

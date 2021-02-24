@@ -6,7 +6,7 @@ import { Segment } from './Segment'
 
 import './style.scss'
 import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs, ITransform, ICoordinateType } from '../../types'
-import { cloneDeep } from 'lodash-es'
+import { cloneDeep, isEqual } from 'lodash-es'
 
 interface DiagramProps {
   value: IDiagramType
@@ -17,16 +17,16 @@ interface DiagramProps {
 }
 
 export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
-  const { value, onChange, onAddHistory, transform, activeNodeIds } = props
+  const {value, onChange, onAddHistory, transform, activeNodeIds} = props
   const [segment, setSegment] = useState<ISegmentType | undefined>()
-  const { current: portRefs } = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
-  const { current: nodeRefs } = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
+  const {current: portRefs} = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
+  const {current: nodeRefs} = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
 
   const handleNodePositionChange = (nodeId: string, nextCoordinates: ICoordinateType) => {
     const nextNodes = [...value.nodes]
     const index = nextNodes.findIndex((node) => node.id === nodeId)
     nextNodes[index].coordinates = nextCoordinates
-    onChange({ ...value, nodes: nextNodes }, true)
+    onChange({...value, nodes: nextNodes}, true)
   }
 
   const handleNodeValueChange = (nodeId: string, nextNodeValue: any) => {
@@ -34,7 +34,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     const nextNodes = cloneDeep(value.nodes)
     const index = nextNodes.findIndex((node) => node.id === nodeId)
     nextNodes[index].data = nextNodeValue
-    onChange({ ...value, nodes: nextNodes })
+    onChange({...value, nodes: nextNodes})
   }
 
   const handleAddHistory = (nodeId: string, nextCoordinates: ICoordinateType) => {
@@ -42,7 +42,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     const nextNodes = cloneDeep(value.nodes)
     const index = nextNodes.findIndex((node) => node.id === nodeId)
     nextNodes[index].coordinates = nextCoordinates
-    onAddHistory({ ...value, nodes: nextNodes })
+    onAddHistory({...value, nodes: nextNodes})
   }
 
   // when a port is registered, save it to the local reference
@@ -58,7 +58,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   // when a new segment is dragged, save it to the local state
   const onDragNewSegment = useCallback((portId, from, to) => {
-    setSegment({ id: `segment-${portId}`, from, to })
+    setSegment({id: `segment-${portId}`, from, to})
   }, [])
 
   // when a segment fails to connect, reset the segment state
@@ -69,15 +69,16 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   // when a segment connects, update the links schema, perform the onChange callback
   // with the new data, then reset the segment state
   const onSegmentConnect = (input: string, output: string) => {
-    const nextLinks = [...value.links, { input, output }]
-    onChange({ ...value, links: nextLinks })
+    const nextLinks = [...value.links, {input, output}]
+    onChange({...value, links: nextLinks})
     setSegment(undefined)
   }
 
   // when links change, performs the onChange callback with the new incoming data
-  const onLinkDelete = (nextLinks: ILinkType[]) => {
-    onChange({ ...value, links: nextLinks })
-  }
+  const onLinkDelete = useCallback((link: ILinkType) => {
+    const nextLinks = value.links.filter((item) => !isEqual(item, link))
+    onChange({...value, links: nextLinks})
+  }, [value, onChange])
 
   return (
     <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} transform={transform}>
@@ -93,8 +94,8 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         onAddHistory={handleAddHistory}
         activeNodeIds={activeNodeIds}
       />
-      <LinksCanvas nodes={value.nodes} links={value.links} onChange={onLinkDelete} />
-      {segment && <Segment segment={segment} />}
+      <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete}/>
+      {segment && <Segment segment={segment}/>}
     </DiagramCanvas>
   )
 })
