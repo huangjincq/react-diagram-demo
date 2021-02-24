@@ -55,17 +55,14 @@ export const LinksCanvas: React.FC<LinkCanvasProps> = React.memo((props) => {
 
   return (
     <svg className="diagram-link-canvas">
-      {links &&
-      links.map((link) => (
-        <>
-          <Link
-            link={link}
-            input={findPortParentNodeInfo(nodes, link.input)}
-            output={findPortParentNodeInfo(nodes, link.output)}
-            onDelete={onDelete}
-            key={`${link.input}-${link.output}`}
-          />
-        </>
+      {links && links.map((link) => (
+        <Link
+          link={link}
+          input={findPortParentNodeInfo(nodes, link.input)}
+          output={findPortParentNodeInfo(nodes, link.output)}
+          onDelete={onDelete}
+          key={`${link.input}-${link.output}`}
+        />
       ))}
     </svg>
   )
