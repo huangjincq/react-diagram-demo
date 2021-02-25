@@ -46,13 +46,6 @@ const findPortParentNodeInfo = (nodes: INodeType[], entityId: string): EntityPut
 export const LinksCanvas: React.FC<LinkCanvasProps> = React.memo((props) => {
   const {nodes, onDelete, links} = props
 
-  // const removeFromLinksArray = useCallback(
-  //   (link) => {
-
-  //   },
-  //   [links, onChange]
-  // )
-
   return (
     <svg className="diagram-link-canvas">
       {links && links.map((link) => (
