@@ -18,7 +18,12 @@ export interface EntityPutType {
   link: ILinkType
 }
 
-const findPortCoordinate = (nodeCoordinates: ICoordinateType, ports: IPointType[], entityId: string, portRefs: IPortRefs): ICoordinateType | null => {
+const findPortCoordinate = (
+  nodeCoordinates: ICoordinateType,
+  ports: IPointType[],
+  entityId: string,
+  portRefs: IPortRefs
+): ICoordinateType | null => {
   for (let j = 0; j < ports.length; j++) {
     const input = ports[j]
     if (input.id === entityId) {
@@ -26,7 +31,7 @@ const findPortCoordinate = (nodeCoordinates: ICoordinateType, ports: IPointType[
       if (!portDom) return null
       return [
         nodeCoordinates[0] + portDom.offsetLeft + portDom.offsetWidth / 2,
-        nodeCoordinates[1] + portDom.offsetTop + portDom.offsetHeight / 2
+        nodeCoordinates[1] + portDom.offsetTop + portDom.offsetHeight / 2,
       ]
     }
   }
@@ -38,7 +43,13 @@ const findPortCoordinate = (nodeCoordinates: ICoordinateType, ports: IPointType[
  * 1. 如果找到 id 是 node 类型线，实际坐标为 x 为该 node 的 left 值，y坐标为该node 的 top + node高度的一半
  * 2. 如果找到 id 是 port 类型线，实际坐标为 x 为该 port 的 父元素 node 的 left + 点相对 node 的偏移量 +点的宽度的一半，y 轴坐标同理
  * */
-const computedLinkCoordinate = (nodes: INodeType[], entityId: string, nodeRefs: INodeRefs, portRefs: IPortRefs, canvasRef: HTMLDivElement | null): ICoordinateType | null => {
+const computedLinkCoordinate = (
+  nodes: INodeType[],
+  entityId: string,
+  nodeRefs: INodeRefs,
+  portRefs: IPortRefs,
+  canvasRef: HTMLDivElement | null
+): ICoordinateType | null => {
   for (let i = 0; i < nodes.length; i++) {
     const node = nodes[i]
     // 如果 id 是 nodeId
@@ -58,29 +69,27 @@ const computedLinkCoordinate = (nodes: INodeType[], entityId: string, nodeRefs: 
 }
 
 export const LinksCanvas: React.FC<LinkCanvasProps> = React.memo((props) => {
-  const {nodes, onDelete, links} = props
+  const { nodes, onDelete, links } = props
 
-  const {canvasRef, portRefs, nodeRefs} = useDiagramManager()
-
+  const { canvasRef, portRefs, nodeRefs } = useDiagramManager()
 
   const result = useMemo(() => {
     const res: EntityPutType[] = []
 
     links.forEach((link) => {
-      const {input, output} = link
+      const { input, output } = link
       const startCoordinates = computedLinkCoordinate(nodes, input, nodeRefs, portRefs, canvasRef)
       const endCoordinates = computedLinkCoordinate(nodes, output, nodeRefs, portRefs, canvasRef)
       if (startCoordinates && endCoordinates) {
         res.push({
           link,
           startCoordinates,
-          endCoordinates
+          endCoordinates,
         })
       }
     })
     return res
   }, [nodes, links, nodeRefs, portRefs, canvasRef])
-
 
   return (
     <svg className="diagram-link-canvas">
@@ -97,4 +106,3 @@ export const LinksCanvas: React.FC<LinkCanvasProps> = React.memo((props) => {
   )
 })
 LinksCanvas.displayName = 'LinksCanvas'
-

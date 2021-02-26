@@ -33,7 +33,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   })
 
   const handleNodeValueChange = useEventCallback((nodeId: string, nextNodeValue: any) => {
-    // 需要 deepClone  历史记录 需要独立的 data
+    // 需要 deepClone 历史记录 不可变数据
     const nextNodes = cloneDeep(value.nodes)
     const index = nextNodes.findIndex((node) => node.id === nodeId)
     nextNodes[index].data = nextNodeValue
@@ -44,7 +44,8 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     // 需要 deepClone  历史记录 需要独立的 data
     const nextNodes = cloneDeep(value.nodes)
     const index = nextNodes.findIndex((node) => node.id === nodeId)
-    nextNodes[index].coordinates = nextCoordinates
+    nextNodes[index] = { ...nextNodes[index], coordinates: nextCoordinates }
+
     onAddHistory({ ...value, nodes: nextNodes })
   })
 
@@ -78,13 +79,10 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   })
 
   // when links change, performs the onChange callback with the new incoming data
-  const onLinkDelete = useCallback(
-    (link: ILinkType) => {
-      const nextLinks = value.links.filter((item) => !isEqual(item, link))
-      onChange({ ...value, links: nextLinks })
-    },
-    [value, onChange]
-  )
+  const onLinkDelete = useEventCallback((link: ILinkType) => {
+    const nextLinks = value.links.filter((item) => !isEqual(item, link))
+    onChange({ ...value, links: nextLinks })
+  })
 
   return (
     <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} transform={transform}>
