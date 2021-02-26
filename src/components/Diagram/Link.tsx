@@ -12,7 +12,7 @@ interface LinkProps {
 }
 
 export const Link: React.FC<LinkProps> = React.memo((props) => {
-  const {input, output, link, onDelete} = props
+  const { input, output, link, onDelete } = props
   const pathRef = useRef<SVGPathElement>(null)
   const [labelPosition, setLabelPosition] = useState<ICoordinateType>()
 
@@ -21,12 +21,11 @@ export const Link: React.FC<LinkProps> = React.memo((props) => {
    * */
   const path = useMemo(() => makeSvgPath(input, output), [input, output])
 
-
   useEffect(() => {
     if (pathRef.current) {
       setLabelPosition(getPathMidpoint(pathRef.current))
     }
-  }, [pathRef])
+  }, [pathRef, input, output])
 
   const handleDelete = useCallback(() => {
     onDelete(link)
@@ -34,9 +33,9 @@ export const Link: React.FC<LinkProps> = React.memo((props) => {
 
   return (
     <g className={'diagram-link'}>
-      <path d={path} className="bi-link-ghost"/>
-      <path d={path} ref={pathRef} className="bi-link-path"/>
-      {labelPosition && <LinkDelete position={labelPosition} onDelete={handleDelete}/>}
+      <path d={path} className="bi-link-ghost" />
+      <path d={path} ref={pathRef} className="bi-link-path" />
+      {labelPosition && <LinkDelete position={labelPosition} onDelete={handleDelete} />}
     </g>
   )
 })

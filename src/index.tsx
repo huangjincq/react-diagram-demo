@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import DiagramPanel from './DiagramPanel'
 import reportWebVitals from './reportWebVitals'
-import { Test } from './testComponent/Test'
+// import { Test } from './testComponent/Test'
 
 ReactDOM.render(
   <React.StrictMode>

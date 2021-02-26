@@ -7,6 +7,7 @@ import { Segment } from './Segment'
 import './style.scss'
 import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs, ITransform, ICoordinateType } from '../../types'
 import { cloneDeep, isEqual } from 'lodash-es'
+import useEventCallback from '../../hooks/useEventCallback'
 
 interface DiagramProps {
   value: IDiagramType
@@ -17,48 +18,50 @@ interface DiagramProps {
 }
 
 export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
-  const {value, onChange, onAddHistory, transform, activeNodeIds} = props
+  const { value, onChange, onAddHistory, transform, activeNodeIds } = props
   const [segment, setSegment] = useState<ISegmentType | undefined>()
-  const {current: portRefs} = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
-  const {current: nodeRefs} = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
+  const { current: portRefs } = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
+  const { current: nodeRefs } = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
 
-  const handleNodePositionChange = (nodeId: string, nextCoordinates: ICoordinateType) => {
+  const handleNodePositionChange = useEventCallback((nodeId: string, nextCoordinates: ICoordinateType) => {
     const nextNodes = [...value.nodes]
-    const index = nextNodes.findIndex((node) => node.id === nodeId)
-    nextNodes[index].coordinates = nextCoordinates
-    onChange({...value, nodes: nextNodes}, true)
-  }
 
-  const handleNodeValueChange = (nodeId: string, nextNodeValue: any) => {
+    const index = nextNodes.findIndex((node) => node.id === nodeId)
+    nextNodes[index] = { ...nextNodes[index], coordinates: nextCoordinates }
+
+    onChange({ ...value, nodes: nextNodes }, true)
+  })
+
+  const handleNodeValueChange = useEventCallback((nodeId: string, nextNodeValue: any) => {
     // 需要 deepClone  历史记录 需要独立的 data
     const nextNodes = cloneDeep(value.nodes)
     const index = nextNodes.findIndex((node) => node.id === nodeId)
     nextNodes[index].data = nextNodeValue
-    onChange({...value, nodes: nextNodes})
-  }
+    onChange({ ...value, nodes: nextNodes })
+  })
 
-  const handleAddHistory = (nodeId: string, nextCoordinates: ICoordinateType) => {
+  const handleAddHistory = useEventCallback((nodeId: string, nextCoordinates: ICoordinateType) => {
     // 需要 deepClone  历史记录 需要独立的 data
     const nextNodes = cloneDeep(value.nodes)
     const index = nextNodes.findIndex((node) => node.id === nodeId)
     nextNodes[index].coordinates = nextCoordinates
-    onAddHistory({...value, nodes: nextNodes})
-  }
+    onAddHistory({ ...value, nodes: nextNodes })
+  })
 
   // when a port is registered, save it to the local reference
-  const onPortRegister = (portId: string, portEl: HTMLElement) => {
+  const onPortRegister = useEventCallback((portId: string, portEl: HTMLElement) => {
     portRefs[portId] = portEl
-  }
+  })
 
   // when a node is registered, save it to the local reference
-  const onNodeRegister = (nodeId: string, nodeEl: HTMLDivElement) => {
+  const onNodeRegister = useEventCallback((nodeId: string, nodeEl: HTMLDivElement) => {
     // const rect = nodeEl.getBoundingClientRect()
     nodeRefs[nodeId] = nodeEl
-  }
+  })
 
   // when a new segment is dragged, save it to the local state
   const onDragNewSegment = useCallback((portId, from, to) => {
-    setSegment({id: `segment-${portId}`, from, to})
+    setSegment({ id: `segment-${portId}`, from, to })
   }, [])
 
   // when a segment fails to connect, reset the segment state
@@ -68,17 +71,20 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   // when a segment connects, update the links schema, perform the onChange callback
   // with the new data, then reset the segment state
-  const onSegmentConnect = (input: string, output: string) => {
-    const nextLinks = [...value.links, {input, output}]
-    onChange({...value, links: nextLinks})
+  const onSegmentConnect = useEventCallback((input: string, output: string) => {
+    const nextLinks = [...value.links, { input, output }]
+    onChange({ ...value, links: nextLinks })
     setSegment(undefined)
-  }
+  })
 
   // when links change, performs the onChange callback with the new incoming data
-  const onLinkDelete = useCallback((link: ILinkType) => {
-    const nextLinks = value.links.filter((item) => !isEqual(item, link))
-    onChange({...value, links: nextLinks})
-  }, [value, onChange])
+  const onLinkDelete = useCallback(
+    (link: ILinkType) => {
+      const nextLinks = value.links.filter((item) => !isEqual(item, link))
+      onChange({ ...value, links: nextLinks })
+    },
+    [value, onChange]
+  )
 
   return (
     <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} transform={transform}>
@@ -94,8 +100,8 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         onAddHistory={handleAddHistory}
         activeNodeIds={activeNodeIds}
       />
-      {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete}/>}
-      {segment && <Segment segment={segment}/>}
+      {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete} />}
+      {segment && <Segment segment={segment} />}
     </DiagramCanvas>
   )
 })

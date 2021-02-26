@@ -1,26 +1,9 @@
 import React, { memo, useCallback, useState, useEffect, useRef } from 'react'
+import useEventCallback from '../hooks/useEventCallback'
 
 export interface TestProps {}
 
 const deepClone = (origin: any) => JSON.parse(JSON.stringify(origin))
-
-function useEventCallback(fn: any, dependencies: any) {
-  const ref = useRef<any>(() => {
-    throw new Error('Cannot call an event handler while rendering.')
-  })
-
-  useEffect(() => {
-    ref.current = fn
-  }, [fn, ...dependencies])
-
-  return useCallback(
-    (arg) => {
-      const fn = ref.current
-      return fn(arg)
-    },
-    [ref]
-  )
-}
 
 const Item = memo(({ item, onClick }: any) => {
   console.log('renderId: ' + item.value)
@@ -39,6 +22,8 @@ const defaultV = [
   { value: 1, label: '第一项' },
   { value: 2, label: '第二项' },
 ]
+
+Item.displayName = 'Item'
 
 export const Test: React.FC<TestProps> = React.memo(() => {
   const [list, setList] = useState(defaultV)
@@ -60,17 +45,14 @@ export const Test: React.FC<TestProps> = React.memo(() => {
     // newList[0].label = `第${Math.random()}项`
     setList(newList)
   }
-  const handleChange = useEventCallback(
-    (id: number) => {
-      const newList = [...list]
+  const handleChange = useEventCallback((id: number) => {
+    const newList = [...list]
 
-      const index = newList.findIndex((item: any) => item.value === id)
-      newList[index] = { ...newList[index], label: `第${Math.random()}项` }
+    const index = newList.findIndex((item: any) => item.value === id)
+    newList[index] = { ...newList[index], label: `第${Math.random()}项` }
 
-      setList(newList)
-    },
-    [list]
-  )
+    setList(newList)
+  })
 
   return (
     <ul>
