@@ -105,3 +105,5 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     </DiagramCanvas>
   )
 })
+
+Diagram.displayName = 'Diagram'

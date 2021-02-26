@@ -39,3 +39,5 @@ export const Link: React.FC<LinkProps> = React.memo((props) => {
     </g>
   )
 })
+
+Link.displayName = 'Link'
