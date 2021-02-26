@@ -94,7 +94,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         onAddHistory={handleAddHistory}
         activeNodeIds={activeNodeIds}
       />
-      <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete}/>
+      {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete}/>}
       {segment && <Segment segment={segment}/>}
     </DiagramCanvas>
   )

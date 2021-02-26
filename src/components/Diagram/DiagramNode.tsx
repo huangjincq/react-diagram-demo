@@ -93,7 +93,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
 
   return (
     <div id={id} className={className} ref={ref} style={{ left: coordinates[0], top: coordinates[1] }}>
-      {component && React.createElement(component, nodeItemProps)}
+      {/*{component && React.createElement(component, nodeItemProps)}*/}
       <DiagramNodePorts inputs={inputs} {...options} type="input" />
       <DiagramNodePorts inputs={outputs} {...options} type="output" />
     </div>

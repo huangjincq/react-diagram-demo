@@ -9,32 +9,50 @@ import { throttle } from 'lodash-es'
 import { checkMouseDownTargetIsDrawPanel, collideCheck } from './utils'
 // import { useThrottleFn } from 'react-use'
 
-// const manyNode = new Array(100).fill({}).map()
+const manyNode: any = new Array(300).fill({}).map((item, index) => {
+  return {
+    id: 'node-' + index,
+    coordinates: [index * 40, index * 50],
+    inputs: [],
+    outputs: [{id: 'port-' + index, isLinked: false}],
+    type: 'nodeTypeInput',
+    data: {
+      inputValue: 'defaultValue'
+    }
+  }
+})
+
+const manyLink = new Array(299).fill({}).map((item, index) => {
+  return {input: 'port-' + index, output: 'node-' + (index + 1)}
+})
+
 
 const defaultValue: IDiagramType = {
-  nodes: [
-    {
-      id: 'node-1',
-      coordinates: [100, 150],
-      inputs: [],
-      outputs: [{id: 'port-1', isLinked: true}],
-      type: 'nodeTypeInput',
-      data: {
-        inputValue: 'defaultValue'
-      }
-    },
-    {
-      id: 'node-2',
-      type: 'nodeTypeSelect',
-      coordinates: [400, 200],
-      inputs: [{id: 'input-1', isLinked: false}],
-      outputs: [{id: 'port-5', isLinked: false}],
-      data: {
-        selectValue: ''
-      }
-    }
-  ],
-  links: [{input: 'port-1', output: 'node-2'}]
+  nodes: manyNode,
+  // nodes: [
+  //   {
+  //     id: 'node-1',
+  //     coordinates: [100, 150],
+  //     inputs: [],
+  //     outputs: [{id: 'port-1', isLinked: true}],
+  //     type: 'nodeTypeInput',
+  //     data: {
+  //       inputValue: 'defaultValue'
+  //     }
+  //   },
+  //   {
+  //     id: 'node-2',
+  //     type: 'nodeTypeSelect',
+  //     coordinates: [400, 200],
+  //     inputs: [{id: 'input-1', isLinked: false}],
+  //     outputs: [{id: 'port-5', isLinked: false}],
+  //     data: {
+  //       selectValue: ''
+  //     }
+  //   }
+  // ],
+  links: manyLink
+  // links: [{input: 'port-1', output: 'node-2'}]
 }
 
 const SCALE_STEP = 0.1
