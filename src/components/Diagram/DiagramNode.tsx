@@ -6,6 +6,7 @@ import { isEqual } from 'lodash-es'
 import { useScale } from '../Context/DiagramManager'
 import { DiagramNodePorts } from './DiagramNodePorts'
 import classnames from 'classnames'
+import { DiagramNodeActionButtons } from './DiagramNodeActionButtons'
 
 interface DiagramNodeProps {
   nodeInfo: INodeType
@@ -18,6 +19,8 @@ interface DiagramNodeProps {
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
   activeNodeIds: string[]
+  // onNodeCopy: (index: number) => void
+  // onNodeDelete: () => void
 }
 
 export const DiagramNode: React.FC<DiagramNodeProps> = React.memo(
@@ -97,6 +100,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo(
         {component && React.createElement(component, nodeItemProps)}
         <DiagramNodePorts inputs={inputs} {...options} type="input"/>
         <DiagramNodePorts inputs={outputs} {...options} type="output"/>
+        {/*<DiagramNodeActionButtons onNodeCopy={onNodeCopy}/>*/}
       </div>
     )
   }
