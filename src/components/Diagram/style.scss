@@ -166,6 +166,25 @@
   }
 }
 
+.mark-line {
+  &-item {
+    pointer-events: none;
+    position: absolute;
+    z-index: 999;
+    // visibility: hidden;
+  }
+  .x-direction {
+    width: 100%;
+    height: 0;
+    border-top: 1px solid red;
+  }
+  .y-direction {
+    height: 100%;
+    width: 0;
+    border-left: 1px solid red;
+  }
+}
+
 // ----------------------------
 // Involved animations
 // ----------------------------

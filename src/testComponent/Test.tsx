@@ -25,7 +25,7 @@ const defaultV = [
 
 Item.displayName = 'Item'
 
-export const Test: React.FC<TestProps> = React.memo(() => {
+export const Test: React.FC<TestProps> = () => {
   const [list, setList] = useState(defaultV)
 
   // const ref = useRef<any>(defaultV)
@@ -63,7 +63,7 @@ export const Test: React.FC<TestProps> = React.memo(() => {
       <button onClick={handleUpdate}>修改第一项</button>
     </ul>
   )
-})
+}
 
 Test.displayName = 'Test'
 

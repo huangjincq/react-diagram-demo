@@ -18,33 +18,33 @@ interface DiagramProps {
 }
 
 export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
-  const {value, onChange, onAddHistory, transform, activeNodeIds} = props
+  const { value, onChange, onAddHistory, transform, activeNodeIds } = props
   const [segment, setSegment] = useState<ISegmentType | undefined>()
-  const {current: portRefs} = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
-  const {current: nodeRefs} = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
+  const { current: portRefs } = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
+  const { current: nodeRefs } = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
 
   const handleNodePositionChange = useEventCallback((nodeId: string, nextCoordinates: ICoordinateType) => {
     const nextNodes = [...value.nodes]
 
     const index = nextNodes.findIndex((node) => node.id === nodeId)
-    nextNodes[index] = {...nextNodes[index], coordinates: nextCoordinates}
+    nextNodes[index] = { ...nextNodes[index], coordinates: nextCoordinates }
 
-    onChange({...value, nodes: nextNodes}, true)
+    onChange({ ...value, nodes: nextNodes }, true)
   })
 
   const handleNodeValueChange = useEventCallback((nodeId: string, nextNodeValue: any) => {
     const nextNodes = [...value.nodes]
     const index = nextNodes.findIndex((node) => node.id === nodeId)
-    nextNodes[index] = {...nextNodes[index], data: nextNodeValue}
-    onChange({...value, nodes: nextNodes})
+    nextNodes[index] = { ...nextNodes[index], data: nextNodeValue }
+    onChange({ ...value, nodes: nextNodes })
   })
 
   const handleAddHistory = useEventCallback((nodeId: string, nextCoordinates: ICoordinateType) => {
     const nextNodes = [...value.nodes]
     const index = nextNodes.findIndex((node) => node.id === nodeId)
-    nextNodes[index] = {...nextNodes[index], coordinates: nextCoordinates}
+    nextNodes[index] = { ...nextNodes[index], coordinates: nextCoordinates }
 
-    onAddHistory({...value, nodes: nextNodes})
+    onAddHistory({ ...value, nodes: nextNodes })
   })
 
   // when a port is registered, save it to the local reference
@@ -60,7 +60,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   // when a new segment is dragged, save it to the local state
   const onDragNewSegment = useCallback((portId, from, to) => {
-    setSegment({id: `segment-${portId}`, from, to})
+    setSegment({ id: `segment-${portId}`, from, to })
   }, [])
 
   // when a segment fails to connect, reset the segment state
@@ -71,15 +71,15 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   // when a segment connects, update the links schema, perform the onChange callback
   // with the new data, then reset the segment state
   const onSegmentConnect = useEventCallback((input: string, output: string) => {
-    const nextLinks = [...value.links, {input, output}]
-    onChange({...value, links: nextLinks})
+    const nextLinks = [...value.links, { input, output }]
+    onChange({ ...value, links: nextLinks })
     setSegment(undefined)
   })
 
   // when links change, performs the onChange callback with the new incoming data
   const onLinkDelete = useEventCallback((link: ILinkType) => {
     const nextLinks = value.links.filter((item) => !isEqual(item, link))
-    onChange({...value, links: nextLinks})
+    onChange({ ...value, links: nextLinks })
   })
 
   return (
@@ -96,8 +96,8 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         onAddHistory={handleAddHistory}
         activeNodeIds={activeNodeIds}
       />
-      {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete}/>}
-      {segment && <Segment segment={segment}/>}
+      {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete} />}
+      {segment && <Segment segment={segment} />}
     </DiagramCanvas>
   )
 })
