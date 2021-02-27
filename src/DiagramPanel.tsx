@@ -9,7 +9,7 @@ import { throttle } from 'lodash-es'
 import { checkMouseDownTargetIsDrawPanel, collideCheck } from './utils'
 // import { useThrottleFn } from 'react-use'
 
-const manyNode: any = new Array(100).fill({}).map((item, index) => {
+const manyNode: any = new Array(3).fill({}).map((item, index) => {
   return {
     id: 'node-' + index,
     coordinates: [index * 40, index * 50],
@@ -22,7 +22,7 @@ const manyNode: any = new Array(100).fill({}).map((item, index) => {
   }
 })
 
-const manyLink = new Array(99).fill({}).map((item, index) => {
+const manyLink = new Array(2).fill({}).map((item, index) => {
   return { input: 'port-' + index, output: 'node-' + (index + 1) }
 })
 
