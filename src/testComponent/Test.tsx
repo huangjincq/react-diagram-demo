@@ -66,3 +66,5 @@ export const Test: React.FC<TestProps> = React.memo(() => {
 })
 
 Test.displayName = 'Test'
+
+// 1. context 正确的使用 要use memo
