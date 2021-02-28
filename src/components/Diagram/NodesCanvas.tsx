@@ -13,10 +13,12 @@ interface NodesCanvasProps {
   onNodePositionChange: (id: string, nextCoords: ICoordinateType) => void
   onNodeValueChange: (id: string, nextNodeValue: any) => void
   onAddHistory: (id: string, nextCoords: ICoordinateType) => void
+  onNodeDelete: (nodeId: string) => void
+  onNodeCopy: (nodeId: string) => void
 }
 
 export const NodesCanvas: React.FC<NodesCanvasProps> = React.memo((props) => {
-  const { nodes, ...others } = props
+  const {nodes, ...others} = props
 
   return (
     <>

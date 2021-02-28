@@ -27,31 +27,31 @@ const manyLink = new Array(2).fill({}).map((item, index) => {
 })
 
 const defaultValue: IDiagramType = {
-  nodes: manyNode,
-  // nodes: [
-  //   {
-  //     id: 'node-1',
-  //     coordinates: [100, 150],
-  //     inputs: [],
-  //     outputs: [{id: 'port-1', isLinked: true}],
-  //     type: 'nodeTypeInput',
-  //     data: {
-  //       inputValue: 'defaultValue'
-  //     }
-  //   },
-  //   {
-  //     id: 'node-2',
-  //     type: 'nodeTypeSelect',
-  //     coordinates: [400, 200],
-  //     inputs: [{id: 'input-1', isLinked: false}],
-  //     outputs: [{id: 'port-5', isLinked: false}],
-  //     data: {
-  //       selectValue: ''
-  //     }
-  //   }
-  // ],
-  links: manyLink
-  // links: [{input: 'port-1', output: 'node-2'}]
+  // nodes: manyNode,
+  nodes: [
+    {
+      id: 'node-1',
+      coordinates: [100, 150],
+      inputs: [],
+      outputs: [{id: 'port-1', isLinked: true}],
+      type: 'nodeTypeInput',
+      data: {
+        inputValue: 'defaultValue'
+      }
+    },
+    {
+      id: 'node-2',
+      type: 'nodeTypeSelect',
+      coordinates: [400, 200],
+      inputs: [{id: 'input-1', isLinked: false}],
+      outputs: [{id: 'port-5', isLinked: false}],
+      data: {
+        selectValue: ''
+      }
+    }
+  ],
+  // links: manyLink
+  links: [{input: 'node-1', output: 'node-2'}]
 }
 
 const SCALE_STEP = 0.1
