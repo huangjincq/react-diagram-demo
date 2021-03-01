@@ -10,6 +10,7 @@ import { cloneDeep, isEqual } from 'lodash-es'
 import useEventCallback from '../../hooks/useEventCallback'
 import { findIndexById } from '../../utils'
 import { copyNode } from '../NodeTypes/config'
+import { MarkLine } from './MarkLine'
 
 interface DiagramProps {
   value: IDiagramType
@@ -126,6 +127,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
       />
       {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete} />}
       {segment && <Segment segment={segment} />}
+      <MarkLine onNodePositionChange={handleNodePositionChange} />
     </DiagramCanvas>
   )
 })

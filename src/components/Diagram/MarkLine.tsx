@@ -1,9 +1,13 @@
 import { isEqual } from 'lodash-es'
-import React, { Children, useCallback, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import { ICoordinateType } from '../../types'
+import eventBus, { NODE_MOVE_END, NODE_MOVING } from '../../utils/eventBus'
 
-export interface MarkLineProps {}
+export interface MarkLineProps {
+  onNodePositionChange: (id: string, nextCoords: ICoordinateType) => void
+}
 
-const getNodeStyle = (nodeDom) => {
+const getNodeStyle = (nodeDom: any) => {
   const dom = nodeDom as HTMLElement
   const width = dom.offsetWidth
   const height = dom.offsetHeight
@@ -17,21 +21,21 @@ const getNodeStyle = (nodeDom) => {
   }
 }
 
-const diff = 5
-const isNearly = (dragValue: number, targetValue: number) => Math.abs(dragValue - targetValue) <= diff
+const DIFF = 3
+const isNearly = (dragValue: number, targetValue: number) => Math.abs(dragValue - targetValue) <= DIFF
 
-export const MarkLine: React.FC<MarkLineProps> = React.memo(({}) => {
+export const MarkLine: React.FC<MarkLineProps> = React.memo(({ onNodePositionChange }) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  const handleMove = (nodeId: string, coordinates: any) => {
-    handleMoveEnd()
+  const handleMove = (nodeId: string, coordinates: ICoordinateType) => {
+    handleHideLine()
 
     const curNodeDom = document.getElementById(nodeId)
     if (!curNodeDom) return
 
     const curNodeStyle = getNodeStyle(curNodeDom)
 
-    const nodes = Array.from(document.querySelectorAll('.node'))
+    const nodes = Array.from(document.querySelectorAll('.diagram-node'))
     nodes.forEach((node) => {
       if (nodeId !== node.id) {
         const nodeStyle = getNodeStyle(node)
@@ -106,15 +110,15 @@ export const MarkLine: React.FC<MarkLineProps> = React.memo(({}) => {
                 condition.lineNode.style[key] = `${condition.lineShift}px`
                 condition.lineNode.style.visibility = 'visible'
               }
-              let newCoordinates = [...coordinates]
+              let newCoordinates: ICoordinateType = [...coordinates]
               if (key === 'top') {
-                newCoordinates = [conditions[0], condition.dragShift]
+                newCoordinates = [coordinates[0], condition.dragShift]
               } else {
-                newCoordinates = [condition.dragShift, conditions[1]]
+                newCoordinates = [condition.dragShift, coordinates[1]]
               }
 
               if (!isEqual(newCoordinates, coordinates)) {
-                console.log('调整位置')
+                onNodePositionChange(nodeId, newCoordinates)
               }
             }
           })
@@ -123,7 +127,7 @@ export const MarkLine: React.FC<MarkLineProps> = React.memo(({}) => {
     })
   }
 
-  const handleMoveEnd = useCallback(() => {
+  const handleHideLine = useCallback(() => {
     if (ref.current) {
       ref.current.childNodes.forEach((markLine) => {
         const line = markLine as HTMLElement
@@ -131,6 +135,15 @@ export const MarkLine: React.FC<MarkLineProps> = React.memo(({}) => {
           line.style.visibility = 'hidden'
         }
       })
+    }
+  }, [ref])
+
+  useEffect(() => {
+    eventBus.on(NODE_MOVING, handleMove)
+    eventBus.on(NODE_MOVE_END, handleHideLine)
+    return () => {
+      eventBus.off(NODE_MOVING, handleMove)
+      eventBus.off(NODE_MOVE_END, handleHideLine)
     }
   }, [ref])
 
