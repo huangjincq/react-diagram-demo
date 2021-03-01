@@ -8,6 +8,8 @@ import './style.scss'
 import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs, ITransform, ICoordinateType } from '../../types'
 import { cloneDeep, isEqual } from 'lodash-es'
 import useEventCallback from '../../hooks/useEventCallback'
+import { findIndexById } from '../../utils'
+import { copyNode } from '../NodeTypes/config'
 
 interface DiagramProps {
   value: IDiagramType
@@ -25,8 +27,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   const handleNodePositionChange = useEventCallback((nodeId: string, nextCoordinates: ICoordinateType) => {
     const nextNodes = [...value.nodes]
-
-    const index = nextNodes.findIndex((node) => node.id === nodeId)
+    const index = findIndexById(nodeId, nextNodes)
     nextNodes[index] = { ...nextNodes[index], coordinates: nextCoordinates }
 
     onChange({ ...value, nodes: nextNodes }, true)
@@ -34,17 +35,42 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   const handleNodeValueChange = useEventCallback((nodeId: string, nextNodeValue: any) => {
     const nextNodes = [...value.nodes]
-    const index = nextNodes.findIndex((node) => node.id === nodeId)
+    const index = findIndexById(nodeId, nextNodes)
     nextNodes[index] = { ...nextNodes[index], data: nextNodeValue }
     onChange({ ...value, nodes: nextNodes })
   })
 
   const handleAddHistory = useEventCallback((nodeId: string, nextCoordinates: ICoordinateType) => {
     const nextNodes = [...value.nodes]
-    const index = nextNodes.findIndex((node) => node.id === nodeId)
+    const index = findIndexById(nodeId, nextNodes)
     nextNodes[index] = { ...nextNodes[index], coordinates: nextCoordinates }
 
     onAddHistory({ ...value, nodes: nextNodes })
+  })
+
+  const handleNodeCopy = useEventCallback((nodeId: string) => {
+    const index = findIndexById(nodeId, value.nodes)
+    const newNode = copyNode(value.nodes[index])
+    onChange({ ...value, nodes: [...value.nodes, newNode] })
+  })
+
+  const handleNodeDelete = useEventCallback((nodeId: string) => {
+    const nextNodes = [...value.nodes]
+    const index = findIndexById(nodeId, nextNodes)
+    const currentNode = value.nodes[index]
+    const nodeOutputs = currentNode.outputs.map((port) => port.id)
+    const nodeInputs = currentNode.inputs.map((port) => port.id)
+    nextNodes.splice(index, 1)
+    // 删除和节点相关的所有线
+    let nextLinks = value.links.filter((link) => {
+      return (
+        !nodeInputs.includes(link.output) &&
+        !nodeOutputs.includes(link.input) &&
+        link.input !== nodeId &&
+        link.output !== nodeId
+      )
+    })
+    onChange({ ...value, links: nextLinks, nodes: nextNodes })
   })
 
   // when a port is registered, save it to the local reference
@@ -92,6 +118,8 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         onSegmentFail={onSegmentFail}
         onNodePositionChange={handleNodePositionChange}
         onNodeValueChange={handleNodeValueChange}
+        onNodeDelete={handleNodeDelete}
+        onNodeCopy={handleNodeCopy}
         onSegmentConnect={onSegmentConnect}
         onAddHistory={handleAddHistory}
         activeNodeIds={activeNodeIds}

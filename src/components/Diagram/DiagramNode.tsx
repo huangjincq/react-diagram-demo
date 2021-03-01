@@ -19,8 +19,8 @@ interface DiagramNodeProps {
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
   activeNodeIds: string[]
-  // onNodeCopy: (index: number) => void
-  // onNodeDelete: () => void
+  onNodeDelete: (nodeId: string) => void
+  onNodeCopy: (nodeId: string) => void
 }
 
 export const DiagramNode: React.FC<DiagramNodeProps> = React.memo(
@@ -35,10 +35,13 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo(
       onSegmentFail,
       onSegmentConnect,
       onAddHistory,
-      activeNodeIds
+      activeNodeIds,
+      onNodeDelete,
+      onNodeCopy
     } = props
 
     const {id, coordinates, type, inputs, data, outputs} = nodeInfo
+
 
     const scale = useScale()
 
@@ -100,7 +103,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo(
         {component && React.createElement(component, nodeItemProps)}
         <DiagramNodePorts inputs={inputs} {...options} type="input"/>
         <DiagramNodePorts inputs={outputs} {...options} type="output"/>
-        {/*<DiagramNodeActionButtons onNodeCopy={onNodeCopy}/>*/}
+        <DiagramNodeActionButtons id={id} onNodeDelete={onNodeDelete} onNodeCopy={onNodeCopy}/>
       </div>
     )
   }

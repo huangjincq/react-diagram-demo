@@ -1,4 +1,4 @@
-import { ICoordinateType } from '../types'
+import { ICoordinateType, INodeType } from '../types'
 
 // 计算 鼠标事件 相对在 diagram 画布内的坐标
 export const calculatingCoordinates = (
@@ -6,7 +6,7 @@ export const calculatingCoordinates = (
   diagramDom: HTMLDivElement | null,
   scale: number
 ): ICoordinateType => {
-  const diagramDomRect = diagramDom?.getBoundingClientRect() || { x: 0, y: 0 }
+  const diagramDomRect = diagramDom?.getBoundingClientRect() || {x: 0, y: 0}
   return [(event.clientX - diagramDomRect.x) / scale, (event.clientY - diagramDomRect.y) / scale]
 }
 
@@ -46,9 +46,12 @@ export const collideCheck = (dom1: HTMLElement | null, dom2: HTMLElement | null)
 export const getPathMidpoint = (pathElement: SVGPathElement): ICoordinateType => {
   if (pathElement.getTotalLength && pathElement.getPointAtLength) {
     const midpoint = pathElement.getTotalLength() / 2
-    const { x, y } = pathElement.getPointAtLength(midpoint)
+    const {x, y} = pathElement.getPointAtLength(midpoint)
     return [x, y]
   }
 
   return [0, 0]
 }
+
+
+export const findIndexById = (nodeId: string, nodes: INodeType[]) => nodes.findIndex((node) => node.id === nodeId)

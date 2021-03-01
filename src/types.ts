@@ -1,3 +1,5 @@
+export type NodeTypeEnum = 'nodeTypeInput' | 'nodeTypeSelect' | 'nodeTypeButton'
+
 /*
  * 坐标 数据类型
  * */
@@ -16,7 +18,7 @@ export interface IPointType {
  * */
 export interface INodeType {
   id: string
-  type: 'nodeTypeInput' | 'nodeTypeSelect' | 'nodeTypeButton' // node 类型
+  type: NodeTypeEnum // node 类型
   inputs: IPointType[] // node 输入点
   outputs: IPointType[] // node 输出点
   coordinates: ICoordinateType // [node left 值，node top 值]
