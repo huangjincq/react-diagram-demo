@@ -12,11 +12,23 @@ interface PortProps extends IPointType {
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
+  onShowSelectModel: (event: MouseEvent) => void
   onPortMount: (id: string, dom: HTMLElement) => void
 }
 
 export const Port: React.FC<PortProps> = React.memo((props) => {
-  const { id, isLinked, index, nodeId, onDragNewSegment, onSegmentFail, onSegmentConnect, onPortMount, type } = props
+  const {
+    id,
+    isLinked,
+    index,
+    nodeId,
+    onDragNewSegment,
+    onSegmentFail,
+    onSegmentConnect,
+    onShowSelectModel,
+    onPortMount,
+    type,
+  } = props
   const canvasRef = useDiagramCanvas()
   const scale = useScale()
   const ref: any = useRef<React.RefObject<HTMLElement>>(null)
@@ -63,6 +75,10 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
     const targetNode = findEventTargetParentNodeId(event.target as HTMLElement)
     if (targetNode && targetNode !== nodeId) {
       onSegmentConnect(id, targetNode)
+      return
+    }
+    if (true) {
+      onShowSelectModel(event)
       return
     }
     // 否则在空白区域松开 释放

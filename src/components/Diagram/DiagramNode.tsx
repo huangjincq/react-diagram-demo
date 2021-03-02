@@ -19,6 +19,7 @@ interface DiagramNodeProps {
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
+  onShowSelectModel: (event: MouseEvent) => void
   activeNodeIds: string[]
   onNodeDelete: (nodeId: string) => void
   onNodeCopy: (nodeId: string) => void
@@ -34,6 +35,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     onNodeMount,
     onSegmentFail,
     onSegmentConnect,
+    onShowSelectModel,
     onAddHistory,
     activeNodeIds,
     onNodeDelete,
@@ -87,7 +89,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     eventBus.emit(NODE_MOVE_END)
   })
 
-  const options = { nodeId: id, onPortMount, onDragNewSegment, onSegmentFail, onSegmentConnect }
+  const options = { nodeId: id, onPortMount, onDragNewSegment, onSegmentFail, onSegmentConnect, onShowSelectModel }
 
   useEffect(() => {
     onNodeMount(id, ref.current)

@@ -11,6 +11,7 @@ import useEventCallback from '../../hooks/useEventCallback'
 import { findIndexById } from '../../utils'
 import { copyNode } from '../NodeTypes/config'
 import { MarkLine } from './MarkLine'
+import { SelectModel } from './SelectModel'
 
 interface DiagramProps {
   value: IDiagramType
@@ -23,6 +24,7 @@ interface DiagramProps {
 export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   const { value, onChange, onAddHistory, transform, activeNodeIds } = props
   const [segment, setSegment] = useState<ISegmentType | undefined>()
+  const [selectModelPosition, setSelectModelPosition] = useState<ICoordinateType>()
   const { current: portRefs } = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
   const { current: nodeRefs } = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
 
@@ -95,6 +97,10 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     setSegment(undefined)
   }, [])
 
+  const onShowSelectModel = useEventCallback((event: MouseEvent) => {
+    setSelectModelPosition([event.clientX, event.clientY])
+  })
+
   // when a segment connects, update the links schema, perform the onChange callback
   // with the new data, then reset the segment state
   const onSegmentConnect = useEventCallback((input: string, output: string) => {
@@ -117,6 +123,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         onPortMount={onPortRegister}
         onDragNewSegment={onDragNewSegment}
         onSegmentFail={onSegmentFail}
+        onShowSelectModel={onShowSelectModel}
         onNodePositionChange={handleNodePositionChange}
         onNodeValueChange={handleNodeValueChange}
         onNodeDelete={handleNodeDelete}
@@ -128,6 +135,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
       {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete} />}
       {segment && <Segment segment={segment} />}
       <MarkLine onNodePositionChange={handleNodePositionChange} />
+      <SelectModel position={selectModelPosition} />
     </DiagramCanvas>
   )
 })
