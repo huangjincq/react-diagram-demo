@@ -1,5 +1,5 @@
 import { isEqual } from 'lodash-es'
-import React, { useCallback, useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import { ICoordinateType } from '../../types'
 import eventBus, { NODE_MOVE_END, NODE_MOVING } from '../../utils/eventBus'
 
@@ -27,106 +27,6 @@ const isNearly = (dragValue: number, targetValue: number) => Math.abs(dragValue 
 export const MarkLine: React.FC<MarkLineProps> = React.memo(({ onNodePositionChange }) => {
   const ref = useRef<HTMLDivElement>(null)
 
-  const handleMove = (nodeId: string, coordinates: ICoordinateType) => {
-    handleHideLine()
-
-    const curNodeDom = document.getElementById(nodeId)
-    if (!curNodeDom) return
-
-    const curNodeStyle = getNodeStyle(curNodeDom)
-
-    const nodes = Array.from(document.querySelectorAll('.diagram-node'))
-    nodes.forEach((node) => {
-      if (nodeId !== node.id) {
-        const nodeStyle = getNodeStyle(node)
-        const { top, left, bottom, right } = nodeStyle
-        const conditions: any = {
-          top: [
-            {
-              isNearly: isNearly(curNodeStyle.top, top),
-              lineNode: ref.current?.childNodes[0],
-              line: 'x-top',
-              dragShift: top,
-              lineShift: top,
-            },
-            {
-              isNearly: isNearly(curNodeStyle.bottom, top),
-              lineNode: ref.current?.childNodes[0],
-              line: 'x-top',
-              dragShift: top - curNodeStyle.height,
-              lineShift: top,
-            },
-            {
-              isNearly: isNearly(curNodeStyle.top, bottom),
-              lineNode: ref.current?.childNodes[1],
-              line: 'x-bottom',
-              dragShift: bottom,
-              lineShift: bottom,
-            },
-            {
-              isNearly: isNearly(curNodeStyle.bottom, bottom),
-              lineNode: ref.current?.childNodes[1],
-              line: 'x-bottom',
-              dragShift: bottom - curNodeStyle.height,
-              lineShift: bottom,
-            },
-          ],
-          left: [
-            {
-              isNearly: isNearly(curNodeStyle.left, left),
-              lineNode: ref.current?.childNodes[2],
-              line: 'y-left',
-              dragShift: left,
-              lineShift: left,
-            },
-            {
-              isNearly: isNearly(curNodeStyle.right, left),
-              lineNode: ref.current?.childNodes[2],
-              line: 'y-left',
-              dragShift: left - curNodeStyle.width,
-              lineShift: left,
-            },
-            {
-              isNearly: isNearly(curNodeStyle.left, right),
-              lineNode: ref.current?.childNodes[3],
-              line: 'y-right',
-              dragShift: right,
-              lineShift: right,
-            },
-            {
-              isNearly: isNearly(curNodeStyle.right, right),
-              lineNode: ref.current?.childNodes[3],
-              line: 'y-right',
-              dragShift: right - curNodeStyle.width,
-              lineShift: right,
-            },
-          ],
-        }
-
-        Object.keys(conditions).forEach((key: string) => {
-          conditions[key].forEach((condition: any) => {
-            if (condition.isNearly) {
-              if (condition.lineNode) {
-                condition.lineNode.style[key] = `${condition.lineShift}px`
-                condition.lineNode.style.visibility = 'visible'
-              }
-              let newCoordinates: ICoordinateType = [...coordinates]
-              if (key === 'top') {
-                newCoordinates = [coordinates[0], condition.dragShift]
-              } else {
-                newCoordinates = [condition.dragShift, coordinates[1]]
-              }
-
-              if (!isEqual(newCoordinates, coordinates)) {
-                onNodePositionChange(nodeId, newCoordinates)
-              }
-            }
-          })
-        })
-      }
-    })
-  }
-
   const handleHideLine = useCallback(() => {
     if (ref.current) {
       ref.current.childNodes.forEach((markLine) => {
@@ -138,6 +38,109 @@ export const MarkLine: React.FC<MarkLineProps> = React.memo(({ onNodePositionCha
     }
   }, [ref])
 
+  const handleMove = useCallback(
+    (nodeId: string, coordinates: ICoordinateType) => {
+      handleHideLine()
+
+      const curNodeDom = document.getElementById(nodeId)
+      if (!curNodeDom) return
+
+      const curNodeStyle = getNodeStyle(curNodeDom)
+
+      const nodes = Array.from(document.querySelectorAll('.diagram-node'))
+      nodes.forEach((node) => {
+        if (nodeId !== node.id) {
+          const nodeStyle = getNodeStyle(node)
+          const { top, left, bottom, right } = nodeStyle
+          const conditions: any = {
+            top: [
+              {
+                isNearly: isNearly(curNodeStyle.top, top),
+                lineNode: ref.current?.childNodes[0],
+                line: 'x-top',
+                dragShift: top,
+                lineShift: top,
+              },
+              {
+                isNearly: isNearly(curNodeStyle.bottom, top),
+                lineNode: ref.current?.childNodes[0],
+                line: 'x-top',
+                dragShift: top - curNodeStyle.height,
+                lineShift: top,
+              },
+              {
+                isNearly: isNearly(curNodeStyle.top, bottom),
+                lineNode: ref.current?.childNodes[1],
+                line: 'x-bottom',
+                dragShift: bottom,
+                lineShift: bottom,
+              },
+              {
+                isNearly: isNearly(curNodeStyle.bottom, bottom),
+                lineNode: ref.current?.childNodes[1],
+                line: 'x-bottom',
+                dragShift: bottom - curNodeStyle.height,
+                lineShift: bottom,
+              },
+            ],
+            left: [
+              {
+                isNearly: isNearly(curNodeStyle.left, left),
+                lineNode: ref.current?.childNodes[2],
+                line: 'y-left',
+                dragShift: left,
+                lineShift: left,
+              },
+              {
+                isNearly: isNearly(curNodeStyle.right, left),
+                lineNode: ref.current?.childNodes[2],
+                line: 'y-left',
+                dragShift: left - curNodeStyle.width,
+                lineShift: left,
+              },
+              {
+                isNearly: isNearly(curNodeStyle.left, right),
+                lineNode: ref.current?.childNodes[3],
+                line: 'y-right',
+                dragShift: right,
+                lineShift: right,
+              },
+              {
+                isNearly: isNearly(curNodeStyle.right, right),
+                lineNode: ref.current?.childNodes[3],
+                line: 'y-right',
+                dragShift: right - curNodeStyle.width,
+                lineShift: right,
+              },
+            ],
+          }
+
+          Object.keys(conditions).forEach((key: string) => {
+            conditions[key].forEach((condition: any) => {
+              if (condition.isNearly) {
+                if (condition.lineNode) {
+                  condition.lineNode.style[key] = `${condition.lineShift}px`
+                  condition.lineNode.style.visibility = 'visible'
+                }
+                let newCoordinates: ICoordinateType = [...coordinates]
+                if (key === 'top') {
+                  newCoordinates = [coordinates[0], condition.dragShift]
+                } else {
+                  newCoordinates = [condition.dragShift, coordinates[1]]
+                }
+
+                if (!isEqual(newCoordinates, coordinates)) {
+                  onNodePositionChange(nodeId, newCoordinates)
+                }
+              }
+            })
+          })
+        }
+      })
+    },
+    [handleHideLine, onNodePositionChange]
+  )
+
   useEffect(() => {
     eventBus.on(NODE_MOVING, handleMove)
     eventBus.on(NODE_MOVE_END, handleHideLine)
@@ -145,7 +148,7 @@ export const MarkLine: React.FC<MarkLineProps> = React.memo(({ onNodePositionCha
       eventBus.off(NODE_MOVING, handleMove)
       eventBus.off(NODE_MOVE_END, handleHideLine)
     }
-  }, [ref])
+  }, [ref, handleMove, handleHideLine])
 
   return (
     <div className="mark-line" ref={ref}>
