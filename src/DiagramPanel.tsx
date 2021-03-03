@@ -6,7 +6,7 @@ import { NodeList } from './components/NodeList/NodeList'
 import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionArea } from './types'
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
-import { checkMouseDownTargetIsDrawPanel, collideCheck } from './utils'
+import { calculatingCoordinates, checkMouseDownTargetIsDrawPanel, collideCheck } from './utils'
 import { MarkLine } from './components/Diagram/MarkLine'
 // import { useThrottleFn } from 'react-use'
 
@@ -119,15 +119,13 @@ function DiagramPanel() {
         event = window.event
       }
       const nodeType = event.dataTransfer.getData('nodeType')
-      const x = event.clientX
-      const y = event.clientY
 
-      const diagramCanvasRect = document.getElementById('diagram-canvas')?.getBoundingClientRect() || { x: 0, y: 0 }
+      const coordinates: ICoordinateType = calculatingCoordinates(
+        event,
+        document.getElementById('diagram-canvas'),
+        transform.scale
+      )
 
-      const coordinates: ICoordinateType = [
-        (x - diagramCanvasRect.x) / transform.scale,
-        (y - diagramCanvasRect.y) / transform.scale,
-      ]
       const newNode = createNode(nodeType, coordinates)
       handleChange({ ...value, nodes: [...value.nodes, newNode] })
     },

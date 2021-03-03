@@ -219,10 +219,35 @@
   right: 0;
   bottom: 0;
   z-index: 2000;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.3);
 }
 .select-model-content {
   position: relative;
+  background-color: #fff;
+  width: 160px;
+  max-height: 200px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  border-radius: 4px;
+  list-style: none;
+  padding: 5px 0;
+  overflow: overlay;
+}
+.select-model-item {
+  height: 28px;
+  cursor: pointer;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  &:hover {
+    background-color: #eeeeee;
+  }
+}
+.select-model-text {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-left: 10px;
 }
 
 // ----------------------------

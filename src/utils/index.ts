@@ -1,13 +1,13 @@
 import { ICoordinateType, INodeType } from '../types'
 
-// 计算 鼠标事件 相对在 diagram 画布内的坐标
+// 计算 鼠标事件 相对在 参照物(diagram 画布)内的坐标
 export const calculatingCoordinates = (
   event: MouseEvent,
-  diagramDom: HTMLDivElement | null,
+  referenceDom: HTMLDivElement | HTMLElement | null,
   scale: number
 ): ICoordinateType => {
-  const diagramDomRect = diagramDom?.getBoundingClientRect() || {x: 0, y: 0}
-  return [(event.clientX - diagramDomRect.x) / scale, (event.clientY - diagramDomRect.y) / scale]
+  const referenceDomRect = referenceDom?.getBoundingClientRect() || { x: 0, y: 0 }
+  return [(event.clientX - referenceDomRect.x) / scale, (event.clientY - referenceDomRect.y) / scale]
 }
 
 export const findEventTargetParentNodeId = (dom: HTMLElement | null): null | string => {
@@ -46,12 +46,11 @@ export const collideCheck = (dom1: HTMLElement | null, dom2: HTMLElement | null)
 export const getPathMidpoint = (pathElement: SVGPathElement): ICoordinateType => {
   if (pathElement.getTotalLength && pathElement.getPointAtLength) {
     const midpoint = pathElement.getTotalLength() / 2
-    const {x, y} = pathElement.getPointAtLength(midpoint)
+    const { x, y } = pathElement.getPointAtLength(midpoint)
     return [x, y]
   }
 
   return [0, 0]
 }
-
 
 export const findIndexById = (nodeId: string, nodes: INodeType[]) => nodes.findIndex((node) => node.id === nodeId)

@@ -5,11 +5,20 @@ import { LinksCanvas } from './LinksCanvas'
 import { Segment } from './Segment'
 
 import './style.scss'
-import { IDiagramType, ILinkType, ISegmentType, IPortRefs, INodeRefs, ITransform, ICoordinateType } from '../../types'
+import {
+  IDiagramType,
+  ILinkType,
+  ISegmentType,
+  IPortRefs,
+  INodeRefs,
+  ITransform,
+  ICoordinateType,
+  NodeTypeEnum,
+} from '../../types'
 import { cloneDeep, isEqual } from 'lodash-es'
 import useEventCallback from '../../hooks/useEventCallback'
-import { findIndexById } from '../../utils'
-import { copyNode } from '../NodeTypes/config'
+import { calculatingCoordinates, findIndexById } from '../../utils'
+import { copyNode, createNode } from '../NodeTypes/config'
 import { MarkLine } from './MarkLine'
 import { SelectModel } from './SelectModel'
 
@@ -99,6 +108,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   const onShowSelectModel = useEventCallback((event: MouseEvent) => {
     setSelectModelPosition([event.clientX, event.clientY])
+    setSegment(undefined)
   })
 
   // when a segment connects, update the links schema, perform the onChange callback
@@ -113,6 +123,19 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   const onLinkDelete = useEventCallback((link: ILinkType) => {
     const nextLinks = value.links.filter((item) => !isEqual(item, link))
     onChange({ ...value, links: nextLinks })
+  })
+
+  const handleSelectModelChange = useEventCallback((nodeType?: NodeTypeEnum) => {
+    if (nodeType && selectModelPosition) {
+      const coordinates: ICoordinateType = calculatingCoordinates(
+        { clientX: selectModelPosition[0], clientY: selectModelPosition[1] } as MouseEvent,
+        document.getElementById('diagram-canvas'),
+        transform.scale
+      )
+      const newNode = createNode(nodeType, coordinates)
+      onChange({ ...value, nodes: [...value.nodes, newNode] })
+    }
+    setSelectModelPosition(undefined)
   })
 
   return (
@@ -135,7 +158,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
       {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete} />}
       {segment && <Segment segment={segment} />}
       <MarkLine onNodePositionChange={handleNodePositionChange} />
-      <SelectModel position={selectModelPosition} />
+      <SelectModel position={selectModelPosition} onChange={handleSelectModelChange} />
     </DiagramCanvas>
   )
 })
