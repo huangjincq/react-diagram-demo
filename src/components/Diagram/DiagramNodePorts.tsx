@@ -10,20 +10,10 @@ export interface DiagramNodePortsProps {
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
-  onShowSelectModel: (event: MouseEvent) => void
 }
 
 export const DiagramNodePorts: React.FC<DiagramNodePortsProps> = (props) => {
-  const {
-    inputs,
-    onPortMount,
-    onDragNewSegment,
-    onSegmentFail,
-    onSegmentConnect,
-    onShowSelectModel,
-    nodeId,
-    type,
-  } = props
+  const { inputs, onPortMount, onDragNewSegment, onSegmentFail, onSegmentConnect, nodeId, type } = props
   return (
     <>
       {inputs.map((port, index) => (
@@ -31,7 +21,6 @@ export const DiagramNodePorts: React.FC<DiagramNodePortsProps> = (props) => {
           onPortMount={onPortMount}
           onDragNewSegment={onDragNewSegment}
           onSegmentFail={onSegmentFail}
-          onShowSelectModel={onShowSelectModel}
           onSegmentConnect={onSegmentConnect}
           type={type}
           key={port.id}
