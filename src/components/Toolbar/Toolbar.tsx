@@ -8,6 +8,7 @@ export interface ToolbarProps {
   redo: () => void
   canUndo: boolean
   canRedo: boolean
+  onAutoLayout?: () => void
   scale: number
 }
 
@@ -16,7 +17,7 @@ const scaleList = [
   { text: '空格 + 鼠标拖动', value: 2 },
 ]
 
-export const Toolbar: React.FC<ToolbarProps> = React.memo(({ undo, redo, canUndo, canRedo, scale }) => {
+export const Toolbar: React.FC<ToolbarProps> = React.memo(({ undo, redo, canUndo, canRedo, scale, onAutoLayout }) => {
   const scaleContent = useMemo(() => {
     return (
       <div>
@@ -31,6 +32,7 @@ export const Toolbar: React.FC<ToolbarProps> = React.memo(({ undo, redo, canUndo
 
   return (
     <div className="toolbar">
+      <Button disabled>{scale * 100}%</Button>
       <Button disabled={!canUndo} onClick={undo}>
         撤销
       </Button>
@@ -40,7 +42,7 @@ export const Toolbar: React.FC<ToolbarProps> = React.memo(({ undo, redo, canUndo
       <Popover placement="right" content={scaleContent} overlayClassName="scale-popover">
         <Button>快捷键</Button>
       </Popover>
-      <Button>{scale * 100}%</Button>
+      <Button onClick={onAutoLayout}>自动排列</Button>
     </div>
   )
 })

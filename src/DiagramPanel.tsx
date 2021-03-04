@@ -7,12 +7,13 @@ import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionAr
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
 import { calculatingCoordinates, checkMouseDownTargetIsDrawPanel, collideCheck } from './utils'
+import autoLayout from './utils/autoLayout'
 // import { useThrottleFn } from 'react-use'
 
 const manyNode: any = new Array(3).fill({}).map((item, index) => {
   return {
     id: 'node-' + index,
-    coordinates: [index * 40, index * 50],
+    coordinates: [index * 40 + 200, index * 50],
     inputs: [],
     outputs: [{ id: 'port-' + index, isLinked: false }],
     type: 'nodeTypeInput',

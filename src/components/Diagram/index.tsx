@@ -21,6 +21,7 @@ import { calculatingCoordinates, findIndexById } from '../../utils'
 import { copyNode, createNode } from '../NodeTypes/config'
 import { MarkLine } from './MarkLine'
 import { SelectModel } from './SelectModel'
+import autoLayout from '../../utils/autoLayout'
 
 interface DiagramProps {
   value: IDiagramType
@@ -148,6 +149,10 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     setSelectModelPosition(undefined)
   })
 
+  const handleAutoLayout = () => {
+    autoLayout(value, nodeRefs)
+  }
+
   return (
     <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} transform={transform}>
       <NodesCanvas
@@ -165,6 +170,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         onAddHistory={handleAddHistory}
         activeNodeIds={activeNodeIds}
       />
+      <button onClick={handleAutoLayout}>点击我自动排列</button>
       {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete} />}
       {segment && <Segment segment={segment} />}
       <MarkLine onNodePositionChange={handleNodePositionChange} />
