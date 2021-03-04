@@ -10,7 +10,7 @@ export interface DiagramNodePortsProps {
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
-  onShowSelectModel: (event: MouseEvent) => void
+  onShowSelectModel: (event: MouseEvent, input: string) => void
 }
 
 export const DiagramNodePorts: React.FC<DiagramNodePortsProps> = (props) => {

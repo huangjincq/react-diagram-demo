@@ -12,7 +12,7 @@ interface PortProps extends IPointType {
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
-  onShowSelectModel: (event: MouseEvent) => void
+  onShowSelectModel: (event: MouseEvent, input: string) => void
   onPortMount: (id: string, dom: HTMLElement) => void
 }
 
@@ -78,7 +78,7 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
       return
     }
     if (true) {
-      onShowSelectModel(event)
+      onShowSelectModel(event, id)
       return
     }
     // 否则在空白区域松开 释放

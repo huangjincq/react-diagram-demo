@@ -9,7 +9,7 @@ interface NodesCanvasProps {
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
-  onShowSelectModel: (event: MouseEvent) => void
+  onShowSelectModel: (event: MouseEvent, input: string) => void
   activeNodeIds: string[]
   onNodePositionChange: (id: string, nextCoords: ICoordinateType) => void
   onNodeValueChange: (id: string, nextNodeValue: any) => void

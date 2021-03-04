@@ -15,7 +15,7 @@ import {
   ICoordinateType,
   NodeTypeEnum,
 } from '../../types'
-import { cloneDeep, isEqual } from 'lodash-es'
+import { isEqual } from 'lodash-es'
 import useEventCallback from '../../hooks/useEventCallback'
 import { calculatingCoordinates, findIndexById } from '../../utils'
 import { copyNode, createNode } from '../NodeTypes/config'
@@ -36,6 +36,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   const [selectModelPosition, setSelectModelPosition] = useState<ICoordinateType>()
   const { current: portRefs } = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
   const { current: nodeRefs } = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
+  const startPortIdRef = useRef<string>() // 保存所有 Node 的 Dom 节点
 
   const handleNodePositionChange = useEventCallback((nodeId: string, nextCoordinates: ICoordinateType) => {
     const nextNodes = [...value.nodes]
@@ -106,7 +107,8 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     setSegment(undefined)
   }, [])
 
-  const onShowSelectModel = useEventCallback((event: MouseEvent) => {
+  const onShowSelectModel = useEventCallback((event: MouseEvent, input: string) => {
+    startPortIdRef.current = input
     setSelectModelPosition([event.clientX, event.clientY])
     setSegment(undefined)
   })
@@ -114,8 +116,12 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   // when a segment connects, update the links schema, perform the onChange callback
   // with the new data, then reset the segment state
   const onSegmentConnect = useEventCallback((input: string, output: string) => {
-    const nextLinks = [...value.links, { input, output }]
-    onChange({ ...value, links: nextLinks })
+    const linkIsExists = value.links.findIndex((link) => link.input === input && link.output === output) > -1
+    if (!linkIsExists) {
+      const nextLinks = [...value.links, { input, output }]
+
+      onChange({ ...value, links: nextLinks })
+    }
     setSegment(undefined)
   })
 
@@ -134,6 +140,10 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
       )
       const newNode = createNode(nodeType, coordinates)
       onChange({ ...value, nodes: [...value.nodes, newNode] })
+      // nodes 更新后 渲染 link
+      setTimeout(() => {
+        onSegmentConnect(startPortIdRef.current || '', newNode.id)
+      }, 20)
     }
     setSelectModelPosition(undefined)
   })

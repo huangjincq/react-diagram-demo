@@ -19,7 +19,7 @@ interface DiagramNodeProps {
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
-  onShowSelectModel: (event: MouseEvent) => void
+  onShowSelectModel: (event: MouseEvent, input: string) => void
   activeNodeIds: string[]
   onNodeDelete: (nodeId: string) => void
   onNodeCopy: (nodeId: string) => void
