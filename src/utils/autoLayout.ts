@@ -41,25 +41,26 @@ const recursionLookup = (
   row: number,
   extendNodes: ExtendActionDto[],
   links: ILinkType[],
-  maxLoopCount = 1000
+  catchNodeIds: string[]
 ) => {
+  if (catchNodeIds.includes(linkEndId)) return
+  catchNodeIds.push(linkEndId)
   const nodeIndex = extendNodes.findIndex((node) => node.id === findPortFatherNodeId(linkEndId, extendNodes))
   extendNodes[nodeIndex].row = row
   extendNodes[nodeIndex].column = baseColumn
   baseColumn++
-  if (baseColumn > maxLoopCount + 10) {
-    return
-  }
+
   extendNodes[nodeIndex].outputs.forEach((port) => {
     const findLink = links.find((link) => link.input === port.id)
 
     if (findLink) {
-      recursionLookup(findLink.output, baseColumn, row, extendNodes, links, maxLoopCount)
+      recursionLookup(findLink.output, baseColumn, row, extendNodes, links, catchNodeIds)
     }
   })
 }
-
-// todo 需要优化
+/*
+ * 自动排列 需要根据实际的点和线 连接放松排列 这里的自动排列涵盖情况有限 重新排列效果仅供参考
+ */
 export default function autoLayout(value: IDiagramType, nodeRefs: INodeRefs) {
   const { links = [], nodes = [] } = value
   let row = 1
@@ -72,17 +73,14 @@ export default function autoLayout(value: IDiagramType, nodeRefs: INodeRefs) {
     }
   })
 
-  const maxLoopCount = nodes.reduce((pre, cur) => pre + cur.outputs.length + cur.inputs.length + 1, 0)
-
   links.forEach((link) => {
     if (checkIsStartLink(link.input, links, extendNodes)) {
-      console.log(2)
-
       const portFatherNodeId = findPortFatherNodeId(link.input, extendNodes)
+      const catchNodeIds = [portFatherNodeId]
       const nodeIndex = extendNodes.findIndex((node) => node.id === portFatherNodeId)
       extendNodes[nodeIndex].row = extendNodes[nodeIndex].row || row
       extendNodes[nodeIndex].column = 1
-      recursionLookup(link.output, 2, row, extendNodes, links, maxLoopCount)
+      recursionLookup(link.output, 2, row, extendNodes, links, catchNodeIds)
       row++
     }
   })
