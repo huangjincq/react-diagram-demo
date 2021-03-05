@@ -288,7 +288,6 @@ function DiagramPanel() {
       style={{ cursor }}
     >
       <Diagram
-        ref={diagramRef}
         value={value}
         transform={transform}
         onChange={handleChange}
