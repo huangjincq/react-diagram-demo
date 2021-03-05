@@ -75,6 +75,15 @@ export interface ISelectionArea {
   height: number
 }
 
+export interface INodeStyle {
+  width: number
+  height: number
+  left: number
+  top: number
+  right: number
+  bottom: number
+}
+
 export interface INodeItemProps<T> {
   value: T
   onChange: (value: T) => void

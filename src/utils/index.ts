@@ -1,4 +1,4 @@
-import { ICoordinateType, INodeType } from '../types'
+import { ICoordinateType, INodeStyle, INodeType } from '../types'
 
 // 计算 鼠标事件 相对在 参照物(diagram 画布)内的坐标
 export const calculatingCoordinates = (
@@ -54,3 +54,17 @@ export const getPathMidpoint = (pathElement: SVGPathElement): ICoordinateType =>
 }
 
 export const findIndexById = (nodeId: string, nodes: INodeType[]) => nodes.findIndex((node) => node.id === nodeId)
+
+export const getNodeStyle = (nodeDom: Element): INodeStyle => {
+  const dom = nodeDom as HTMLElement
+  const width = dom.offsetHeight
+  const height = dom.offsetHeight
+  return {
+    width,
+    height,
+    left: dom.offsetLeft,
+    top: dom.offsetTop,
+    right: dom.offsetLeft + width,
+    bottom: dom.offsetTop + height,
+  }
+}
