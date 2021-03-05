@@ -151,7 +151,6 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   const handleAutoLayout = () => {
     const resultValue = autoLayout(value, nodeRefs)
-    console.log(resultValue)
     onChange(resultValue)
   }
 

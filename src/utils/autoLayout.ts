@@ -75,6 +75,8 @@ export default function (value: IDiagramType, nodeRefs: INodeRefs) {
 
   links.forEach((link) => {
     if (checkIsStartLink(link.input, links, extendNodes)) {
+      console.log(2)
+
       const portFatherNodeId = findPortFatherNodeId(link.input, extendNodes)
       const nodeIndex = extendNodes.findIndex((node) => node.id === portFatherNodeId)
       extendNodes[nodeIndex].row = row
