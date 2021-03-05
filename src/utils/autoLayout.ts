@@ -80,7 +80,7 @@ export default function autoLayout(value: IDiagramType, nodeRefs: INodeRefs) {
 
       const portFatherNodeId = findPortFatherNodeId(link.input, extendNodes)
       const nodeIndex = extendNodes.findIndex((node) => node.id === portFatherNodeId)
-      extendNodes[nodeIndex].row = row
+      extendNodes[nodeIndex].row = extendNodes[nodeIndex].row || row
       extendNodes[nodeIndex].column = 1
       recursionLookup(link.output, 2, row, extendNodes, links, maxLoopCount)
       row++
@@ -125,15 +125,16 @@ export default function autoLayout(value: IDiagramType, nodeRefs: INodeRefs) {
 
   Object.values(groupRow).forEach((aRow) => {
     const groupColum = groupBy(aRow, (item) => item.column)
-    let baseColumnLeft = LAYOUT_BASIC_COORDINATE.LEFT
     const aRowHeightList = Object.values(groupColum).map((aColumn) => {
       let currentTop = baseRowTop
+
       aColumn.forEach((cell) => {
-        cell.coordinates = [baseColumnLeft, currentTop]
+        cell.coordinates = [(cell.column - 1) * COLUMN_STEP_WIDTH + LAYOUT_BASIC_COORDINATE.LEFT, currentTop]
         currentTop += cell.style.height + SPACING
       })
-      baseColumnLeft += COLUMN_STEP_WIDTH
+
       const columnReduceHeight = aColumn.reduce((pre: number, cur) => cur.style.height + pre + SPACING, 0)
+
       return columnReduceHeight
     })
     const rowMaxHeight = maxBy(aRowHeightList) || 0
