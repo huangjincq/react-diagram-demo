@@ -59,6 +59,7 @@ const recursionLookup = (
   })
 }
 
+// todo 需要优化
 export default function (value: IDiagramType, nodeRefs: INodeRefs) {
   const { links = [], nodes = [] } = value
   let row = 1
