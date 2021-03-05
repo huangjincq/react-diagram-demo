@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useRef } from 'react'
+import React, { useCallback, useState, useRef, useEffect } from 'react'
 import { DiagramCanvas } from './DiagramCanvas'
 import { NodesCanvas } from './NodesCanvas'
 import { LinksCanvas } from './LinksCanvas'
@@ -22,6 +22,7 @@ import { copyNode, createNode } from '../NodeTypes/config'
 import { MarkLine } from './MarkLine'
 import { SelectModel } from './SelectModel'
 import autoLayout from '../../utils/autoLayout'
+import eventBus, { EVENT_AUTO_LAYOUT } from '../../utils/eventBus'
 
 interface DiagramProps {
   value: IDiagramType
@@ -149,10 +150,17 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     setSelectModelPosition(undefined)
   })
 
-  const handleAutoLayout = () => {
+  const handleAutoLayout = useCallback(() => {
     const resultValue = autoLayout(value, nodeRefs)
     onChange(resultValue)
-  }
+  }, [value, nodeRefs, onChange])
+
+  useEffect(() => {
+    eventBus.on(EVENT_AUTO_LAYOUT, handleAutoLayout)
+    return () => {
+      eventBus.off(EVENT_AUTO_LAYOUT, handleAutoLayout)
+    }
+  }, [handleAutoLayout])
 
   return (
     <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} transform={transform}>
@@ -171,7 +179,6 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         onAddHistory={handleAddHistory}
         activeNodeIds={activeNodeIds}
       />
-      <button onClick={handleAutoLayout}>点击我自动排列</button>
       {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete} />}
       {segment && <Segment segment={segment} />}
       <MarkLine onNodePositionChange={handleNodePositionChange} />

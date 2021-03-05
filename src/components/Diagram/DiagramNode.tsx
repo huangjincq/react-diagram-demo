@@ -7,7 +7,7 @@ import { useScale } from '../Context/DiagramManager'
 import { DiagramNodePorts } from './DiagramNodePorts'
 import classnames from 'classnames'
 import { DiagramNodeActionButtons } from './DiagramNodeActionButtons'
-import eventBus, { NODE_MOVE_END, NODE_MOVING } from '../../utils/eventBus'
+import eventBus, { EVENT_NODE_MOVE_END, EVENT_NODE_MOVING } from '../../utils/eventBus'
 
 interface DiagramNodeProps {
   nodeInfo: INodeType
@@ -79,14 +79,14 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     ]
 
     onNodePositionChange(id, nextCoords)
-    eventBus.emit(NODE_MOVING, id, nextCoords)
+    eventBus.emit(EVENT_NODE_MOVING, id, nextCoords)
   })
 
   onDragEnd((event: MouseEvent) => {
     if (!isEqual(dragStartPoint.current, coordinates)) {
       onAddHistory(id, dragStartPoint.current)
     }
-    eventBus.emit(NODE_MOVE_END)
+    eventBus.emit(EVENT_NODE_MOVE_END)
   })
 
   const options = { nodeId: id, onPortMount, onDragNewSegment, onSegmentFail, onSegmentConnect, onShowSelectModel }

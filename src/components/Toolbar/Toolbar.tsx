@@ -1,14 +1,14 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { Button, Popover } from 'antd'
 
 import './style.scss'
+import eventBus, { EVENT_AUTO_LAYOUT } from '../../utils/eventBus'
 
 export interface ToolbarProps {
   undo: () => void
   redo: () => void
   canUndo: boolean
   canRedo: boolean
-  onAutoLayout: () => void
   scale: number
 }
 
@@ -30,7 +30,9 @@ export const Toolbar: React.FC<ToolbarProps> = React.memo(({ undo, redo, canUndo
     )
   }, [])
 
-  const handleAutoLayout = () => {}
+  const handleAutoLayout = useCallback(() => {
+    eventBus.emit(EVENT_AUTO_LAYOUT)
+  }, [])
 
   return (
     <div className="toolbar">

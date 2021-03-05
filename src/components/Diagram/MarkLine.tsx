@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash-es'
 import React, { useCallback, useEffect, useRef } from 'react'
 import { ICoordinateType } from '../../types'
-import eventBus, { NODE_MOVE_END, NODE_MOVING } from '../../utils/eventBus'
+import eventBus, { EVENT_NODE_MOVE_END, EVENT_NODE_MOVING } from '../../utils/eventBus'
 
 export interface MarkLineProps {
   onNodePositionChange: (id: string, nextCoords: ICoordinateType) => void
@@ -142,11 +142,11 @@ export const MarkLine: React.FC<MarkLineProps> = React.memo(({ onNodePositionCha
   )
 
   useEffect(() => {
-    eventBus.on(NODE_MOVING, handleMove)
-    eventBus.on(NODE_MOVE_END, handleHideLine)
+    eventBus.on(EVENT_NODE_MOVING, handleMove)
+    eventBus.on(EVENT_NODE_MOVE_END, handleHideLine)
     return () => {
-      eventBus.off(NODE_MOVING, handleMove)
-      eventBus.off(NODE_MOVE_END, handleHideLine)
+      eventBus.off(EVENT_NODE_MOVING, handleMove)
+      eventBus.off(EVENT_NODE_MOVE_END, handleHideLine)
     }
   }, [ref, handleMove, handleHideLine])
 

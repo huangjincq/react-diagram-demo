@@ -82,7 +82,6 @@ function DiagramPanel() {
   const [selectionArea, setSelectionArea] = useState<ISelectionArea | undefined>()
   const [dragState, setDragState] = useState<string>(DRAG_STATE.DEFAULT)
   const mouseDownStartPosition = useRef<IMousePosition | undefined>()
-  const diagramRef = useRef<any>(null)
   const [activeNodeIds, setActiveNodeIds] = useState<string[]>([])
 
   const panelRef = useRef<HTMLDivElement>(null)
@@ -273,6 +272,7 @@ function DiagramPanel() {
 
   return (
     <div
+      id="diagram-panel"
       ref={panelRef}
       className="diagram-panel"
       onDrop={handleDrop}
@@ -295,14 +295,7 @@ function DiagramPanel() {
         activeNodeIds={activeNodeIds}
       />
       <NodeList />
-      <Toolbar
-        undo={undo}
-        redo={redo}
-        canUndo={canUndo}
-        scale={transform.scale}
-        canRedo={canRedo}
-        onAutoLayout={diagramRef.current?.handleAutoLayout}
-      />
+      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={transform.scale} canRedo={canRedo} />
       <div
         ref={selectionAreaRef}
         className="diagram-selection-area"

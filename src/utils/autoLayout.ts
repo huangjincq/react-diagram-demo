@@ -86,8 +86,6 @@ export default function (value: IDiagramType, nodeRefs: INodeRefs) {
     }
   })
 
-  console.log(extendNodes)
-
   // if is init data update row and column
   extendNodes.forEach((node) => {
     if (node.row === 0) {

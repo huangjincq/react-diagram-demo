@@ -77,9 +77,9 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
       onSegmentConnect(id, targetNode)
       return
     }
-    if (true) {
+    const panelDom = document.getElementById('diagram-panel')
+    if (panelDom && panelDom.contains(event.target as HTMLElement)) {
       onShowSelectModel(event, id)
-      return
     }
     // 否则在空白区域松开 释放
     onSegmentFail && onSegmentFail(id, type)
