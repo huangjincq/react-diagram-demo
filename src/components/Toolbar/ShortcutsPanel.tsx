@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React,  from 'react'
 
 import './style.scss'
 import IconClick from '../../static/icon-click.png'
@@ -10,7 +10,7 @@ export interface ShortcutsPanelProps {}
 const isMac = (() => /macintosh|mac os x/i.test(navigator.userAgent))()
 
 const CTRL_OR_CMD = isMac ? 'CMD' : 'Ctrl'
-const ALT_OR_OPT = isMac ? 'OPT' : 'Alt'
+// const ALT_OR_OPT = isMac ? 'OPT' : 'Alt'
 
 const hotkeyList = [
   { text: '撤销', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'Z' }] },
@@ -33,7 +33,7 @@ export const ShortcutsPanel: React.FC<ShortcutsPanelProps> = React.memo(({}) => 
           <div className="shortcuts-panel-title">{item.text} :</div>
           <div className="shortcuts-panel-list">
             {item.hotKeys.map((keyItem, keyIndex) => (
-              <React.Fragment key={index}>
+              <React.Fragment key={keyIndex}>
                 {keyIndex > 0 && <span className="shortcuts-panel-plus">+</span>}
                 <div className="shortcuts-panel-key">
                   {keyItem.key}
