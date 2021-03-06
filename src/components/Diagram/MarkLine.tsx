@@ -1,5 +1,6 @@
 import { isEqual } from 'lodash-es'
 import React, { useCallback, useEffect, useRef } from 'react'
+import useEventBus from '../../hooks/useEventBus'
 import { ICoordinateType } from '../../types'
 import eventBus, { EVENT_NODE_MOVE_END, EVENT_NODE_MOVING } from '../../utils/eventBus'
 
@@ -141,14 +142,8 @@ export const MarkLine: React.FC<MarkLineProps> = React.memo(({ onNodePositionCha
     [handleHideLine, onNodePositionChange]
   )
 
-  useEffect(() => {
-    eventBus.on(EVENT_NODE_MOVING, handleMove)
-    eventBus.on(EVENT_NODE_MOVE_END, handleHideLine)
-    return () => {
-      eventBus.off(EVENT_NODE_MOVING, handleMove)
-      eventBus.off(EVENT_NODE_MOVE_END, handleHideLine)
-    }
-  }, [ref, handleMove, handleHideLine])
+  useEventBus({ type: EVENT_NODE_MOVING, onChange: handleMove })
+  useEventBus({ type: EVENT_NODE_MOVE_END, onChange: handleHideLine })
 
   return (
     <div className="mark-line" ref={ref}>

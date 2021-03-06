@@ -23,6 +23,7 @@ import { MarkLine } from './MarkLine'
 import { SelectModel } from './SelectModel'
 import autoLayout from '../../utils/autoLayout'
 import eventBus, { EVENT_AUTO_LAYOUT } from '../../utils/eventBus'
+import useEventBus from '../../hooks/useEventBus'
 
 interface DiagramProps {
   value: IDiagramType
@@ -155,12 +156,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     onChange(resultValue)
   }, [value, nodeRefs, onChange])
 
-  useEffect(() => {
-    eventBus.on(EVENT_AUTO_LAYOUT, handleAutoLayout)
-    return () => {
-      eventBus.off(EVENT_AUTO_LAYOUT, handleAutoLayout)
-    }
-  }, [handleAutoLayout])
+  useEventBus({ type: EVENT_AUTO_LAYOUT, onChange: handleAutoLayout })
 
   return (
     <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} transform={transform}>
