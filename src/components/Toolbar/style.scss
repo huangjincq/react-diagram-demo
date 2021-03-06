@@ -26,3 +26,43 @@
     // width: 64px;
   }
 }
+
+.shortcuts-panel {
+  display: flex;
+  flex-wrap: wrap;
+  width: 490px;
+  list-style: none;
+  padding: 8px 0 0 0;
+  margin: 0;
+  &-item {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+    color: #546e7a;
+  }
+  &-title {
+    text-align: right;
+    width: 72px;
+    color: #263238;
+  }
+  &-list {
+    margin-left: 8px;
+    display: flex;
+  }
+  &-icon {
+    width: 26px;
+  }
+  &-key {
+    background-color: rgba(84, 110, 122, 0.1);
+    border-radius: 4px;
+    padding: 0 10px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+  }
+  &-plus {
+    width: 20px;
+    text-align: center;
+  }
+}

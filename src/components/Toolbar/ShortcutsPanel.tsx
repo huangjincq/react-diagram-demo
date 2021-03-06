@@ -14,26 +14,36 @@ const ALT_OR_OPT = isMac ? 'OPT' : 'Alt'
 
 const hotkeyList = [
   { text: '撤销', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'Z' }] },
+  { text: '多选', hotKeys: [{ key: 'Shift' }, { icon: IconClick }] },
   { text: '重做', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'Shift' }, { key: 'Z' }] },
-  { text: '缩放', hotKeys: [{ icon: IconWheel }] },
-  { text: '复制', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'C' }] },
-  { text: '粘贴', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'V' }] },
   { text: '全选', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'A' }] },
-  { text: '自动排列', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'Shift' }, { key: 'A' }] },
-  { text: '删除', hotKeys: [{ key: 'Del' }] },
-  { text: '多选', hotKeys: [{ key: 'Shift' }, { icon: IconMove }] },
+  { text: '复制', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'C' }] },
+  { text: '缩放', hotKeys: [{ icon: IconWheel }] },
+  { text: '粘贴', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'V' }] },
   { text: '移动画布', hotKeys: [{ key: 'Space' }, { icon: IconMove }] },
+  { text: '删除', hotKeys: [{ key: 'Del' }] },
+  { text: '自动排列', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'Shift' }, { key: 'A' }] },
 ]
 
 export const ShortcutsPanel: React.FC<ShortcutsPanelProps> = React.memo(({}) => {
   return (
-    <div>
+    <ul className="shortcuts-panel">
       {hotkeyList.map((item, index) => (
-        <div key={index} className="scale-item">
-          {item.text}
-          <img src={IconWheel} alt="" />
-        </div>
+        <li key={index} className="shortcuts-panel-item">
+          <div className="shortcuts-panel-title">{item.text} :</div>
+          <div className="shortcuts-panel-list">
+            {item.hotKeys.map((keyItem, keyIndex) => (
+              <React.Fragment key={index}>
+                {keyIndex > 0 && <span className="shortcuts-panel-plus">+</span>}
+                <div className="shortcuts-panel-key">
+                  {keyItem.key}
+                  {keyItem.icon && <img className="shortcuts-panel-icon" src={keyItem.icon} alt={item.text} />}
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+        </li>
       ))}
-    </div>
+    </ul>
   )
 })

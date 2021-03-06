@@ -27,7 +27,7 @@ export const Toolbar: React.FC<ToolbarProps> = React.memo(({ undo, redo, canUndo
       <Button disabled={!canRedo} onClick={redo}>
         重做
       </Button>
-      <Popover placement="right" content={<ShortcutsPanel />} overlayClassName="scale-popover">
+      <Popover trigger="click" placement="right" content={<ShortcutsPanel />} overlayClassName="scale-popover">
         <Button>快捷键</Button>
       </Popover>
       <Button onClick={handleAutoLayout}>自动排列</Button>
