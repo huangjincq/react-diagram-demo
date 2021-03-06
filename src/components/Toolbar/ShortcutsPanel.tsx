@@ -1,4 +1,4 @@
-import React,  from 'react'
+import React from 'react'
 
 import './style.scss'
 import IconClick from '../../static/icon-click.png'
