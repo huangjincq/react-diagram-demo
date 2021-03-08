@@ -275,32 +275,34 @@ function DiagramPanel() {
   useEventListener('mousedown', handleMouseDown)
 
   return (
-    <div
-      id="diagram-panel"
-      ref={panelRef}
-      className="diagram-panel"
-      onDrop={handleDrop}
-      onDragEnter={handleDrag}
-      onDragOver={handleDrag}
-      tabIndex={1}
-      style={{ cursor }}
-    >
-      <Diagram
-        value={value}
-        transform={transform}
-        onChange={handleChange}
-        onAddHistory={handleAddHistory}
-        activeNodeIds={activeNodeIds}
-      />
-      <NodeList />
-      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={transform.scale} canRedo={canRedo} />
+    <>
       <div
-        ref={selectionAreaRef}
-        className="diagram-selection-area"
-        hidden={hideSelectionArea}
-        style={selectionAreaStyled}
-      />
-    </div>
+        id="diagram-panel"
+        ref={panelRef}
+        className="diagram-panel"
+        onDrop={handleDrop}
+        onDragEnter={handleDrag}
+        onDragOver={handleDrag}
+        tabIndex={1}
+        style={{ cursor }}
+      >
+        <Diagram
+          value={value}
+          transform={transform}
+          onChange={handleChange}
+          onAddHistory={handleAddHistory}
+          activeNodeIds={activeNodeIds}
+        />
+        <div
+          ref={selectionAreaRef}
+          className="diagram-selection-area"
+          hidden={hideSelectionArea}
+          style={selectionAreaStyled}
+        />
+      </div>
+      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={transform.scale} canRedo={canRedo} />
+      <NodeList />
+    </>
   )
 }
 
