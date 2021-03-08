@@ -7,7 +7,7 @@ import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionAr
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
 import { calculatingCoordinates, checkMouseDownTargetIsDrawPanel, collideCheck } from './utils'
-import autoLayout from './utils/autoLayout'
+import { useHotkeys } from 'react-hotkeys-hook'
 // import { useThrottleFn } from 'react-use'
 
 const manyNode: any = new Array(3).fill({}).map((item, index) => {
@@ -86,6 +86,10 @@ function DiagramPanel() {
 
   const panelRef = useRef<HTMLDivElement>(null)
   const selectionAreaRef = useRef<HTMLDivElement>(null)
+
+  const isFocusInPanel = useMemo(() => {
+    return document.activeElement === panelRef.current
+  }, [panelRef, document.activeElement])
 
   // eslint-disable-next-line
   const handleThrottleSetTransform = useCallback(
@@ -269,6 +273,15 @@ function DiagramPanel() {
     }),
     [selectionArea]
   )
+
+  useHotkeys('ctrl+a', () => {
+    console.log(isFocusInPanel)
+    console.log(document.activeElement === panelRef.current)
+
+    if (isFocusInPanel) {
+      console.log('select All')
+    }
+  })
 
   return (
     <div
