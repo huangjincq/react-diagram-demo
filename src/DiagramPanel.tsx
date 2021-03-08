@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState, memo } from 'react'
+import React, { useCallback, useMemo, useRef, useState, memo, useEffect } from 'react'
 import { Diagram } from './components/Diagram'
 import { useHistory } from './hooks/useHistory'
 import { Toolbar } from './components/Toolbar/Toolbar'
@@ -8,6 +8,8 @@ import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
 import { calculatingCoordinates, checkMouseDownTargetIsDrawPanel, collideCheck } from './utils'
 import { useHotkeys } from 'react-hotkeys-hook'
+import useEventCallback from './hooks/useEventCallback'
+import useEventListener from './hooks/useEventListener'
 // import { useThrottleFn } from 'react-use'
 
 const manyNode: any = new Array(3).fill({}).map((item, index) => {
@@ -87,10 +89,6 @@ function DiagramPanel() {
   const panelRef = useRef<HTMLDivElement>(null)
   const selectionAreaRef = useRef<HTMLDivElement>(null)
 
-  const isFocusInPanel = useMemo(() => {
-    return document.activeElement === panelRef.current
-  }, [panelRef, document.activeElement])
-
   // eslint-disable-next-line
   const handleThrottleSetTransform = useCallback(
     throttle((transform) => {
@@ -140,55 +138,50 @@ function DiagramPanel() {
     e.preventDefault()
   }, [])
 
-  const handleWheel = useCallback(
-    (event: any) => {
-      const wheelDelta = event.nativeEvent.wheelDelta
+  const handleWheel = useEventCallback((event: any) => {
+    if (!panelRef.current?.contains(event.target)) return
+    const wheelDelta = event.wheelDelta
 
-      let { scale, translateX, translateY } = transform
+    let { scale, translateX, translateY } = transform
 
-      const offsetX = ((event.clientX - translateX) * SCALE_STEP) / scale
-      const offsetY = ((event.clientY - translateY) * SCALE_STEP) / scale
+    const offsetX = ((event.clientX - translateX) * SCALE_STEP) / scale
+    const offsetY = ((event.clientY - translateY) * SCALE_STEP) / scale
 
-      if (wheelDelta < 0) {
-        scale = scale - SCALE_STEP
-        translateX = translateX + offsetX
-        translateY = translateY + offsetY
+    if (wheelDelta < 0) {
+      scale = scale - SCALE_STEP
+      translateX = translateX + offsetX
+      translateY = translateY + offsetY
+    }
+    if (wheelDelta > 0) {
+      scale = scale + SCALE_STEP
+      translateX = translateX - offsetX
+      translateY = translateY - offsetY
+    }
+
+    if (scale > 1 || scale < 0.1) return
+
+    handleThrottleSetTransform({
+      scale: Number(scale.toFixed(2)),
+      translateX,
+      translateY,
+    })
+  })
+
+  const handleMouseDown = useEventCallback((event) => {
+    mouseDownStartPosition.current = {
+      x: event.clientX,
+      y: event.clientY,
+      relativeX: event.clientX - transform.translateX,
+      relativeY: event.clientY - transform.translateY,
+    }
+    if (checkMouseDownTargetIsDrawPanel(event, panelRef.current)) {
+      if (dragState === DRAG_STATE.START) {
+        setDragState(DRAG_STATE.MOVE)
+      } else {
+        setDragState(DRAG_STATE.SELECTION)
       }
-      if (wheelDelta > 0) {
-        scale = scale + SCALE_STEP
-        translateX = translateX - offsetX
-        translateY = translateY - offsetY
-      }
-
-      if (scale > 1 || scale < 0.1) return
-
-      handleThrottleSetTransform({
-        scale: Number(scale.toFixed(2)),
-        translateX,
-        translateY,
-      })
-    },
-    [handleThrottleSetTransform, transform]
-  )
-
-  const handleMouseDown = useCallback(
-    (event) => {
-      mouseDownStartPosition.current = {
-        x: event.clientX,
-        y: event.clientY,
-        relativeX: event.clientX - transform.translateX,
-        relativeY: event.clientY - transform.translateY,
-      }
-      if (checkMouseDownTargetIsDrawPanel(event, panelRef.current)) {
-        if (dragState === DRAG_STATE.START) {
-          setDragState(DRAG_STATE.MOVE)
-        } else {
-          setDragState(DRAG_STATE.SELECTION)
-        }
-      }
-    },
-    [dragState, transform]
-  )
+    }
+  })
 
   // eslint-disable-next-line
   const handleThrottleSetSelectionArea = useCallback(
@@ -214,49 +207,40 @@ function DiagramPanel() {
     [transform, value]
   )
 
-  const handleMouseUp = useCallback(
-    (event) => {
-      if (dragState === DRAG_STATE.MOVE) {
-        setDragState(DRAG_STATE.START)
-      } else {
-        setDragState(DRAG_STATE.DEFAULT)
-      }
-      setSelectionArea(undefined)
-      mouseDownStartPosition.current = undefined
-    },
-    [dragState]
-  )
+  const handleMouseUp = useEventCallback((event) => {
+    if (dragState === DRAG_STATE.MOVE) {
+      setDragState(DRAG_STATE.START)
+    } else {
+      setDragState(DRAG_STATE.DEFAULT)
+    }
+    setSelectionArea(undefined)
+    mouseDownStartPosition.current = undefined
+  })
 
-  const handleMouseMove = useCallback(
-    (event) => {
-      if (dragState === DRAG_STATE.MOVE && mouseDownStartPosition.current) {
-        handleThrottleSetTransform({
-          ...transform,
-          translateX: event.clientX - mouseDownStartPosition.current.relativeX,
-          translateY: event.clientY - mouseDownStartPosition.current.relativeY,
-        })
-      }
-      if (dragState === DRAG_STATE.SELECTION) {
-        handleThrottleSetSelectionArea(event)
-      }
-    },
-    [dragState, handleThrottleSetSelectionArea, handleThrottleSetTransform, transform, mouseDownStartPosition]
-  )
+  const handleMouseMove = useEventCallback((event) => {
+    if (dragState === DRAG_STATE.MOVE && mouseDownStartPosition.current) {
+      handleThrottleSetTransform({
+        ...transform,
+        translateX: event.clientX - mouseDownStartPosition.current.relativeX,
+        translateY: event.clientY - mouseDownStartPosition.current.relativeY,
+      })
+    }
+    if (dragState === DRAG_STATE.SELECTION) {
+      handleThrottleSetSelectionArea(event)
+    }
+  })
 
-  const handleKeyDown = useCallback(
-    (event) => {
-      if (event.keyCode === 32 && dragState === DRAG_STATE.DEFAULT) {
-        setDragState(DRAG_STATE.START)
-      }
-    },
-    [dragState]
-  )
+  const handleKeyDown = useEventCallback((event) => {
+    if (event.keyCode === 32 && dragState === DRAG_STATE.DEFAULT) {
+      setDragState(DRAG_STATE.START)
+    }
+  })
 
-  const handleKeyUp = useCallback((event) => {
+  const handleKeyUp = useEventCallback((event) => {
     if (event.keyCode === 32) {
       setDragState(DRAG_STATE.DEFAULT)
     }
-  }, [])
+  })
 
   const cursor = useMemo(() => {
     return CURSOR_MAP[dragState]
@@ -275,13 +259,20 @@ function DiagramPanel() {
   )
 
   useHotkeys('ctrl+a', () => {
-    console.log(isFocusInPanel)
-    console.log(document.activeElement === panelRef.current)
-
-    if (isFocusInPanel) {
-      console.log('select All')
-    }
+    // console.log(isFocusInPanel)
+    // console.log(document.activeElement === panelRef.current)
+    // if (isFocusInPanel) {
+    //   console.log('select All')
+    // }
   })
+  useEventListener('wheel', handleWheel)
+
+  useEventListener('keyup', handleKeyUp)
+  useEventListener('keydown', handleKeyDown)
+
+  useEventListener('mouseup', handleMouseUp)
+  useEventListener('mousemove', handleMouseMove)
+  useEventListener('mousedown', handleMouseDown)
 
   return (
     <div
@@ -292,12 +283,6 @@ function DiagramPanel() {
       onDragEnter={handleDrag}
       onDragOver={handleDrag}
       tabIndex={1}
-      onWheel={handleWheel}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onKeyDown={handleKeyDown}
-      onKeyUp={handleKeyUp}
       style={{ cursor }}
     >
       <Diagram
