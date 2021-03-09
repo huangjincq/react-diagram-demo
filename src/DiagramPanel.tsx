@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState, memo, useEffect } from 'react'
+import React, { useCallback, useMemo, useRef, useState, memo } from 'react'
 import { Diagram } from './components/Diagram'
 import { useHistory } from './hooks/useHistory'
 import { Toolbar } from './components/Toolbar/Toolbar'
@@ -230,14 +230,12 @@ function DiagramPanel() {
     }
   })
 
-  const handleKeyDown = useEventCallback((event) => {
-    if (event.keyCode === 32 && dragState === DRAG_STATE.DEFAULT) {
+  const handleSpaceHotKey = useEventCallback((event: KeyboardEvent) => {
+    if (event.type === 'keydown' && dragState === DRAG_STATE.DEFAULT) {
       setDragState(DRAG_STATE.START)
     }
-  })
 
-  const handleKeyUp = useEventCallback((event) => {
-    if (event.keyCode === 32) {
+    if (event.type === 'keyup') {
       setDragState(DRAG_STATE.DEFAULT)
     }
   })
@@ -258,17 +256,17 @@ function DiagramPanel() {
     [selectionArea]
   )
 
-  useHotkeys('ctrl+a', () => {
+  useHotkeys('alt+a', () => {
     // console.log(isFocusInPanel)
     // console.log(document.activeElement === panelRef.current)
     // if (isFocusInPanel) {
     //   console.log('select All')
     // }
   })
-  useEventListener('wheel', handleWheel)
 
-  useEventListener('keyup', handleKeyUp)
-  useEventListener('keydown', handleKeyDown)
+  useHotkeys('space', handleSpaceHotKey, { keyup: true, keydown: true }, [handleSpaceHotKey])
+
+  useEventListener('wheel', handleWheel)
 
   useEventListener('mouseup', handleMouseUp)
   useEventListener('mousemove', handleMouseMove)
