@@ -89,6 +89,8 @@ function DiagramPanel() {
   const panelRef = useRef<HTMLDivElement>(null)
   const selectionAreaRef = useRef<HTMLDivElement>(null)
 
+  const panelRect = useMemo(() => panelRef.current?.getBoundingClientRect() || { x: 0, y: 0 }, [panelRef.current])
+
   // eslint-disable-next-line
   const handleThrottleSetTransform = useCallback(
     throttle((transform) => {
@@ -140,12 +142,15 @@ function DiagramPanel() {
 
   const handleWheel = useEventCallback((event: any) => {
     if (!panelRef.current?.contains(event.target)) return
+
+    // const panelRect = panelRef.current.getBoundingClientRect() || { x: 0, y: 0 }
+
     const wheelDelta = event.wheelDelta
 
     let { scale, translateX, translateY } = transform
 
-    const offsetX = ((event.clientX - translateX) * SCALE_STEP) / scale
-    const offsetY = ((event.clientY - translateY) * SCALE_STEP) / scale
+    const offsetX = ((event.clientX - panelRect.x - translateX) * SCALE_STEP) / scale
+    const offsetY = ((event.clientY - panelRect.y - translateY) * SCALE_STEP) / scale
 
     if (wheelDelta < 0) {
       scale = scale - SCALE_STEP
@@ -187,7 +192,7 @@ function DiagramPanel() {
   const handleThrottleSetSelectionArea = useCallback(
     throttle((e) => {
       if (mouseDownStartPosition.current && panelRef.current) {
-        const panelRect = panelRef.current.getBoundingClientRect()
+        // const panelRect = panelRef.current.getBoundingClientRect()
         setSelectionArea({
           left: Math.min(e.clientX, mouseDownStartPosition.current.x) - panelRect.x,
           top: Math.min(e.clientY, mouseDownStartPosition.current.y) - panelRect.y,
