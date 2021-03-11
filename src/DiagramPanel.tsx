@@ -101,6 +101,7 @@ function DiagramPanel() {
   const panelRef = useRef<HTMLDivElement>(null)
   const selectionAreaRef = useRef<HTMLDivElement>(null)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const panelRect = useMemo(() => panelRef.current?.getBoundingClientRect() || { x: 0, y: 0 }, [panelRef.current])
 
   // eslint-disable-next-line
@@ -108,7 +109,7 @@ function DiagramPanel() {
     throttle((transform) => {
       setTransform(transform)
     }, 20),
-    []
+    [setTransform]
   )
 
   const handleChange = useCallback(
