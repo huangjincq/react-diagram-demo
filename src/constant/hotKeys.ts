@@ -1,0 +1,8 @@
+export const HOT_KEY_COPY = 'ctrl+c, cmd+c'
+export const HOT_KEY_PASTE = 'ctrl+v, cmd+v'
+export const HOT_KEY_UNDO = 'ctrl+z, cmd+z'
+export const HOT_KEY_REDO = 'ctrl+shift+z, cmd+shift+z'
+export const HOT_KEY_SELECT_ALL = 'ctrl+a, cmd+a'
+export const HOT_KEY_DEL = 'del'
+export const HOT_KEY_AUTO_LAYOUT = 'ctrl+shift+a, cmd+shift+a'
+export const HOT_KEY_SPACE = 'space'

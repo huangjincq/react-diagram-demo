@@ -8,13 +8,13 @@ const initialState = {
   // 当前的state值
   present: null,
   // 让我们可以用使用重做功能的，future数组
-  future: []
+  future: [],
 }
 
 // 根据action处理state的改变
 const reducer = (state: any, action: any) => {
-  const {past, present, future} = state
-  const {newPresent} = action
+  const { past, present, future } = state
+  const { newPresent } = action
 
   switch (action.type) {
     case 'UNDO':
@@ -24,7 +24,7 @@ const reducer = (state: any, action: any) => {
       return {
         past: newPast,
         present: previous,
-        future: [present, ...future]
+        future: [present, ...future],
       }
     case 'REDO':
       const next = future[0]
@@ -33,13 +33,13 @@ const reducer = (state: any, action: any) => {
       return {
         past: [...past, present],
         present: next,
-        future: newFuture
+        future: newFuture,
       }
     case 'SET':
       return {
         past: [...past],
         present: newPresent,
-        future: []
+        future: [],
       }
 
     case 'SET_WIDTH_HISTORY':
@@ -49,7 +49,7 @@ const reducer = (state: any, action: any) => {
       return {
         past: [...past, present],
         present: newPresent,
-        future: []
+        future: [],
       }
 
     case 'ADD_A_HISTORY':
@@ -59,15 +59,15 @@ const reducer = (state: any, action: any) => {
       return {
         past: [...past, newPresent],
         present: present,
-        future: []
+        future: [],
       }
 
     case 'CLEAR':
-      const {initialPresent} = action
+      const { initialPresent } = action
 
       return {
         ...initialState,
-        present: initialPresent
+        present: initialPresent,
       }
   }
 }
@@ -76,7 +76,7 @@ const reducer = (state: any, action: any) => {
 export const useHistory = (initialPresent: IDiagramType) => {
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
-    present: initialPresent
+    present: initialPresent,
   })
 
   const canUndo = state.past.length !== 0
@@ -84,26 +84,26 @@ export const useHistory = (initialPresent: IDiagramType) => {
 
   const undo = useCallback(() => {
     if (canUndo) {
-      dispatch({type: 'UNDO'})
+      dispatch({ type: 'UNDO' })
     }
   }, [canUndo, dispatch])
 
   const redo = useCallback(() => {
     if (canRedo) {
-      dispatch({type: 'REDO'})
+      dispatch({ type: 'REDO' })
     }
   }, [canRedo, dispatch])
 
   // 只设置值 不追加历史记录 例如 移动 node的过程不需要记录
-  const set = useCallback((newPresent) => dispatch({type: 'SET', newPresent}), [dispatch])
+  const set = useCallback((newPresent) => dispatch({ type: 'SET', newPresent }), [dispatch])
 
   // 设置值 并且追加历史记录 例如 增加删除节点，修改节点data数据等
-  const setWithHistory = useCallback((newPresent) => dispatch({type: 'SET_WIDTH_HISTORY', newPresent}), [dispatch])
+  const setWithHistory = useCallback((newPresent) => dispatch({ type: 'SET_WIDTH_HISTORY', newPresent }), [dispatch])
 
   // 仅追加一条历史记录不设置值 例如 节点移动后，把节点拖拽的起始位置 追加进入历史栈
-  const addAHistory = useCallback((newPresent) => dispatch({type: 'ADD_A_HISTORY', newPresent}), [dispatch])
+  const addAHistory = useCallback((newPresent) => dispatch({ type: 'ADD_A_HISTORY', newPresent }), [dispatch])
 
-  const clear = useCallback(() => dispatch({type: 'CLEAR', initialPresent}), [dispatch, initialPresent])
+  const clear = useCallback(() => dispatch({ type: 'CLEAR', initialPresent }), [dispatch, initialPresent])
 
-  return {value: state.present, set, setWithHistory, addAHistory, undo, redo, clear, canUndo, canRedo}
+  return { present: state.present, set, setWithHistory, addAHistory, undo, redo, clear, canUndo, canRedo }
 }

@@ -10,6 +10,7 @@ import { calculatingCoordinates, checkMouseDownTargetIsDrawPanel, collideCheck }
 import { useHotkeys } from 'react-hotkeys-hook'
 import useEventCallback from './hooks/useEventCallback'
 import useEventListener from './hooks/useEventListener'
+import { HOT_KEY_REDO, HOT_KEY_SELECT_ALL, HOT_KEY_SPACE, HOT_KEY_UNDO } from './constant/hotKeys'
 // import { useThrottleFn } from 'react-use'
 
 const manyNode: any = new Array(3).fill({}).map((item, index) => {
@@ -75,7 +76,18 @@ const CURSOR_MAP = {
 }
 
 function DiagramPanel() {
-  const { value, set, setWithHistory, addAHistory, undo, redo, canUndo, canRedo } = useHistory(defaultValue)
+  const {
+    present,
+    set,
+    setWithHistory,
+    addAHistory,
+    undo: handleUndo,
+    redo: handleRedo,
+    canUndo,
+    canRedo,
+  } = useHistory(defaultValue)
+
+  const value = present as IDiagramType
   const [transform, setTransform] = useState<ITransform>({
     scale: 1,
     translateX: 0,
@@ -143,8 +155,6 @@ function DiagramPanel() {
   const handleWheel = useEventCallback((event: any) => {
     if (!panelRef.current?.contains(event.target)) return
 
-    // const panelRect = panelRef.current.getBoundingClientRect() || { x: 0, y: 0 }
-
     const wheelDelta = event.wheelDelta
 
     let { scale, translateX, translateY } = transform
@@ -200,7 +210,7 @@ function DiagramPanel() {
           height: Math.abs(e.clientY - mouseDownStartPosition.current.y),
         })
         const selectAreaDom = selectionAreaRef.current
-        const activeNodeIds = (value as IDiagramType).nodes
+        const activeNodeIds = value.nodes
           .map((v) => v.id)
           .filter((id) => {
             return collideCheck(selectAreaDom, document.getElementById(id))
@@ -239,10 +249,13 @@ function DiagramPanel() {
     if (event.type === 'keydown' && dragState === DRAG_STATE.DEFAULT) {
       setDragState(DRAG_STATE.START)
     }
-
     if (event.type === 'keyup') {
       setDragState(DRAG_STATE.DEFAULT)
     }
+  })
+
+  const handleSelectAll = useEventCallback((event: KeyboardEvent) => {
+    setActiveNodeIds(value.nodes.map((node) => node.id))
   })
 
   const cursor = useMemo(() => {
@@ -261,15 +274,13 @@ function DiagramPanel() {
     [selectionArea]
   )
 
-  useHotkeys('alt+a', () => {
-    // console.log(isFocusInPanel)
-    // console.log(document.activeElement === panelRef.current)
-    // if (isFocusInPanel) {
-    //   console.log('select All')
-    // }
-  })
-
-  useHotkeys('space', handleSpaceHotKey, { keyup: true, keydown: true }, [handleSpaceHotKey])
+  /*
+   * bind some hotkeys
+   */
+  useHotkeys(HOT_KEY_UNDO, handleUndo, {}, [handleUndo])
+  useHotkeys(HOT_KEY_REDO, handleRedo, {}, [handleRedo])
+  useHotkeys(HOT_KEY_SELECT_ALL, handleSelectAll, {}, [handleSelectAll])
+  useHotkeys(HOT_KEY_SPACE, handleSpaceHotKey, { keyup: true, keydown: true }, [handleSpaceHotKey])
 
   useEventListener('wheel', handleWheel)
 
@@ -303,7 +314,7 @@ function DiagramPanel() {
           style={selectionAreaStyled}
         />
       </div>
-      <Toolbar undo={undo} redo={redo} canUndo={canUndo} scale={transform.scale} canRedo={canRedo} />
+      <Toolbar undo={handleUndo} redo={handleRedo} canUndo={canUndo} scale={transform.scale} canRedo={canRedo} />
       <NodeList />
     </>
   )
