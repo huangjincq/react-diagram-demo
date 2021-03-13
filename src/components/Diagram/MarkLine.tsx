@@ -1,8 +1,8 @@
 import { isEqual } from 'lodash-es'
-import React, { useCallback, useEffect, useRef } from 'react'
+import React, { useCallback, useRef } from 'react'
 import useEventBus from '../../hooks/useEventBus'
 import { ICoordinateType } from '../../types'
-import eventBus, { EVENT_NODE_MOVE_END, EVENT_NODE_MOVING } from '../../utils/eventBus'
+import { EVENT_NODE_MOVE_END, EVENT_NODE_MOVING } from '../../utils/eventBus'
 
 export interface MarkLineProps {
   onNodePositionChange: (id: string, nextCoords: ICoordinateType) => void
