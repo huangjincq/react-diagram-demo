@@ -25,52 +25,11 @@ import {
   HOT_KEY_UNDO
 } from './constant/hotKeys'
 import { CURSOR_MAP, DRAG_STATE, SCALE_STEP } from './constant'
+import { defaultValue } from './utils/creatMockData'
 // import { useThrottleFn } from 'react-use'
 
-const manyNode: any = new Array(3).fill({}).map((item, index) => {
-  return {
-    id: 'node-' + index,
-    coordinates: [index * 40 + 200, index * 50],
-    inputs: [],
-    outputs: [{id: 'port-' + index, isLinked: false}],
-    type: 'nodeTypeInput',
-    data: {
-      inputValue: 'defaultValue'
-    }
-  }
-})
 
-const manyLink = new Array(2).fill({}).map((item, index) => {
-  return {input: 'port-' + index, output: 'node-' + (index + 1)}
-})
 
-const defaultValue: IDiagramType = {
-  nodes: manyNode,
-  // nodes: [
-  //   {
-  //     id: 'node-1',
-  //     coordinates: [100, 150],
-  //     inputs: [],
-  //     outputs: [{id: 'port-1', isLinked: true}],
-  //     type: 'nodeTypeInput',
-  //     data: {
-  //       inputValue: 'defaultValue'
-  //     }
-  //   },
-  //   {
-  //     id: 'node-2',
-  //     type: 'nodeTypeSelect',
-  //     coordinates: [400, 200],
-  //     inputs: [{id: 'input-1', isLinked: false}],
-  //     outputs: [{id: 'port-5', isLinked: false}],
-  //     data: {
-  //       selectValue: ''
-  //     }
-  //   }
-  // ],
-  links: manyLink
-  // links: [{input: 'port-1', output: 'node-2'}]
-}
 
 function DiagramPanel() {
   const {
@@ -257,7 +216,7 @@ function DiagramPanel() {
   })
 
   const handleSelectAll = useEventCallback((event: KeyboardEvent) => {
-    if (checkIsFocusInPanel(panelRef.current) ) {
+    if (checkIsFocusInPanel(panelRef.current)) {
       event.preventDefault()
       setActiveNodeIds(value.nodes.map((node) => node.id))
     }

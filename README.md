@@ -2,7 +2,9 @@
 
 ## [在线预览](https://huangjincq.github.io/react-diagram-demo)
 
-## Todo List
+![Mar-13-2021 20-19-05.gif](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03f157a2a4284f76bd62486f7429a9bc~tplv-k3u1fbpfcp-watermark.image)
+
+## Feature List
 
 - [x] 核心功能，拖拽、连线、node 内容自定义
 - [x] 拖动画布
@@ -14,4 +16,7 @@
 - [x] 辅助线、贴边吸附 功能开关
 - [x] 快捷键
 - [x] 自动排列
-- [ ] 使用文档 原理分析 移除mock data
+- [x] 原理分析
+
+## [原理分析](https://juejin.cn/post/6932290812554264583/)
+
