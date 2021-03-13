@@ -22,6 +22,7 @@ interface DiagramNodeProps {
   onShowSelectModel: (event: MouseEvent, input: string) => void
   onNodeDelete: (nodeId: string) => void
   onNodeCopy: (nodeId: string) => void
+  onToggleActiveNodeId: (nodeId: string) => void
   isActive: boolean
 }
 
@@ -37,6 +38,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     onSegmentConnect,
     onShowSelectModel,
     onAddHistory,
+    onToggleActiveNodeId,
     isActive,
     onNodeDelete,
     onNodeCopy
@@ -89,9 +91,11 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     eventBus.emit(EVENT_NODE_MOVE_END)
   })
 
-  const handleClick = useCallback(() => {
-
-  }, [])
+  const handleClick = useCallback((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    if (event.shiftKey) {
+      onToggleActiveNodeId(id)
+    }
+  }, [id, onToggleActiveNodeId])
 
   const options = {nodeId: id, onPortMount, onDragNewSegment, onSegmentFail, onSegmentConnect, onShowSelectModel}
 

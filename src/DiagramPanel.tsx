@@ -245,6 +245,18 @@ function DiagramPanel() {
     setActiveNodeIds(value.nodes.map((node) => node.id))
   })
 
+
+  const handleToggleActiveNodeId = useEventCallback((nodeId: string) => {
+    let nextActiveNodeIds = [...activeNodeIds]
+    const findIndex = nextActiveNodeIds.findIndex(activeNodeId => activeNodeId === nodeId)
+    if (findIndex > -1) {
+      nextActiveNodeIds.splice(findIndex, 1)
+    } else {
+      nextActiveNodeIds = [...nextActiveNodeIds, nodeId]
+    }
+    setActiveNodeIds(nextActiveNodeIds)
+  })
+
   const cursor = useMemo(() => {
     return CURSOR_MAP[dragState]
   }, [dragState])
@@ -293,6 +305,7 @@ function DiagramPanel() {
           onChange={handleChange}
           onAddHistory={handleAddHistory}
           activeNodeIds={activeNodeIds}
+          onToggleActiveNodeId={handleToggleActiveNodeId}
         />
         <div
           ref={selectionAreaRef}

@@ -31,11 +31,12 @@ interface DiagramProps {
   onAddHistory: (value: IDiagramType) => void
   transform: ITransform
   activeNodeIds: string[]
+  onToggleActiveNodeId: (nodeId: string) => void
 }
 
 
 export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
-  const {value, onChange, onAddHistory, transform, activeNodeIds} = props
+  const {value, onChange, onAddHistory, transform, activeNodeIds, onToggleActiveNodeId} = props
   const [segment, setSegment] = useState<ISegmentType | undefined>()
   const [selectModelPosition, setSelectModelPosition] = useState<ICoordinateType>()
   const {current: portRefs} = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
@@ -168,6 +169,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         onNodeCopy={handleNodeCopy}
         onSegmentConnect={onSegmentConnect}
         onAddHistory={handleAddHistory}
+        onToggleActiveNodeId={onToggleActiveNodeId}
         activeNodeIds={activeNodeIds}
       />
       {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete}/>}

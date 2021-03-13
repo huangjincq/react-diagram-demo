@@ -16,6 +16,7 @@ interface NodesCanvasProps {
   onAddHistory: (id: string, nextCoords: ICoordinateType) => void
   onNodeDelete: (nodeId: string) => void
   onNodeCopy: (nodeId: string) => void
+  onToggleActiveNodeId: (nodeId: string) => void
 }
 
 export const NodesCanvas: React.FC<NodesCanvasProps> = React.memo((props) => {
