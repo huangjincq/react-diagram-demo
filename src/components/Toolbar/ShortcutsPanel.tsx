@@ -22,7 +22,7 @@ const hotkeyList = [
   { text: '粘贴', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'V' }] },
   { text: '移动画布', hotKeys: [{ key: 'Space' }, { icon: IconMove }] },
   { text: '删除', hotKeys: [{ key: 'Del' }] },
-  { text: '自动排列', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'Shift' }, { key: 'A' }] },
+  // { text: '自动排列', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'Shift' }, { key: 'A' }] },
 ]
 
 export const ShortcutsPanel: React.FC<ShortcutsPanelProps> = React.memo(({}) => {
