@@ -3,12 +3,10 @@ import ReactDOM from 'react-dom'
 import './index.css'
 import DiagramPanel from './DiagramPanel'
 import reportWebVitals from './reportWebVitals'
-// import { Test } from './testComponent/Test'
 
 ReactDOM.render(
   <React.StrictMode>
     <DiagramPanel />
-    {/* <Test /> */}
   </React.StrictMode>,
   document.getElementById('root')
 )
