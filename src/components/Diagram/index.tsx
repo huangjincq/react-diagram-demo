@@ -17,7 +17,7 @@ import {
 } from '../../types'
 import { isEqual } from 'lodash-es'
 import useEventCallback from '../../hooks/useEventCallback'
-import { batchUpdateCoordinates, calculatingCoordinates, findIndexById } from '../../utils'
+import { batchUpdateCoordinates, calculatingCoordinates, findIndexById, oneNodeDelete } from '../../utils'
 import { copyNode, createNode } from '../NodeTypes/config'
 import { MarkLine } from './MarkLine'
 import { SelectModel } from './SelectModel'
@@ -66,24 +66,12 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
     onChange({...value, nodes: [...value.nodes, newNode]})
   })
 
+
   const handleNodeDelete = useEventCallback((nodeId: string) => {
-    const nextNodes = [...value.nodes]
-    const index = findIndexById(nodeId, nextNodes)
-    const currentNode = value.nodes[index]
-    const nodeOutputs = currentNode.outputs.map((port) => port.id)
-    const nodeInputs = currentNode.inputs.map((port) => port.id)
-    nextNodes.splice(index, 1)
-    // 删除和节点相关的所有线
-    let nextLinks = value.links.filter((link) => {
-      return (
-        !nodeInputs.includes(link.output) &&
-        !nodeOutputs.includes(link.input) &&
-        link.input !== nodeId &&
-        link.output !== nodeId
-      )
-    })
-    onChange({...value, links: nextLinks, nodes: nextNodes})
+    const nextValue = oneNodeDelete(value, nodeId)
+    onChange(nextValue)
   })
+
 
   // when a port is registered, save it to the local reference
   const onPortRegister = useEventCallback((portId: string, portEl: HTMLElement) => {

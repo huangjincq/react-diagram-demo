@@ -1,4 +1,4 @@
-import { ICoordinateType, INodeStyle, INodeType } from '../types'
+import { ICoordinateType, IDiagramType, INodeStyle, INodeType } from '../types'
 
 // 计算 鼠标事件 相对在 参照物(diagram 画布)内的坐标
 export const calculatingCoordinates = (
@@ -6,7 +6,7 @@ export const calculatingCoordinates = (
   referenceDom: HTMLDivElement | HTMLElement | null,
   scale: number
 ): ICoordinateType => {
-  const referenceDomRect = referenceDom?.getBoundingClientRect() || { x: 0, y: 0 }
+  const referenceDomRect = referenceDom?.getBoundingClientRect() || {x: 0, y: 0}
   return [(event.clientX - referenceDomRect.x) / scale, (event.clientY - referenceDomRect.y) / scale]
 }
 
@@ -46,7 +46,7 @@ export const collideCheck = (dom1: HTMLElement | null, dom2: HTMLElement | null)
 export const getPathMidpoint = (pathElement: SVGPathElement): ICoordinateType => {
   if (pathElement.getTotalLength && pathElement.getPointAtLength) {
     const midpoint = pathElement.getTotalLength() / 2
-    const { x, y } = pathElement.getPointAtLength(midpoint)
+    const {x, y} = pathElement.getPointAtLength(midpoint)
     return [x, y]
   }
 
@@ -65,11 +65,11 @@ export const getNodeStyle = (nodeDom: Element): INodeStyle => {
     left: dom.offsetLeft,
     top: dom.offsetTop,
     right: dom.offsetLeft + width,
-    bottom: dom.offsetTop + height,
+    bottom: dom.offsetTop + height
   }
 }
 
-export const batchUpdateCoordinates = (nodeId: string, nextCoordinates: ICoordinateType, nodes: INodeType[], activeNodeIds: string[]) => {
+export const batchUpdateCoordinates = (nodeId: string, nextCoordinates: ICoordinateType, nodes: INodeType[], activeNodeIds: string[]): INodeType[] => {
   const nextNodes = [...nodes]
 
   const index = findIndexById(nodeId, nextNodes)
@@ -100,3 +100,24 @@ export const batchUpdateCoordinates = (nodeId: string, nextCoordinates: ICoordin
 
   return nextNodes
 }
+
+export const oneNodeDelete = (value: IDiagramType, nodeId: string): IDiagramType => {
+  const nextNodes = [...value.nodes]
+  const index = findIndexById(nodeId, nextNodes)
+  const currentNode = value.nodes[index]
+  const nodeOutputs = currentNode.outputs.map((port) => port.id)
+  const nodeInputs = currentNode.inputs.map((port) => port.id)
+  nextNodes.splice(index, 1)
+  // 删除和节点相关的所有线
+  let nextLinks = value.links.filter((link) => {
+    return (
+      !nodeInputs.includes(link.output) &&
+      !nodeOutputs.includes(link.input) &&
+      link.input !== nodeId &&
+      link.output !== nodeId
+    )
+  })
+  return {links: nextLinks, nodes: nextNodes}
+}
+
+export const checkIsFocusInPanel = (panelDom: HTMLElement | null) => document.activeElement === panelDom

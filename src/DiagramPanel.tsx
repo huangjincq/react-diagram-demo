@@ -6,11 +6,17 @@ import { NodeList } from './components/NodeList/NodeList'
 import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionArea } from './types'
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
-import { calculatingCoordinates, checkMouseDownTargetIsDrawPanel, collideCheck } from './utils'
+import {
+  calculatingCoordinates,
+  checkIsFocusInPanel,
+  checkMouseDownTargetIsDrawPanel,
+  collideCheck,
+  oneNodeDelete
+} from './utils'
 import { useHotkeys } from 'react-hotkeys-hook'
 import useEventCallback from './hooks/useEventCallback'
 import useEventListener from './hooks/useEventListener'
-import { HOT_KEY_REDO, HOT_KEY_SELECT_ALL, HOT_KEY_SPACE, HOT_KEY_UNDO } from './constant/hotKeys'
+import { HOT_KEY_DEL, HOT_KEY_REDO, HOT_KEY_SELECT_ALL, HOT_KEY_SPACE, HOT_KEY_UNDO } from './constant/hotKeys'
 import { CURSOR_MAP, DRAG_STATE, SCALE_STEP } from './constant'
 // import { useThrottleFn } from 'react-use'
 
@@ -245,6 +251,15 @@ function DiagramPanel() {
     setActiveNodeIds(value.nodes.map((node) => node.id))
   })
 
+  const handleBatchDelete = useEventCallback(() => {
+    if (checkIsFocusInPanel(panelRef.current) && activeNodeIds.length > 0) {
+      let nextValue = {...value}
+      activeNodeIds.forEach(nodeId => {
+        nextValue = oneNodeDelete(nextValue, nodeId)
+      })
+      handleChange(nextValue)
+    }
+  })
 
   const handleToggleActiveNodeId = useEventCallback((nodeId: string) => {
     let nextActiveNodeIds = [...activeNodeIds]
@@ -279,6 +294,7 @@ function DiagramPanel() {
   useHotkeys(HOT_KEY_UNDO, handleUndo, {}, [handleUndo])
   useHotkeys(HOT_KEY_REDO, handleRedo, {}, [handleRedo])
   useHotkeys(HOT_KEY_SELECT_ALL, handleSelectAll, {}, [handleSelectAll])
+  useHotkeys(HOT_KEY_DEL, handleBatchDelete, {}, [handleBatchDelete])
   useHotkeys(HOT_KEY_SPACE, handleSpaceHotKey, {keyup: true, keydown: true}, [handleSpaceHotKey])
 
   useEventListener('wheel', handleWheel)
