@@ -68,3 +68,35 @@ export const getNodeStyle = (nodeDom: Element): INodeStyle => {
     bottom: dom.offsetTop + height,
   }
 }
+
+export const batchUpdateCoordinates = (nodeId: string, nextCoordinates: ICoordinateType, nodes: INodeType[], activeNodeIds: string[]) => {
+  const nextNodes = [...nodes]
+
+  const index = findIndexById(nodeId, nextNodes)
+
+  const offsetCoordinate = {
+    xOffset: nextCoordinates[0] - nodes[index].coordinates[0],
+    yOffset: nextCoordinates[1] - nodes[index].coordinates[1]
+  }
+  // update activeNodeIds
+  activeNodeIds.forEach(activeNodeId => {
+    nextNodes.some((node, nextIndex) => {
+      if (node.id === activeNodeId) {
+        nextNodes[nextIndex] = {
+          ...nextNodes[nextIndex],
+          coordinates: [
+            node.coordinates[0] + offsetCoordinate.xOffset,
+            node.coordinates[1] + offsetCoordinate.yOffset
+          ]
+        }
+        return true
+      } else {
+        return false
+      }
+    })
+  })
+  // update self
+  nextNodes[index] = {...nextNodes[index], coordinates: nextCoordinates}
+
+  return nextNodes
+}

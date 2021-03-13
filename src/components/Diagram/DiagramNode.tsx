@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 import useDrag from '../../hooks/useDrag'
 import { INodeType, ICoordinateType } from '../../types'
 import { nodesConfig } from '../NodeTypes/config'
@@ -20,9 +20,9 @@ interface DiagramNodeProps {
   onSegmentFail: (id: string, type: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
   onShowSelectModel: (event: MouseEvent, input: string) => void
-  activeNodeIds: string[]
   onNodeDelete: (nodeId: string) => void
   onNodeCopy: (nodeId: string) => void
+  isActive: boolean
 }
 
 export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
@@ -37,12 +37,12 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     onSegmentConnect,
     onShowSelectModel,
     onAddHistory,
-    activeNodeIds,
+    isActive,
     onNodeDelete,
-    onNodeCopy,
+    onNodeCopy
   } = props
 
-  const { id, coordinates, type, inputs, data, outputs } = nodeInfo
+  const {id, coordinates, type, inputs, data, outputs} = nodeInfo
 
   const scale = useScale()
 
@@ -56,12 +56,12 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   // 传给子组件点 Props
   const nodeItemProps = {
     value: data,
-    onChange: handleNodeDataChange,
+    onChange: handleNodeDataChange
   }
 
   const ref: any = useRef(null)
 
-  const { onDragStart, onDrag, onDragEnd } = useDrag({ throttleBy: 14, ref }) // get the drag n drop methods
+  const {onDragStart, onDrag, onDragEnd} = useDrag({throttleBy: 14, ref}) // get the drag n drop methods
   const dragStartPoint = useRef(coordinates) // keeps the drag start point in a persistent reference
 
   // when drag starts, save the starting coordinates into the `dragStartPoint` ref
@@ -75,7 +75,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     event.stopPropagation()
     const nextCoords: ICoordinateType = [
       dragStartPoint.current[0] + info.offset[0] / scale,
-      dragStartPoint.current[1] + info.offset[1] / scale,
+      dragStartPoint.current[1] + info.offset[1] / scale
     ]
 
     onNodePositionChange(id, nextCoords)
@@ -89,7 +89,11 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     eventBus.emit(EVENT_NODE_MOVE_END)
   })
 
-  const options = { nodeId: id, onPortMount, onDragNewSegment, onSegmentFail, onSegmentConnect, onShowSelectModel }
+  const handleClick = useCallback(() => {
+
+  }, [])
+
+  const options = {nodeId: id, onPortMount, onDragNewSegment, onSegmentFail, onSegmentConnect, onShowSelectModel}
 
   useEffect(() => {
     onNodeMount(id, ref.current)
@@ -97,16 +101,21 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
 
   const className = useMemo(() => {
     return classnames('diagram-node', {
-      active: activeNodeIds.includes(id),
+      active: isActive
     })
-  }, [activeNodeIds, id])
+  }, [isActive])
 
   return (
-    <div id={id} className={className} ref={ref} style={{ left: coordinates[0], top: coordinates[1] }}>
+    <div
+      id={id}
+      className={className}
+      ref={ref}
+      style={{left: coordinates[0], top: coordinates[1]}}
+      onClick={handleClick}>
       {component && React.createElement(component, nodeItemProps)}
-      <DiagramNodePorts inputs={inputs} {...options} type="input" />
-      <DiagramNodePorts inputs={outputs} {...options} type="output" />
-      <DiagramNodeActionButtons id={id} onNodeDelete={onNodeDelete} onNodeCopy={onNodeCopy} />
+      <DiagramNodePorts inputs={inputs} {...options} type="input"/>
+      <DiagramNodePorts inputs={outputs} {...options} type="output"/>
+      <DiagramNodeActionButtons id={id} onNodeDelete={onNodeDelete} onNodeCopy={onNodeCopy}/>
     </div>
   )
 })

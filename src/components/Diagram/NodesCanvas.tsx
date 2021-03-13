@@ -19,12 +19,12 @@ interface NodesCanvasProps {
 }
 
 export const NodesCanvas: React.FC<NodesCanvasProps> = React.memo((props) => {
-  const { nodes, ...others } = props
+  const {nodes, activeNodeIds, ...others} = props
 
   return (
     <>
       {nodes.map((node) => (
-        <DiagramNode nodeInfo={node} key={node.id} {...others} />
+        <DiagramNode isActive={activeNodeIds.includes(node.id)} nodeInfo={node} key={node.id} {...others} />
       ))}
     </>
   )
