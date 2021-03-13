@@ -11,6 +11,7 @@ import { useHotkeys } from 'react-hotkeys-hook'
 import useEventCallback from './hooks/useEventCallback'
 import useEventListener from './hooks/useEventListener'
 import { HOT_KEY_REDO, HOT_KEY_SELECT_ALL, HOT_KEY_SPACE, HOT_KEY_UNDO } from './constant/hotKeys'
+import { CURSOR_MAP, DRAG_STATE, SCALE_STEP } from './constant'
 // import { useThrottleFn } from 'react-use'
 
 const manyNode: any = new Array(3).fill({}).map((item, index) => {
@@ -56,23 +57,6 @@ const defaultValue: IDiagramType = {
   // ],
   links: manyLink,
   // links: [{input: 'port-1', output: 'node-2'}]
-}
-
-const SCALE_STEP = 0.1
-
-const DRAG_STATE = {
-  DEFAULT: 'DEFAULT',
-  START: 'START',
-  MOVE: 'MOVE',
-  END: 'END',
-  SELECTION: 'SELECTION',
-}
-
-const CURSOR_MAP = {
-  [DRAG_STATE.DEFAULT]: 'default',
-  [DRAG_STATE.SELECTION]: 'default',
-  [DRAG_STATE.START]: 'grab',
-  [DRAG_STATE.MOVE]: 'grabbing',
 }
 
 function DiagramPanel() {
