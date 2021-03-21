@@ -2,7 +2,6 @@
 
 ## [在线预览](https://huangjincq.github.io/react-diagram-demo)
 
-![1](https://github.com/huangjincq/react-diagram-demo/blob/master/doc/logo192.png)
 ![img](https://github.com/huangjincq/react-diagram-demo/blob/master/doc/main.image)
 
 ## Feature List
