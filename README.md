@@ -2,7 +2,8 @@
 
 ## [在线预览](https://huangjincq.github.io/react-diagram-demo)
 
-![Mar-13-2021 20-19-05.gif](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03f157a2a4284f76bd62486f7429a9bc~tplv-k3u1fbpfcp-watermark.image)
+![1](https://github.com/huangjincq/react-diagram-demo/blob/master/doc/logo192.png)
+![img](https://github.com/huangjincq/react-diagram-demo/blob/master/doc/main.image)
 
 ## Feature List
 
