@@ -96,8 +96,14 @@ export const Link: React.FC<LinkProps> = React.memo(
         pointerEvents="none"
       >
         <path d={path} className="bi-link-path" />
-        <path d={path} className="bi-link-ghost" onMouseOver={handleMouseOver} onMouseOut={handleMouseOut} />
-        <LinkDelete position={labelPosition} onDelete={handleDelete} />
+        <path
+          d={path}
+          className="bi-link-ghost"
+          onDoubleClick={handleDelete}
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}
+        />
+        {/* <LinkDelete position={labelPosition} onDelete={handleDelete} /> */}
       </svg>
     )
   },
