@@ -7,11 +7,10 @@ interface LinkDeleteProps {
   onDelete: () => void
 }
 
-
-export const LinkDelete: React.FC<LinkDeleteProps> = React.memo(({position, onDelete}) => (
+export const LinkDelete: React.FC<LinkDeleteProps> = React.memo(({ position, onDelete }) => (
   <foreignObject x={position[0]} y={position[1]}>
     <div className="bi-diagram-link-label">
-      <DeleteOutlined onClick={onDelete}/>
+      <DeleteOutlined onClick={onDelete} />
     </div>
   </foreignObject>
 ))

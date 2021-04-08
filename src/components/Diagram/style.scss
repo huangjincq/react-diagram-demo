@@ -1,3 +1,15 @@
+// z-index 层级定义
+// Link 层级 ------------------------
+$linkZIndexDefault: 10;
+$linkZIndexActive: 22;
+$linkZIndexHover: 23;
+// Node 层级 ------------------------
+$nodeZIndexDefault: 20;
+$nodeZIndexHover: 21;
+$nodeZIndexActive: 25;
+// segment 层级 ------------------------
+$segmentZIndexDefault: 30;
+
 .diagram {
   // ----------------------------
   // Diagram canvas
@@ -15,7 +27,7 @@
   // ----------------------------
   &-node {
     position: absolute;
-    z-index: 1;
+    z-index: $nodeZIndexDefault;
     user-select: none;
     cursor: move;
     background-color: #ffffff;
@@ -27,6 +39,7 @@
 
     &:hover {
       box-shadow: 0px 3px 24px #000000;
+      z-index: $nodeZIndexHover;
 
       .diagram-node-action {
         display: block;
@@ -35,6 +48,7 @@
 
     &.active {
       box-shadow: 0 0 30px 0 rgb(98 104 229 / 50%), 0 0 15px 0 rgb(98 104 229 / 59%), 0 2px 4px 0 rgb(0 0 0 / 24%);
+      z-index: $nodeZIndexActive;
     }
 
     &-action {
@@ -104,7 +118,7 @@
     overflow: visible !important;
     width: 100%;
     height: 100%;
-    z-index: 2;
+    z-index: $segmentZIndexDefault;
   }
 
   &-segment-link {
@@ -126,62 +140,43 @@
   // ----------------------------
   // Link canvas layer
   // ----------------------------
-  &-link-canvas {
-    pointer-events: none;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    overflow: visible !important;
-  }
 
   &-link {
     pointer-events: stroke;
+    position: absolute;
+    overflow: visible !important;
+    z-index: $linkZIndexDefault;
+    &.hover .bi-link-path {
+      stroke: #88cdff;
+      stroke-dasharray: 10, 2;
+      animation: BiDashSegmentAnimation 1s linear infinite;
+    }
 
     // link path
     .bi-link-path {
       stroke: #dae1e7;
       stroke-width: 2px;
-      pointer-events: stroke;
+      pointer-events: 'none';
       fill: transparent;
-      cursor: pointer;
-      user-select: none;
     }
 
     // link ghost
     .bi-link-ghost {
-      pointer-events: stroke;
+      pointer-events: visiblestroke;
       stroke: transparent;
-      stroke-width: 16px;
+      stroke-width: 10px;
       fill: transparent;
       cursor: pointer;
-    }
-
-    // hover
-    &:hover {
-      &.bi-link-path {
-        stroke: #88cdff;
-        stroke-dasharray: 10, 2;
-        animation: BiDashSegmentAnimation 1s linear infinite;
-      }
-
-      .bi-diagram-link-label {
-        display: inline-block;
-      }
-    }
-
-    /* stylelint-disable-next-line */
-    foreignObject {
-      overflow: visible !important;
     }
 
     // ----------------------------
     // Link label
     // ----------------------------
     .bi-diagram-link-label {
-      display: none;
+      position: absolute;
+      z-index: 999;
+      left: 0;
+      top: 0;
       color: #fff;
       background-color: rgba(0, 0, 0, 0.3);
       border-radius: 5px;

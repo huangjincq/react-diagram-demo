@@ -30,7 +30,7 @@ const findPortCoordinate = (
       const portDom = portRefs[entityId]
       if (!portDom) return null
       return [
-        nodeCoordinates[0] + portDom.offsetLeft + portDom.offsetWidth,
+        nodeCoordinates[0] + portDom.offsetLeft + portDom.offsetWidth / 2,
         nodeCoordinates[1] + portDom.offsetTop + portDom.offsetHeight / 2,
       ]
     }
@@ -92,7 +92,7 @@ export const LinksCanvas: React.FC<LinkCanvasProps> = React.memo((props) => {
   }, [nodes, links, nodeRefs, portRefs, canvasRef])
 
   return (
-    <>
+    <svg className="diagram-link-canvas">
       {result.map((item) => (
         <Link
           link={item.link}
@@ -102,7 +102,7 @@ export const LinksCanvas: React.FC<LinkCanvasProps> = React.memo((props) => {
           key={`${item.link.input}-${item.link.output}`}
         />
       ))}
-    </>
+    </svg>
   )
 })
 LinksCanvas.displayName = 'LinksCanvas'
