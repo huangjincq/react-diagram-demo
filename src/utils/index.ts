@@ -6,7 +6,7 @@ export const calculatingCoordinates = (
   referenceDom: HTMLDivElement | HTMLElement | null,
   scale: number
 ): ICoordinateType => {
-  const referenceDomRect = referenceDom?.getBoundingClientRect() || {x: 0, y: 0}
+  const referenceDomRect = referenceDom?.getBoundingClientRect() || { x: 0, y: 0 }
   return [(event.clientX - referenceDomRect.x) / scale, (event.clientY - referenceDomRect.y) / scale]
 }
 
@@ -43,16 +43,6 @@ export const collideCheck = (dom1: HTMLElement | null, dom2: HTMLElement | null)
   return false
 }
 
-export const getPathMidpoint = (pathElement: SVGPathElement): ICoordinateType => {
-  if (pathElement.getTotalLength && pathElement.getPointAtLength) {
-    const midpoint = pathElement.getTotalLength() / 2
-    const {x, y} = pathElement.getPointAtLength(midpoint)
-    return [x, y]
-  }
-
-  return [0, 0]
-}
-
 export const findIndexById = (nodeId: string, nodes: INodeType[]) => nodes.findIndex((node) => node.id === nodeId)
 
 export const getNodeStyle = (nodeDom: Element): INodeStyle => {
@@ -65,29 +55,31 @@ export const getNodeStyle = (nodeDom: Element): INodeStyle => {
     left: dom.offsetLeft,
     top: dom.offsetTop,
     right: dom.offsetLeft + width,
-    bottom: dom.offsetTop + height
+    bottom: dom.offsetTop + height,
   }
 }
 
-export const batchUpdateCoordinates = (nodeId: string, nextCoordinates: ICoordinateType, nodes: INodeType[], activeNodeIds: string[]): INodeType[] => {
+export const batchUpdateCoordinates = (
+  nodeId: string,
+  nextCoordinates: ICoordinateType,
+  nodes: INodeType[],
+  activeNodeIds: string[]
+): INodeType[] => {
   const nextNodes = [...nodes]
 
   const index = findIndexById(nodeId, nextNodes)
 
   const offsetCoordinate = {
     xOffset: nextCoordinates[0] - nodes[index].coordinates[0],
-    yOffset: nextCoordinates[1] - nodes[index].coordinates[1]
+    yOffset: nextCoordinates[1] - nodes[index].coordinates[1],
   }
   // update activeNodeIds
-  activeNodeIds.forEach(activeNodeId => {
+  activeNodeIds.forEach((activeNodeId) => {
     nextNodes.some((node, nextIndex) => {
       if (node.id === activeNodeId) {
         nextNodes[nextIndex] = {
           ...nextNodes[nextIndex],
-          coordinates: [
-            node.coordinates[0] + offsetCoordinate.xOffset,
-            node.coordinates[1] + offsetCoordinate.yOffset
-          ]
+          coordinates: [node.coordinates[0] + offsetCoordinate.xOffset, node.coordinates[1] + offsetCoordinate.yOffset],
         }
         return true
       } else {
@@ -96,7 +88,7 @@ export const batchUpdateCoordinates = (nodeId: string, nextCoordinates: ICoordin
     })
   })
   // update self
-  nextNodes[index] = {...nextNodes[index], coordinates: nextCoordinates}
+  nextNodes[index] = { ...nextNodes[index], coordinates: nextCoordinates }
 
   return nextNodes
 }
@@ -117,7 +109,55 @@ export const oneNodeDelete = (value: IDiagramType, nodeId: string): IDiagramType
       link.output !== nodeId
     )
   })
-  return {links: nextLinks, nodes: nextNodes}
+  return { links: nextLinks, nodes: nextNodes }
 }
 
 export const checkIsFocusInPanel = (panelDom: HTMLElement | null) => document.activeElement === panelDom
+
+/*
+ * 画出 link 的 svg 矩形容器，和位置，并且重新计算在 矩形容器内的起点和终点
+ * */
+export const computedLinkSvgInfo = (input: ICoordinateType, output: ICoordinateType) => {
+  const width = Math.abs(output[0] - input[0])
+  const height = Math.abs(output[1] - input[1])
+  const MIN_SIZE = 1
+  let left = 0
+  let top = 0
+  const start = { x: 0, y: 0 }
+  const end = { x: 0, y: 0 }
+
+  // x 轴防方向
+  if (output[0] > input[0]) {
+    left = input[0]
+
+    start.x = 0
+    end.x = width
+  } else {
+    left = output[0]
+
+    start.x = width
+    end.x = 0
+  }
+
+  // y 轴防方向
+  if (output[1] > input[1]) {
+    top = input[1]
+
+    start.y = 0
+    end.y = height
+  } else {
+    top = output[1]
+
+    start.y = height
+    end.y = 0
+  }
+
+  return {
+    width: width || MIN_SIZE,
+    height: height || MIN_SIZE,
+    left,
+    top,
+    start: [start.x, start.y],
+    end: [end.x, end.y],
+  }
+}

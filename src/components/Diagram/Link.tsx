@@ -1,54 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef } from 'react'
 import makeSvgPath from '../../utils/makeSvgPath'
-import { LinkDelete } from './LinkDelete'
 import { ICoordinateType, ILinkType } from '../../types'
-import { getPathMidpoint } from '../../utils'
 import { isEqual } from 'lodash-es'
-
-const computedSvnInfo = (input: ICoordinateType, output: ICoordinateType) => {
-  const width = Math.abs(output[0] - input[0])
-  const height = Math.abs(output[1] - input[1])
-  const MIN_SIZE = 1
-  let left = 0
-  let top = 0
-  const start = { x: 0, y: 0 }
-  const end = { x: 0, y: 0 }
-
-  // x 轴防方向
-  if (output[0] > input[0]) {
-    left = input[0]
-
-    start.x = 0
-    end.x = width
-  } else {
-    left = output[0]
-
-    start.x = width
-    end.x = 0
-  }
-
-  // y 轴防方向
-  if (output[1] > input[1]) {
-    top = input[1]
-
-    start.y = 0
-    end.y = height
-  } else {
-    top = output[1]
-
-    start.y = height
-    end.y = 0
-  }
-
-  return {
-    width: width || MIN_SIZE,
-    height: height || MIN_SIZE,
-    left,
-    top,
-    start: [start.x, start.y],
-    end: [end.x, end.y],
-  }
-}
+import { computedLinkSvgInfo } from '../../utils'
 
 interface LinkProps {
   input: ICoordinateType
@@ -63,11 +17,9 @@ export const Link: React.FC<LinkProps> = React.memo(
     const svgRef = useRef<SVGSVGElement>(null)
 
     /*
-     * 画出 svg 矩形容器，和位置，并且重新计算在 矩形容器内的起点和终点
+     * 画出 link 的 svg 矩形容器，和位置，并且重新计算在 矩形容器内的起点和终点
      * */
-    const { width, height, left, top, start, end } = useMemo(() => computedSvnInfo(input, output), [input, output])
-
-    const labelPosition: any = [width / 2, height / 2]
+    const { width, height, left, top, start, end } = useMemo(() => computedLinkSvgInfo(input, output), [input, output])
 
     /*
      * 根据两点坐标生成 svg path 路径
@@ -103,7 +55,6 @@ export const Link: React.FC<LinkProps> = React.memo(
           onMouseOver={handleMouseOver}
           onMouseOut={handleMouseOut}
         />
-        {/* <LinkDelete position={labelPosition} onDelete={handleDelete} /> */}
       </svg>
     )
   },
