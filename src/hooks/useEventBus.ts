@@ -11,6 +11,6 @@ const useEventBus = ({ type, onChange }: UseEventType, dep = []) => {
     return () => {
       eventBus.off(type, onChange)
     }
-  }, [type, onChange, ...dep])
+  }, [type, onChange, dep])
 }
 export default useEventBus

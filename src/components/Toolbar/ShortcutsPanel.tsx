@@ -25,7 +25,7 @@ const hotkeyList = [
   // { text: '自动排列', hotKeys: [{ key: CTRL_OR_CMD }, { key: 'Shift' }, { key: 'A' }] },
 ]
 
-export const ShortcutsPanel: React.FC<ShortcutsPanelProps> = React.memo(({}) => {
+export const ShortcutsPanel: React.FC<ShortcutsPanelProps> = React.memo(() => {
   return (
     <ul className="shortcuts-panel">
       {hotkeyList.map((item, index) => (
