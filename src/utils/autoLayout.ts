@@ -1,4 +1,4 @@
-import { groupBy, maxBy, omit } from 'lodash-es'
+import { groupBy, isEqual, maxBy, omit } from 'lodash-es'
 import { getNodeStyle } from '.'
 import { IDiagramType, ILinkType, INodeRefs, INodeStyle, INodeType, IPointType } from '../types'
 
@@ -156,4 +156,17 @@ export default function autoLayout(value: IDiagramType, nodeRefs: INodeRefs) {
     }
   })
   return { links: links, nodes: newNodes }
+}
+
+export const diffNodesCoordinates = (oldNodes: INodeType[], newNodes: INodeType[]) => {
+  return newNodes.some(({ id, coordinates }) => {
+    const find = oldNodes.find((item) => item.id === id)
+    if (!find) {
+      return true
+    } else if (!isEqual(find.coordinates, coordinates)) {
+      return true
+    } else {
+      return false
+    }
+  })
 }
