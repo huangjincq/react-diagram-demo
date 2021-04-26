@@ -35,6 +35,29 @@ interface ExtendActionDto extends INodeType {
   style: INodeStyle
 }
 
+const recursionLookup = (
+  linkEndId: string,
+  baseColumn: number,
+  row: number,
+  extendNodes: ExtendActionDto[],
+  links: ILinkType[],
+  catchNodeIds: string[]
+) => {
+  if (catchNodeIds.includes(linkEndId)) return
+  catchNodeIds.push(linkEndId)
+  const nodeIndex = extendNodes.findIndex((node) => node.id === findPortFatherNodeId(linkEndId, extendNodes))
+  extendNodes[nodeIndex].row = row
+  extendNodes[nodeIndex].column = baseColumn
+  baseColumn++
+
+  extendNodes[nodeIndex].outputs.forEach((port) => {
+    const findLink = links.find((link) => link.input === port.id)
+
+    if (findLink) {
+      recursionLookup(findLink.output, baseColumn, row, extendNodes, links, catchNodeIds)
+    }
+  })
+}
 /*
  * 自动排列 需要根据实际的点和线 连接放松排列 这里的自动排列涵盖情况有限 重新排列效果仅供参考
  */
@@ -50,43 +73,14 @@ export default function autoLayout(value: IDiagramType, nodeRefs: INodeRefs) {
     }
   })
 
-  const recursionLookup = (
-    linkEndId: string,
-    baseColumn: number,
-    extendNodes: ExtendActionDto[],
-    links: ILinkType[],
-    catchNodeIds: string[]
-  ) => {
-    if (catchNodeIds.includes(linkEndId)) return
-    catchNodeIds.push(linkEndId)
-    const currentNode = extendNodes.find((node) => node.id === findPortFatherNodeId(linkEndId, extendNodes))
-    if (!currentNode) return
-    currentNode.row = currentNode.row || row
-    currentNode.column = currentNode.column || baseColumn
-    baseColumn++
-    let outputHasLinkNum = 0
-
-    currentNode.outputs.forEach((port) => {
-      const findLink = links.find((link) => link.input === port.id)
-      if (findLink) {
-        outputHasLinkNum++
-        if (outputHasLinkNum > 1) {
-          row++
-        }
-        recursionLookup(findLink.output, baseColumn, extendNodes, links, catchNodeIds)
-      }
-    })
-  }
-
   links.forEach((link) => {
     if (checkIsStartLink(link.input, links, extendNodes)) {
       const portFatherNodeId = findPortFatherNodeId(link.input, extendNodes)
       const catchNodeIds = [portFatherNodeId]
-      const currentNode = extendNodes.find((node) => node.id === portFatherNodeId)
-      if (!currentNode) return
-      currentNode.row = currentNode.row || row
-      currentNode.column = 1
-      recursionLookup(link.output, 2, extendNodes, links, catchNodeIds)
+      const nodeIndex = extendNodes.findIndex((node) => node.id === portFatherNodeId)
+      extendNodes[nodeIndex].row = extendNodes[nodeIndex].row || row
+      extendNodes[nodeIndex].column = 1
+      recursionLookup(link.output, 2, row, extendNodes, links, catchNodeIds)
       row++
     }
   })
@@ -116,6 +110,8 @@ export default function autoLayout(value: IDiagramType, nodeRefs: INodeRefs) {
     })
   })
 
+  const groupRow = groupBy(extendNodes, (item) => item.row)
+
   const SPACING = 50
   const LAYOUT_BASIC_COORDINATE = {
     LEFT: 100,
@@ -123,31 +119,24 @@ export default function autoLayout(value: IDiagramType, nodeRefs: INodeRefs) {
   }
 
   const COLUMN_STEP_WIDTH = 200 + SPACING
-  const groupRowMap = groupBy(extendNodes, (item) => item.row)
-  const groupRows = Object.values(groupRowMap)
+  let baseRowTop = LAYOUT_BASIC_COORDINATE.TOP
 
-  // row start top
-  let currentTop = LAYOUT_BASIC_COORDINATE.TOP
+  Object.values(groupRow).forEach((aRow) => {
+    const groupColum = groupBy(aRow, (item) => item.column)
+    const aRowHeightList = Object.values(groupColum).map((aColumn) => {
+      let currentTop = baseRowTop
 
-  groupRows.forEach((aRow, rowIndex) => {
-    // sort by column
-    aRow.sort((a, b) => a.column - b.column)
-
-    aRow.forEach((cell, cellIndex) => {
-      if (cellIndex === 0 && rowIndex > 0) {
-        const preRow = groupRows[rowIndex - 1]
-
-        const currentAfterPreRow = preRow.filter((preCell) => preCell.column >= cell.column)
-
-        const currentAfterPreRowMaxHeightList = currentAfterPreRow.map((cell) => cell.style.height)
-
-        const rowMaxHeight = maxBy(currentAfterPreRowMaxHeightList) || 0
-        currentTop += rowMaxHeight + SPACING
-      }
-      if (cell.column) {
+      aColumn.forEach((cell) => {
         cell.coordinates = [(cell.column - 1) * COLUMN_STEP_WIDTH + LAYOUT_BASIC_COORDINATE.LEFT, currentTop]
-      }
+        currentTop += cell.style.height + SPACING
+      })
+
+      const columnReduceHeight = aColumn.reduce((pre: number, cur) => cur.style.height + pre + SPACING, 0)
+
+      return columnReduceHeight
     })
+    const rowMaxHeight = maxBy(aRowHeightList) || 0
+    baseRowTop += rowMaxHeight
   })
 
   const newNodes = extendNodes.map((node) => {
