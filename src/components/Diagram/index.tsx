@@ -13,17 +13,18 @@ import {
   ITransform,
   ICoordinateType,
   NodeTypeEnum,
+  INodeTypeWithStep,
+  INodeType,
 } from '../../types'
-import { isEqual } from 'lodash-es'
+import { isEqual, omit } from 'lodash-es'
 import useEventCallback from '../../hooks/useEventCallback'
 import { batchUpdateCoordinates, calculatingCoordinates, findIndexById, oneNodeDelete } from '../../utils'
 import { copyNode, createNode } from '../NodeTypes/config'
 import { MarkLine } from './MarkLine'
 import { SelectModel } from './SelectModel'
-import autoLayout from '../../utils/autoLayout'
+import autoLayout, { computedAnimationStep } from '../../utils/autoLayout'
 import { EVENT_AUTO_LAYOUT } from '../../utils/eventBus'
 import useEventBus from '../../hooks/useEventBus'
-
 interface DiagramProps {
   value: IDiagramType
   onChange: (value: IDiagramType, notAddHistory?: boolean) => void
@@ -32,24 +33,7 @@ interface DiagramProps {
   activeNodeIds: string[]
   onToggleActiveNodeId: (nodeId: string) => void
 }
-const stepCount = 100
-
-//  @ts-ignore
-const computedStep = (oldNodes, newNodes) => {
-  //  @ts-ignore
-  return oldNodes.map((node) => {
-    //  @ts-ignore
-    const findNextNode = newNodes.find((item) => item.id === node.id)
-
-    return {
-      ...node,
-      //  @ts-ignore
-      xStep: Number(((findNextNode.coordinates[0] - node.coordinates[0]) / stepCount).toFixed(4)),
-      //  @ts-ignore
-      yStep: Number(((findNextNode.coordinates[1] - node.coordinates[1]) / stepCount).toFixed(4)),
-    }
-  })
-}
+const STEP_COUNT = 60 // auto layout 动画执行总次数
 
 export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   const { value, onChange, onAddHistory, transform, activeNodeIds, onToggleActiveNodeId } = props
@@ -59,8 +43,8 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   const { current: nodeRefs } = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
   const startPortIdRef = useRef<string>() // 保存所有 Node 的 Dom 节点
 
-  const nodeWithStepRef = useRef(null)
-  const animationCountRef = useRef(0)
+  const nodeWithStepRef = useRef<INodeTypeWithStep[]>([]) // 储存 auto layout node动画每个node 的步长
+  const animationCountRef = useRef<number>(0) // 动画执行次数
 
   const handleNodePositionChange = useEventCallback((nodeId: string, nextCoordinates: ICoordinateType) => {
     const nextNodes = batchUpdateCoordinates(nodeId, nextCoordinates, value.nodes, activeNodeIds)
@@ -155,30 +139,31 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   const handleAutoLayout = useCallback(() => {
     const resultValue = autoLayout(value, nodeRefs)
 
-    nodeWithStepRef.current = computedStep(value.nodes, resultValue.nodes)
+    nodeWithStepRef.current = computedAnimationStep(value.nodes, resultValue.nodes, STEP_COUNT)
 
     const step = () => {
       animationCountRef.current = animationCountRef.current + 1
-      // @ts-ignore
       nodeWithStepRef.current = nodeWithStepRef.current.map((item) => {
         return {
           ...item,
           coordinates: [item.coordinates[0] + item.xStep, item.coordinates[1] + item.yStep],
         }
       })
-      // @ts-ignore
+      const newNodes: INodeType[] = nodeWithStepRef.current.map((item) => ({ ...omit(item, ['xStep', 'yStep']) }))
 
-      onChange({ ...resultValue, nodes: nodeWithStepRef.current })
+      onChange({ ...resultValue, nodes: newNodes }, true) // 不加历史记录
 
-      if (animationCountRef.current <= stepCount) {
+      if (animationCountRef.current < STEP_COUNT) {
         requestAnimationFrame(step)
       } else {
-        onChange(resultValue)
+        onChange(resultValue, true) // 不加历史记录
+        onAddHistory(value) // 追加原始位置到历史记录
+        nodeWithStepRef.current = []
         animationCountRef.current = 0
       }
     }
     requestAnimationFrame(step)
-  }, [value, nodeRefs, onChange])
+  }, [value, nodeRefs, onChange, nodeWithStepRef, nodeWithStepRef])
 
   useEventBus({ type: EVENT_AUTO_LAYOUT, onChange: handleAutoLayout })
 

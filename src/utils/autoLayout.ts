@@ -1,6 +1,6 @@
 import { groupBy, isEqual, maxBy, omit } from 'lodash-es'
 import { getNodeStyle } from '.'
-import { IDiagramType, ILinkType, INodeRefs, INodeStyle, INodeType, IPointType } from '../types'
+import { IDiagramType, ILinkType, INodeRefs, INodeStyle, INodeType, INodeTypeWithStep, IPointType } from '../types'
 
 const checkPortIsNodeSon = (ports: IPointType[], entityId: string) => {
   for (let j = 0; j < ports.length; j++) {
@@ -167,6 +167,27 @@ export const diffNodesCoordinates = (oldNodes: INodeType[], newNodes: INodeType[
       return true
     } else {
       return false
+    }
+  })
+}
+
+export const computedAnimationStep = (
+  oldNodes: INodeType[],
+  newNodes: INodeType[],
+  stepCount: number
+): INodeTypeWithStep[] => {
+  return oldNodes.map((node) => {
+    const findNextNode = newNodes.find((item) => item.id === node.id)
+    const xStep = findNextNode
+      ? Number(((findNextNode.coordinates[0] - node.coordinates[0]) / stepCount).toFixed(2))
+      : 0
+    const yStep = findNextNode
+      ? Number(((findNextNode.coordinates[1] - node.coordinates[1]) / stepCount).toFixed(2))
+      : 0
+    return {
+      ...node,
+      xStep,
+      yStep,
     }
   })
 }

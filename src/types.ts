@@ -88,3 +88,8 @@ export interface INodeItemProps<T> {
   value: T
   onChange: (value: T) => void
 }
+
+export interface INodeTypeWithStep extends INodeType {
+  xStep: number
+  yStep: number
+}
