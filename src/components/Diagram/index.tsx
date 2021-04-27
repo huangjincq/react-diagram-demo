@@ -3,7 +3,6 @@ import { DiagramCanvas } from './DiagramCanvas'
 import { NodesCanvas } from './NodesCanvas'
 import { LinksCanvas } from './LinksCanvas'
 import { Segment } from './Segment'
-
 import './style.scss'
 import {
   IDiagramType,
@@ -13,7 +12,7 @@ import {
   INodeRefs,
   ITransform,
   ICoordinateType,
-  NodeTypeEnum
+  NodeTypeEnum,
 } from '../../types'
 import { isEqual } from 'lodash-es'
 import useEventCallback from '../../hooks/useEventCallback'
@@ -33,45 +32,63 @@ interface DiagramProps {
   activeNodeIds: string[]
   onToggleActiveNodeId: (nodeId: string) => void
 }
+const stepCount = 100
 
+//  @ts-ignore
+const computedStep = (oldNodes, newNodes) => {
+  //  @ts-ignore
+  return oldNodes.map((node) => {
+    //  @ts-ignore
+    const findNextNode = newNodes.find((item) => item.id === node.id)
+
+    return {
+      ...node,
+      //  @ts-ignore
+      xStep: Number(((findNextNode.coordinates[0] - node.coordinates[0]) / stepCount).toFixed(4)),
+      //  @ts-ignore
+      yStep: Number(((findNextNode.coordinates[1] - node.coordinates[1]) / stepCount).toFixed(4)),
+    }
+  })
+}
 
 export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
-  const {value, onChange, onAddHistory, transform, activeNodeIds, onToggleActiveNodeId} = props
+  const { value, onChange, onAddHistory, transform, activeNodeIds, onToggleActiveNodeId } = props
   const [segment, setSegment] = useState<ISegmentType | undefined>()
   const [selectModelPosition, setSelectModelPosition] = useState<ICoordinateType>()
-  const {current: portRefs} = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
-  const {current: nodeRefs} = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
+  const { current: portRefs } = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
+  const { current: nodeRefs } = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
   const startPortIdRef = useRef<string>() // 保存所有 Node 的 Dom 节点
+
+  const nodeWithStepRef = useRef(null)
+  const animationCountRef = useRef(0)
 
   const handleNodePositionChange = useEventCallback((nodeId: string, nextCoordinates: ICoordinateType) => {
     const nextNodes = batchUpdateCoordinates(nodeId, nextCoordinates, value.nodes, activeNodeIds)
-    onChange({...value, nodes: nextNodes}, true)
+    onChange({ ...value, nodes: nextNodes }, true)
   })
 
   const handleNodeValueChange = useEventCallback((nodeId: string, nextNodeValue: any) => {
     const nextNodes = [...value.nodes]
     const index = findIndexById(nodeId, nextNodes)
-    nextNodes[index] = {...nextNodes[index], data: nextNodeValue}
-    onChange({...value, nodes: nextNodes})
+    nextNodes[index] = { ...nextNodes[index], data: nextNodeValue }
+    onChange({ ...value, nodes: nextNodes })
   })
 
   const handleAddHistory = useEventCallback((nodeId: string, nextCoordinates: ICoordinateType) => {
     const nextNodes = batchUpdateCoordinates(nodeId, nextCoordinates, value.nodes, activeNodeIds)
-    onAddHistory({...value, nodes: nextNodes})
+    onAddHistory({ ...value, nodes: nextNodes })
   })
 
   const handleNodeCopy = useEventCallback((nodeId: string) => {
     const index = findIndexById(nodeId, value.nodes)
     const newNode = copyNode(value.nodes[index])
-    onChange({...value, nodes: [...value.nodes, newNode]})
+    onChange({ ...value, nodes: [...value.nodes, newNode] })
   })
-
 
   const handleNodeDelete = useEventCallback((nodeId: string) => {
     const nextValue = oneNodeDelete(value, nodeId)
     onChange(nextValue)
   })
-
 
   // when a port is registered, save it to the local reference
   const onPortRegister = useEventCallback((portId: string, portEl: HTMLElement) => {
@@ -86,7 +103,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   // when a new segment is dragged, save it to the local state
   const onDragNewSegment = useCallback((portId, from, to) => {
-    setSegment({id: `segment-${portId}`, from, to})
+    setSegment({ id: `segment-${portId}`, from, to })
   }, [])
 
   // when a segment fails to connect, reset the segment state
@@ -105,9 +122,9 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   const onSegmentConnect = useEventCallback((input: string, output: string) => {
     const linkIsExists = value.links.findIndex((link) => link.input === input && link.output === output) > -1
     if (!linkIsExists) {
-      const nextLinks = [...value.links, {input, output}]
+      const nextLinks = [...value.links, { input, output }]
 
-      onChange({...value, links: nextLinks})
+      onChange({ ...value, links: nextLinks })
     }
     setSegment(undefined)
   })
@@ -115,18 +132,18 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   // when links change, performs the onChange callback with the new incoming data
   const onLinkDelete = useEventCallback((link: ILinkType) => {
     const nextLinks = value.links.filter((item) => !isEqual(item, link))
-    onChange({...value, links: nextLinks})
+    onChange({ ...value, links: nextLinks })
   })
 
   const handleSelectModelChange = useEventCallback((nodeType?: NodeTypeEnum) => {
     if (nodeType && selectModelPosition) {
       const coordinates: ICoordinateType = calculatingCoordinates(
-        {clientX: selectModelPosition[0], clientY: selectModelPosition[1]} as MouseEvent,
+        { clientX: selectModelPosition[0], clientY: selectModelPosition[1] } as MouseEvent,
         document.getElementById('diagram-canvas'),
         transform.scale
       )
       const newNode = createNode(nodeType, coordinates)
-      onChange({...value, nodes: [...value.nodes, newNode]})
+      onChange({ ...value, nodes: [...value.nodes, newNode] })
       // nodes 更新后 渲染 link
       setTimeout(() => {
         onSegmentConnect(startPortIdRef.current || '', newNode.id)
@@ -137,10 +154,33 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   const handleAutoLayout = useCallback(() => {
     const resultValue = autoLayout(value, nodeRefs)
-    onChange(resultValue)
+
+    nodeWithStepRef.current = computedStep(value.nodes, resultValue.nodes)
+
+    const step = () => {
+      animationCountRef.current = animationCountRef.current + 1
+      // @ts-ignore
+      nodeWithStepRef.current = nodeWithStepRef.current.map((item) => {
+        return {
+          ...item,
+          coordinates: [item.coordinates[0] + item.xStep, item.coordinates[1] + item.yStep],
+        }
+      })
+      // @ts-ignore
+
+      onChange({ ...resultValue, nodes: nodeWithStepRef.current })
+
+      if (animationCountRef.current <= stepCount) {
+        requestAnimationFrame(step)
+      } else {
+        onChange(resultValue)
+        animationCountRef.current = 0
+      }
+    }
+    requestAnimationFrame(step)
   }, [value, nodeRefs, onChange])
 
-  useEventBus({type: EVENT_AUTO_LAYOUT, onChange: handleAutoLayout})
+  useEventBus({ type: EVENT_AUTO_LAYOUT, onChange: handleAutoLayout })
 
   return (
     <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} transform={transform}>
@@ -160,10 +200,10 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
         onToggleActiveNodeId={onToggleActiveNodeId}
         activeNodeIds={activeNodeIds}
       />
-      {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete}/>}
-      {segment && <Segment segment={segment}/>}
-      <MarkLine onNodePositionChange={handleNodePositionChange}/>
-      <SelectModel position={selectModelPosition} onChange={handleSelectModelChange}/>
+      {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete} />}
+      {segment && <Segment segment={segment} />}
+      <MarkLine onNodePositionChange={handleNodePositionChange} />
+      <SelectModel position={selectModelPosition} onChange={handleSelectModelChange} />
     </DiagramCanvas>
   )
 })

@@ -153,10 +153,10 @@ export const computedLinkSvgInfo = (input: ICoordinateType, output: ICoordinateT
   }
 
   return {
-    width: width || MIN_SIZE,
-    height: height || MIN_SIZE,
-    left,
-    top,
+    width: Math.floor(width) || MIN_SIZE,
+    height: Math.floor(height) || MIN_SIZE,
+    left: Math.floor(left),
+    top: Math.floor(top),
     start: [start.x, start.y],
     end: [end.x, end.y],
   }
