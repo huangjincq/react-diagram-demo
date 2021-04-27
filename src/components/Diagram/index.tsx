@@ -22,7 +22,7 @@ import { batchUpdateCoordinates, calculatingCoordinates, findIndexById, oneNodeD
 import { copyNode, createNode } from '../NodeTypes/config'
 import { MarkLine } from './MarkLine'
 import { SelectModel } from './SelectModel'
-import autoLayout, { computedAnimationStep } from '../../utils/autoLayout'
+import autoLayout, { computedAnimationStep, diffNodesCoordinates } from '../../utils/autoLayout'
 import { EVENT_AUTO_LAYOUT } from '../../utils/eventBus'
 import useEventBus from '../../hooks/useEventBus'
 interface DiagramProps {
@@ -138,6 +138,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   const handleAutoLayout = useCallback(() => {
     const resultValue = autoLayout(value, nodeRefs)
+    if (!diffNodesCoordinates(value.nodes, resultValue.nodes) || animationCountRef.current !== 0) return
 
     nodeWithStepRef.current = computedAnimationStep(value.nodes, resultValue.nodes, STEP_COUNT)
 
