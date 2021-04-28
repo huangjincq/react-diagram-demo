@@ -164,7 +164,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
       }
     }
     requestAnimationFrame(step)
-  }, [value, nodeRefs, onChange, nodeWithStepRef, nodeWithStepRef])
+  }, [value, nodeRefs, onChange, onAddHistory, nodeWithStepRef, animationCountRef])
 
   useEventBus({ type: EVENT_AUTO_LAYOUT, onChange: handleAutoLayout })
 
