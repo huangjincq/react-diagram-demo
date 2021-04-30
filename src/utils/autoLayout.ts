@@ -1,6 +1,6 @@
 import { groupBy, isEqual, maxBy, omit } from 'lodash-es'
 import { getNodeStyle } from '.'
-import { IDiagramType, ILinkType, INodeRefs, INodeStyle, INodeType, INodeTypeWithStep, IPointType } from '../types'
+import { IDiagramType, ILinkType, INodeRefs, INodeStyle, INodeType, IPointType } from '../types'
 
 const checkPortIsNodeSon = (ports: IPointType[], entityId: string) => {
   for (let j = 0; j < ports.length; j++) {
@@ -171,6 +171,8 @@ export const diffNodesCoordinates = (oldNodes: INodeType[], newNodes: INodeType[
   })
 }
 
+const toFixed2 = (num: number) => Number(num.toFixed(2))
+
 export const computedAnimationStep = (
   oldNodes: INodeType[],
   newNodes: INodeType[],
@@ -178,16 +180,55 @@ export const computedAnimationStep = (
 ): INodeTypeWithStep[] => {
   return oldNodes.map((node) => {
     const findNextNode = newNodes.find((item) => item.id === node.id)
-    const xStep = findNextNode
-      ? Number(((findNextNode.coordinates[0] - node.coordinates[0]) / stepCount).toFixed(2))
-      : 0
-    const yStep = findNextNode
-      ? Number(((findNextNode.coordinates[1] - node.coordinates[1]) / stepCount).toFixed(2))
-      : 0
+    const xStep = findNextNode ? toFixed2((findNextNode.coordinates[0] - node.coordinates[0]) / stepCount) : 0
+    const yStep = findNextNode ? toFixed2((findNextNode.coordinates[1] - node.coordinates[1]) / stepCount) : 0
     return {
       ...node,
       xStep,
       yStep,
+    }
+  })
+}
+
+interface INodeTypeWithStep extends INodeType {
+  xStep: number
+  yStep: number
+}
+
+interface IAutoLayoutAnimation {
+  originNodes: INodeType[]
+  futureNodes: INodeType[]
+  animationFn: (nodes: INodeType[]) => void
+  stepCount: number
+}
+
+export const autoLayoutAnimation = ({ originNodes, futureNodes, animationFn, stepCount }: IAutoLayoutAnimation) => {
+  return new Promise((resolve, reject) => {
+    try {
+      let animationCount = 0
+      let nodeWithStep: INodeTypeWithStep[] = computedAnimationStep(originNodes, futureNodes, stepCount)
+      const step = () => {
+        animationCount = animationCount + 1
+        nodeWithStep = nodeWithStep.map((item) => {
+          return {
+            ...item,
+            coordinates: [item.coordinates[0] + item.xStep, item.coordinates[1] + item.yStep],
+          }
+        })
+        const nextNodes: INodeType[] = nodeWithStep.map((item) => ({ ...omit(item, ['xStep', 'yStep']) }))
+
+        animationFn(nextNodes)
+
+        if (animationCount < stepCount) {
+          requestAnimationFrame(step)
+        } else {
+          animationFn(futureNodes) // 最后多执行一次保证位置正确
+          resolve(futureNodes)
+        }
+      }
+      requestAnimationFrame(step)
+    } catch (error) {
+      reject(error)
     }
   })
 }

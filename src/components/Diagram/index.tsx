@@ -13,16 +13,15 @@ import {
   ITransform,
   ICoordinateType,
   NodeTypeEnum,
-  INodeTypeWithStep,
   INodeType,
 } from '../../types'
-import { isEqual, omit } from 'lodash-es'
+import { isEqual } from 'lodash-es'
 import useEventCallback from '../../hooks/useEventCallback'
 import { batchUpdateCoordinates, calculatingCoordinates, findIndexById, oneNodeDelete } from '../../utils'
 import { copyNode, createNode } from '../NodeTypes/config'
 import { MarkLine } from './MarkLine'
 import { SelectModel } from './SelectModel'
-import autoLayout, { computedAnimationStep, diffNodesCoordinates } from '../../utils/autoLayout'
+import autoLayout, { autoLayoutAnimation, diffNodesCoordinates } from '../../utils/autoLayout'
 import { EVENT_AUTO_LAYOUT } from '../../utils/eventBus'
 import useEventBus from '../../hooks/useEventBus'
 interface DiagramProps {
@@ -42,9 +41,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   const { current: portRefs } = useRef<IPortRefs>({}) // 保存所有 Port 的 Dom 节点
   const { current: nodeRefs } = useRef<INodeRefs>({}) // 保存所有 Node 的 Dom 节点
   const startPortIdRef = useRef<string>() // 保存所有 Node 的 Dom 节点
-
-  const nodeWithStepRef = useRef<INodeTypeWithStep[]>([]) // 储存 auto layout node动画每个node 的步长
-  const animationCountRef = useRef<number>(0) // 动画执行次数
+  const isAutoLayoutRef = useRef<boolean>(false) // 保存所有 Node 的 Dom 节点
 
   const handleNodePositionChange = useEventCallback((nodeId: string, nextCoordinates: ICoordinateType) => {
     const nextNodes = batchUpdateCoordinates(nodeId, nextCoordinates, value.nodes, activeNodeIds)
@@ -137,34 +134,23 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   })
 
   const handleAutoLayout = useCallback(() => {
-    const resultValue = autoLayout(value, nodeRefs)
-    if (!diffNodesCoordinates(value.nodes, resultValue.nodes) || animationCountRef.current !== 0) return
-
-    nodeWithStepRef.current = computedAnimationStep(value.nodes, resultValue.nodes, STEP_COUNT)
-
-    const step = () => {
-      animationCountRef.current = animationCountRef.current + 1
-      nodeWithStepRef.current = nodeWithStepRef.current.map((item) => {
-        return {
-          ...item,
-          coordinates: [item.coordinates[0] + item.xStep, item.coordinates[1] + item.yStep],
-        }
-      })
-      const newNodes: INodeType[] = nodeWithStepRef.current.map((item) => ({ ...omit(item, ['xStep', 'yStep']) }))
-
-      onChange({ ...resultValue, nodes: newNodes }, true) // 不加历史记录
-
-      if (animationCountRef.current < STEP_COUNT) {
-        requestAnimationFrame(step)
-      } else {
-        onChange(resultValue, true) // 不加历史记录
-        onAddHistory(value) // 追加原始位置到历史记录
-        nodeWithStepRef.current = []
-        animationCountRef.current = 0
+    const nextValue = autoLayout(value, nodeRefs)
+    if (diffNodesCoordinates(value.nodes, nextValue.nodes) && !isAutoLayoutRef.current) {
+      const params = {
+        originNodes: value.nodes,
+        futureNodes: nextValue.nodes,
+        animationFn: (nodes: INodeType[]) => onChange({ ...nextValue, nodes: nodes }, true),
+        stepCount: STEP_COUNT,
       }
+      isAutoLayoutRef.current = true
+
+      autoLayoutAnimation(params)
+        .then(() => {
+          onAddHistory(value) // 成功后把原始位置追加到历史记录
+        })
+        .finally(() => (isAutoLayoutRef.current = false))
     }
-    requestAnimationFrame(step)
-  }, [value, nodeRefs, onChange, onAddHistory, nodeWithStepRef, animationCountRef])
+  }, [value, nodeRefs, onChange, onAddHistory, isAutoLayoutRef])
 
   useEventBus({ type: EVENT_AUTO_LAYOUT, onChange: handleAutoLayout })
 
