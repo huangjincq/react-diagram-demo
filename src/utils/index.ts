@@ -161,3 +161,25 @@ export const computedLinkSvgInfo = (input: ICoordinateType, output: ICoordinateT
     end: [end.x, end.y],
   }
 }
+
+/*
+ * 检测鼠标滚轮方向
+ */
+export const checkWheelDirection = (event: any) => {
+  let wheelDown = false
+  let wheelUp = false
+
+  // in chrome
+  if (event.wheelDelta) {
+    wheelDown = event.wheelDelta < 0
+    wheelUp = event.wheelDelta > 0
+    // in firefox
+  } else {
+    wheelDown = event.deltaX > 0 || event.deltaY > 0 || event.deltaZ > 0
+    wheelUp = event.deltaX < 0 || event.deltaY < 0 || event.deltaZ < 0
+  }
+  return {
+    wheelDown,
+    wheelUp,
+  }
+}
