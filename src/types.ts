@@ -34,6 +34,16 @@ export interface ILinkType {
 }
 
 /*
+ * link 数据类型 粘贴的时候扩展两个字段
+ * */
+export interface IPasteLinkType {
+  input: string // 起点 id
+  output: string // 终点 id
+  inputUpdated?: boolean
+  outputUpdated?: boolean
+}
+
+/*
  *  数据类型
  * */
 export interface IDiagramType {

@@ -1,4 +1,6 @@
-import { ICoordinateType, IDiagramType, INodeStyle, INodeType } from '../types'
+import { ICoordinateType, IDiagramType, INodeStyle, INodeType, IPasteLinkType } from '../types'
+import { v4 as uuidv4 } from 'uuid'
+import { link } from 'node:fs'
 
 // 计算 鼠标事件 相对在 参照物(diagram 画布)内的坐标
 export const calculatingCoordinates = (
@@ -181,5 +183,67 @@ export const checkWheelDirection = (event: any) => {
   return {
     wheelDown,
     wheelUp,
+  }
+}
+
+/*
+ * 生成copy数据
+ */
+export const createCopyValue = (value: IDiagramType, activeNodeIds: string[]) => {
+  const newNodes = value.nodes.filter((node) => activeNodeIds.includes(node.id))
+
+  return {
+    nodes: newNodes,
+    links: value.links,
+  }
+}
+
+const updatePasteLink = (links: IPasteLinkType[], oldId: string, newId: string) => {
+  return links.map((link) => {
+    const inputUpdated = link.input === oldId
+    const outputUpdated = link.output === oldId
+    return {
+      ...link,
+      input: inputUpdated ? newId : link.input,
+      output: outputUpdated ? newId : link.output,
+      inputUpdated: inputUpdated || link.inputUpdated,
+      outputUpdated: outputUpdated || link.outputUpdated,
+    }
+  })
+}
+
+/*
+ * 生成copy数据
+ */
+export const createPasteValue = (value: IDiagramType) => {
+  let newLinks: IPasteLinkType[] = value.links
+
+  const newNodes = value.nodes.map((item) => {
+    const newNodeId = uuidv4()
+    newLinks = updatePasteLink(newLinks, item.id, newNodeId)
+
+    return {
+      ...item,
+      inputs: item.inputs.map((port) => {
+        const newPortId = uuidv4()
+        newLinks = updatePasteLink(newLinks, port.id, newPortId)
+
+        return { ...port, id: newPortId }
+      }),
+      outputs: item.outputs.map((port) => {
+        const newPortId = uuidv4()
+        newLinks = updatePasteLink(newLinks, port.id, newPortId)
+
+        return { ...port, id: newPortId }
+      }),
+      id: newNodeId,
+    }
+  })
+
+  return {
+    nodes: newNodes,
+    links: newLinks
+      .filter((link) => link.inputUpdated && link.outputUpdated)
+      .map(({ inputUpdated, outputUpdated, ...link }) => ({ ...link })),
   }
 }

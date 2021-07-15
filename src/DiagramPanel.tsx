@@ -3,8 +3,8 @@ import { Diagram } from './components/Diagram'
 import { useHistory } from './hooks/useHistory'
 import { Toolbar } from './components/Toolbar/Toolbar'
 import { NodeList } from './components/NodeList/NodeList'
-import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionArea, INodeType } from './types'
-import { copyNode, createNode } from './components/NodeTypes/config'
+import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionArea } from './types'
+import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
 import {
   calculatingCoordinates,
@@ -12,20 +12,14 @@ import {
   checkMouseDownTargetIsDrawPanel,
   checkWheelDirection,
   collideCheck,
+  createCopyValue,
+  createPasteValue,
   oneNodeDelete,
 } from './utils'
 import { useHotkeys } from 'react-hotkeys-hook'
 import useEventCallback from './hooks/useEventCallback'
 import useEventListener from './hooks/useEventListener'
-import {
-  HOT_KEY_COPY,
-  HOT_KEY_DEL,
-  HOT_KEY_PASTE,
-  HOT_KEY_REDO,
-  HOT_KEY_SELECT_ALL,
-  HOT_KEY_SPACE,
-  HOT_KEY_UNDO,
-} from './constant/hotKeys'
+import { HOT_KEY_DEL, HOT_KEY_REDO, HOT_KEY_SELECT_ALL, HOT_KEY_SPACE, HOT_KEY_UNDO } from './constant/hotKeys'
 import { CURSOR_MAP, DRAG_STATE, SCALE_STEP } from './constant'
 import { defaultValue } from './utils/creatMockData'
 // import { useThrottleFn } from 'react-use'
@@ -55,8 +49,6 @@ function DiagramPanel() {
 
   const panelRef = useRef<HTMLDivElement>(null)
   const selectionAreaRef = useRef<HTMLDivElement>(null)
-  const batchCopyNodesRef = useRef<INodeType[]>([])
-  const batchCopyActiveNodeIdsRef = useRef<string[]>([])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const panelRect = useMemo(() => panelRef.current?.getBoundingClientRect() || { x: 0, y: 0 }, [panelRef.current])
@@ -231,22 +223,27 @@ function DiagramPanel() {
     }
   })
 
-  const handleBatchCopy = useEventCallback((event: KeyboardEvent) => {
+  const handleBatchCopy = useEventCallback((event: React.ClipboardEvent) => {
     if (checkIsFocusInPanel(panelRef.current) && activeNodeIds.length) {
       event.preventDefault()
-      batchCopyNodesRef.current = value.nodes
-      batchCopyActiveNodeIdsRef.current = activeNodeIds
+      // activeNodeIds
+      const originCopyData = createCopyValue(value, activeNodeIds)
+
+      event.clipboardData.setData('text/json', JSON.stringify(originCopyData))
     }
   })
 
-  const handleBatchPaste = useEventCallback((event: KeyboardEvent) => {
+  const handleBatchPaste = useEventCallback((event: React.ClipboardEvent) => {
     if (checkIsFocusInPanel(panelRef.current)) {
       event.preventDefault()
-      const nextValue = batchCopyActiveNodeIdsRef.current.map((nodeId: string) => {
-        const nodeIndex = batchCopyNodesRef.current.findIndex((node) => node.id === nodeId)
-        return copyNode(batchCopyNodesRef.current[nodeIndex])
-      })
-      handleChange({ ...value, nodes: [...value.nodes, ...nextValue] })
+      const newValue = createPasteValue(JSON.parse(event.clipboardData.getData('text/json')))
+      console.log(newValue)
+
+      // const nextValue = batchCopyActiveNodeIdsRef.current.map((nodeId: string) => {
+      //   const nodeIndex = batchCopyValueRef.current.findIndex((node) => node.id === nodeId)
+      //   return copyNode(batchCopyValueRef.current[nodeIndex])
+      // })
+      handleChange({ links: [...value.links, ...newValue.links], nodes: [...value.nodes, ...newValue.nodes] })
     }
   })
 
@@ -282,8 +279,6 @@ function DiagramPanel() {
    */
   useHotkeys(HOT_KEY_UNDO, handleUndo, {}, [handleUndo])
   useHotkeys(HOT_KEY_REDO, handleRedo, {}, [handleRedo])
-  useHotkeys(HOT_KEY_COPY, handleBatchCopy, {}, [handleBatchCopy])
-  useHotkeys(HOT_KEY_PASTE, handleBatchPaste, {}, [handleBatchPaste])
   useHotkeys(HOT_KEY_SELECT_ALL, handleSelectAll, {}, [handleSelectAll])
   useHotkeys(HOT_KEY_DEL, handleBatchDelete, {}, [handleBatchDelete])
   useHotkeys(HOT_KEY_SPACE, handleSpaceHotKey, { keyup: true, keydown: true }, [handleSpaceHotKey])
@@ -293,6 +288,9 @@ function DiagramPanel() {
   useEventListener('mouseup', handleMouseUp)
   useEventListener('mousemove', handleMouseMove)
   useEventListener('mousedown', handleMouseDown)
+
+  useEventListener('copy', handleBatchCopy)
+  useEventListener('paste', handleBatchPaste)
 
   return (
     <>
