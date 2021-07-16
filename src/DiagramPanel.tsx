@@ -240,8 +240,6 @@ function DiagramPanel() {
         ? calculatePasteOriginCoordination(transform, panelRef.current)
         : { x: 20, y: 20 }
 
-      console.log('pasteOffset', pasteOffset, transform, panelRef.current)
-
       const pasteString = event.clipboardData.getData('text/json')
       if (pasteString) {
         const newValue = createPasteValue(JSON.parse(pasteString), pasteOffset)
