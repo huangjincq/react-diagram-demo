@@ -18,12 +18,13 @@ import {
 import { isEqual } from 'lodash-es'
 import useEventCallback from '../../hooks/useEventCallback'
 import { batchUpdateCoordinates, calculatingCoordinates, findIndexById, oneNodeDelete } from '../../utils'
-import { copyNode, createNode } from '../NodeTypes/config'
+import { createNode } from '../NodeTypes/config'
 import { MarkLine } from './MarkLine'
 import { SelectModel } from './SelectModel'
 import autoLayout, { autoLayoutAnimation, diffNodesCoordinates } from '../../utils/autoLayout'
 import { EVENT_AUTO_LAYOUT } from '../../utils/eventBus'
 import useEventBus from '../../hooks/useEventBus'
+import { createSinglePasteValue } from '../../utils/copyPaste'
 interface DiagramProps {
   value: IDiagramType
   onChange: (value: IDiagramType, notAddHistory?: boolean) => void
@@ -62,7 +63,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
 
   const handleNodeCopy = useEventCallback((nodeId: string) => {
     const index = findIndexById(nodeId, value.nodes)
-    const newNode = copyNode(value.nodes[index])
+    const newNode = createSinglePasteValue(value.nodes[index])
     onChange({ ...value, nodes: [...value.nodes, newNode] })
   })
 

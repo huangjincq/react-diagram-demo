@@ -7,14 +7,11 @@ import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionAr
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
 import {
-  calculatePasteOriginCoordination,
   calculatingCoordinates,
   checkIsFocusInPanel,
   checkMouseDownTargetIsDrawPanel,
   checkWheelDirection,
   collideCheck,
-  createCopyValue,
-  createPasteValue,
   oneNodeDelete,
 } from './utils'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -23,6 +20,7 @@ import useEventListener from './hooks/useEventListener'
 import { HOT_KEY_DEL, HOT_KEY_REDO, HOT_KEY_SELECT_ALL, HOT_KEY_SPACE, HOT_KEY_UNDO } from './constant/hotKeys'
 import { CURSOR_MAP, DRAG_STATE, SCALE_STEP } from './constant'
 import { defaultValue } from './utils/creatMockData'
+import { calculatePasteOriginCoordination, createCopyValue, createPasteValue } from './utils/copyPaste'
 // import { useThrottleFn } from 'react-use'
 
 function DiagramPanel() {
