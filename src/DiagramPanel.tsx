@@ -7,6 +7,7 @@ import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionAr
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
 import {
+  calculatePasteOriginCoordination,
   calculatingCoordinates,
   checkIsFocusInPanel,
   checkMouseDownTargetIsDrawPanel,
@@ -236,14 +237,19 @@ function DiagramPanel() {
   const handleBatchPaste = useEventCallback((event: React.ClipboardEvent) => {
     if (checkIsFocusInPanel(panelRef.current)) {
       event.preventDefault()
-      const newValue = createPasteValue(JSON.parse(event.clipboardData.getData('text/json')))
-      console.log(newValue)
+      // 计算 node 粘贴的偏移量
+      const pasteOffset = panelRef.current
+        ? calculatePasteOriginCoordination(transform, panelRef.current)
+        : { x: 20, y: 20 }
 
-      // const nextValue = batchCopyActiveNodeIdsRef.current.map((nodeId: string) => {
-      //   const nodeIndex = batchCopyValueRef.current.findIndex((node) => node.id === nodeId)
-      //   return copyNode(batchCopyValueRef.current[nodeIndex])
-      // })
-      handleChange({ links: [...value.links, ...newValue.links], nodes: [...value.nodes, ...newValue.nodes] })
+      console.log('pasteOffset', pasteOffset, transform, panelRef.current)
+
+      const pasteString = event.clipboardData.getData('text/json')
+      if (pasteString) {
+        const newValue = createPasteValue(JSON.parse(pasteString), pasteOffset)
+
+        handleChange({ links: [...value.links, ...newValue.links], nodes: [...value.nodes, ...newValue.nodes] })
+      }
     }
   })
 

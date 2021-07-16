@@ -1,6 +1,6 @@
-import { ICoordinateType, IDiagramType, INodeStyle, INodeType, IPasteLinkType } from '../types'
+import { ICoordinateType, IDiagramType, INodeStyle, INodeType, IPasteLinkType, ITransform } from '../types'
 import { v4 as uuidv4 } from 'uuid'
-import { link } from 'node:fs'
+import { minBy } from 'lodash-es'
 
 // 计算 鼠标事件 相对在 参照物(diagram 画布)内的坐标
 export const calculatingCoordinates = (
@@ -49,7 +49,7 @@ export const findIndexById = (nodeId: string, nodes: INodeType[]) => nodes.findI
 
 export const getNodeStyle = (nodeDom: Element): INodeStyle => {
   const dom = nodeDom as HTMLElement
-  const width = dom.offsetHeight
+  const width = dom.offsetWidth
   const height = dom.offsetHeight
   return {
     width,
@@ -198,8 +198,8 @@ export const createCopyValue = (value: IDiagramType, activeNodeIds: string[]) =>
   }
 }
 
-const updatePasteLink = (links: IPasteLinkType[], oldId: string, newId: string) => {
-  return links.map((link) => {
+const updatePasteLink = (links: IPasteLinkType[], oldId: string, newId: string) =>
+  links.map((link) => {
     const inputUpdated = link.input === oldId
     const outputUpdated = link.output === oldId
     return {
@@ -210,20 +210,29 @@ const updatePasteLink = (links: IPasteLinkType[], oldId: string, newId: string) 
       outputUpdated: outputUpdated || link.outputUpdated,
     }
   })
-}
 
 /*
  * 生成copy数据
  */
-export const createPasteValue = (value: IDiagramType) => {
+export const createPasteValue = (value: IDiagramType, offset: { x: number; y: number }) => {
+  // 1. 找到原始 node 边界
+  const minX = minBy(value.nodes, 'coordinates[0]')?.coordinates[0] || 0
+  const minY = minBy(value.nodes, 'coordinates[1]')?.coordinates[1] || 0
+
   let newLinks: IPasteLinkType[] = value.links
 
   const newNodes = value.nodes.map((item) => {
     const newNodeId = uuidv4()
+    const newCoordinates: ICoordinateType = [
+      item.coordinates[0] - minX + offset.x,
+      item.coordinates[1] - minY + offset.y,
+    ]
     newLinks = updatePasteLink(newLinks, item.id, newNodeId)
 
     return {
       ...item,
+      // 重新设置 node 坐标
+      coordinates: newCoordinates,
       inputs: item.inputs.map((port) => {
         const newPortId = uuidv4()
         newLinks = updatePasteLink(newLinks, port.id, newPortId)
@@ -245,5 +254,18 @@ export const createPasteValue = (value: IDiagramType) => {
     links: newLinks
       .filter((link) => link.inputUpdated && link.outputUpdated)
       .map(({ inputUpdated, outputUpdated, ...link }) => ({ ...link })),
+  }
+}
+
+/*
+ * 计算在屏幕范围的中心位置，在 画布内的坐标
+ */
+export const calculatePasteOriginCoordination = (transform: ITransform, panelDom: HTMLDivElement) => {
+  const { scale, translateX, translateY } = transform
+  const { width, height } = getNodeStyle(panelDom)
+
+  return {
+    x: -translateX / scale + width / scale / 3,
+    y: -translateY / scale + height / scale / 2,
   }
 }
