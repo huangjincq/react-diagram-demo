@@ -16,16 +16,52 @@ export const nodesConfig = {
     component: NodeTypeInput,
     label: 'Input 节点',
     icon: AppleOutlined,
+    defaultValue: () => {
+      return {
+        id: uuidv4(),
+        coordinates: [0, 0],
+        type: NodeTypes.nodeTypeInput,
+        inputs: [{ id: uuidv4(), isLinked: false }],
+        outputs: [{ id: uuidv4(), isLinked: false }],
+        data: {
+          inputValue: 'default input value',
+        },
+      }
+    },
   },
   [NodeTypes.nodeTypeSelect]: {
     component: NodeTypeSelect,
     label: 'Select 节点',
     icon: WindowsOutlined,
+    defaultValue: () => {
+      return {
+        id: uuidv4(),
+        coordinates: [0, 0],
+        type: NodeTypes.nodeTypeInput,
+        inputs: [{ id: uuidv4(), isLinked: false }],
+        outputs: [{ id: uuidv4(), isLinked: false }],
+        data: {
+          inputValue: 'default select value',
+        },
+      }
+    },
   },
   [NodeTypes.nodeTypeButton]: {
     component: NodeTypeButton,
     label: 'Button 节点',
     icon: GithubOutlined,
+    defaultValue: () => {
+      return {
+        id: uuidv4(),
+        coordinates: [0, 0],
+        type: NodeTypes.nodeTypeInput,
+        inputs: [{ id: uuidv4(), isLinked: false }],
+        outputs: [{ id: uuidv4(), isLinked: false }],
+        data: {
+          inputValue: 'default select',
+        },
+      }
+    },
   },
 }
 
@@ -37,52 +73,7 @@ export const nodesList = Object.entries(nodesConfig).map(([key, value]) => {
 })
 
 export const createNode = (nodeType: NodeTypeEnum, coordinate: ICoordinateType): INodeType => {
-  let nodeData: INodeType = {
-    id: uuidv4(),
-    coordinates: coordinate,
-    type: nodeType,
-    inputs: [],
-    outputs: [],
-    data: {},
-  }
-  switch (nodeType) {
-    case NodeTypes.nodeTypeInput:
-      nodeData = {
-        ...nodeData,
-        outputs: [{ id: uuidv4(), isLinked: false }],
-        data: {
-          inputValue: 'test',
-        },
-      }
+  const { defaultValue } = nodesConfig[nodeType]
 
-      break
-    case NodeTypes.nodeTypeSelect:
-      nodeData = {
-        ...nodeData,
-        outputs: [{ id: uuidv4(), isLinked: false }],
-        data: {
-          inputValue: '',
-        },
-      }
-      break
-    case NodeTypes.nodeTypeButton:
-      const buttonData = {
-        buttonList: [
-          { text: 'button-1', id: uuidv4() },
-          { text: 'button-2', id: uuidv4() },
-        ],
-      }
-      const outputs = buttonData.buttonList.map((item: any) => ({
-        id: item.id,
-        isLinked: false,
-      }))
-      nodeData = {
-        ...nodeData,
-        outputs: outputs,
-        data: buttonData,
-      }
-      break
-  }
-
-  return nodeData
+  return { ...defaultValue(), coordinates: coordinate }
 }
