@@ -40,7 +40,7 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
     'is-linked': isLinked,
   })
 
-  const { onDragStart, onDrag, onDragEnd } = useDrag({ ref, throttleBy: 15 })
+  const { onDragStart, onDrag, onDragEnd } = useDrag({ ref, throttleBy: 16 })
 
   onDragStart((event: MouseEvent) => {
     event.stopImmediatePropagation()

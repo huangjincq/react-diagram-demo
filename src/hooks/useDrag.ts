@@ -18,7 +18,7 @@ interface InfoType {
 
 const defaultOptions: DefaultOptions = {
   ref: null,
-  throttleBy: 0,
+  throttleBy: 16,
 }
 
 const getEventCoordinates = (event: MouseEvent): ICoordinateType => [event.clientX, event.clientY]

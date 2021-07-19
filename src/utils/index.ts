@@ -183,3 +183,14 @@ export const checkWheelDirection = (event: any) => {
     wheelUp,
   }
 }
+
+const BASE_NUM = 4
+export const getInteger = (num: number) => {
+  const integer = Math.floor(num / BASE_NUM)
+  let remainder = num % BASE_NUM
+
+  remainder = remainder > BASE_NUM / 2 ? BASE_NUM : 0
+
+  const res = integer * BASE_NUM + remainder
+  return res
+}

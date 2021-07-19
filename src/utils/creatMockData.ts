@@ -88,7 +88,7 @@ export const defaultValue: IDiagramType = {
   ],
 }
 
-const manyNode: any = new Array(500).fill({}).map((item, index) => {
+const manyNode: any = new Array(1000).fill({}).map((item, index) => {
   return {
     id: 'node-' + index,
     coordinates: [index * 40 + 200, index * 50],
@@ -101,7 +101,7 @@ const manyNode: any = new Array(500).fill({}).map((item, index) => {
   }
 })
 
-const manyLink = new Array(400).fill({}).map((item, index) => {
+const manyLink = new Array(999).fill({}).map((item, index) => {
   return { input: 'port-' + index, output: 'node-' + (index + 1) }
 })
 

@@ -19,7 +19,7 @@ import { isEqual } from 'lodash-es'
 import useEventCallback from '../../hooks/useEventCallback'
 import { batchUpdateCoordinates, calculatingCoordinates, findIndexById, oneNodeDelete } from '../../utils'
 import { createNode } from '../NodeTypes/config'
-import { MarkLine } from './MarkLine'
+// import { MarkLine } from './MarkLine'
 import { SelectModel } from './SelectModel'
 import autoLayout, { autoLayoutAnimation, diffNodesCoordinates } from '../../utils/autoLayout'
 import { EVENT_AUTO_LAYOUT } from '../../utils/eventBus'
@@ -175,7 +175,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
       />
       {value.links.length > 0 && <LinksCanvas nodes={value.nodes} links={value.links} onDelete={onLinkDelete} />}
       {segment && <Segment segment={segment} />}
-      <MarkLine onNodePositionChange={handleNodePositionChange} />
+      {/* <MarkLine onNodePositionChange={handleNodePositionChange} /> */}
       <SelectModel position={selectModelPosition} onChange={handleSelectModelChange} />
     </DiagramCanvas>
   )

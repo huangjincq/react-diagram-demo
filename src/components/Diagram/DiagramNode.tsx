@@ -63,7 +63,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
 
   const ref: any = useRef(null)
 
-  const { onDragStart, onDrag, onDragEnd } = useDrag({ throttleBy: 14, ref }) // get the drag n drop methods
+  const { onDragStart, onDrag, onDragEnd } = useDrag({ throttleBy: 16, ref }) // get the drag n drop methods
   const dragStartPoint = useRef(coordinates) // keeps the drag start point in a persistent reference
 
   // when drag starts, save the starting coordinates into the `dragStartPoint` ref
@@ -117,7 +117,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
       id={id}
       className={className}
       ref={ref}
-      style={{ left: Math.floor(coordinates[0]), top: Math.floor(coordinates[1]) }}
+      style={{ left: coordinates[0], top: coordinates[1] }}
       onClick={handleClick}
     >
       {component && React.createElement(component, nodeItemProps)}
