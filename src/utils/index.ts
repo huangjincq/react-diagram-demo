@@ -7,7 +7,10 @@ export const calculatingCoordinates = (
   scale: number
 ): ICoordinateType => {
   const referenceDomRect = referenceDom?.getBoundingClientRect() || { x: 0, y: 0 }
-  return [(event.clientX - referenceDomRect.x) / scale, (event.clientY - referenceDomRect.y) / scale]
+  return [
+    getInteger((event.clientX - referenceDomRect.x) / scale),
+    getInteger((event.clientY - referenceDomRect.y) / scale),
+  ]
 }
 
 export const findEventTargetParentNodeId = (dom: HTMLElement | null): null | string => {
@@ -79,7 +82,10 @@ export const batchUpdateCoordinates = (
       if (node.id === activeNodeId) {
         nextNodes[nextIndex] = {
           ...nextNodes[nextIndex],
-          coordinates: [node.coordinates[0] + offsetCoordinate.xOffset, node.coordinates[1] + offsetCoordinate.yOffset],
+          coordinates: [
+            getInteger(node.coordinates[0] + offsetCoordinate.xOffset),
+            getInteger(node.coordinates[1] + offsetCoordinate.yOffset),
+          ],
         }
         return true
       } else {
@@ -88,7 +94,10 @@ export const batchUpdateCoordinates = (
     })
   })
   // update self
-  nextNodes[index] = { ...nextNodes[index], coordinates: nextCoordinates }
+  nextNodes[index] = {
+    ...nextNodes[index],
+    coordinates: [getInteger(nextCoordinates[0]), getInteger(nextCoordinates[1])],
+  }
 
   return nextNodes
 }
@@ -184,7 +193,7 @@ export const checkWheelDirection = (event: any) => {
   }
 }
 
-const BASE_NUM = 4
+const BASE_NUM = 2
 export const getInteger = (num: number) => {
   const integer = Math.floor(num / BASE_NUM)
   let remainder = num % BASE_NUM

@@ -19,7 +19,7 @@ import useEventCallback from './hooks/useEventCallback'
 import useEventListener from './hooks/useEventListener'
 import { HOT_KEY_DEL, HOT_KEY_REDO, HOT_KEY_SELECT_ALL, HOT_KEY_SPACE, HOT_KEY_UNDO } from './constant/hotKeys'
 import { CURSOR_MAP, DRAG_STATE, SCALE_STEP } from './constant'
-import { defaultValue, bigDataValue } from './utils/creatMockData'
+import { defaultValue } from './utils/creatMockData'
 import { calculatePasteOriginCoordination, createCopyValue, createPasteValue } from './utils/copyPaste'
 // import { useThrottleFn } from 'react-use'
 
