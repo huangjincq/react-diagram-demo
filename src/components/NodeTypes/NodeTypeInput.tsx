@@ -1,5 +1,5 @@
 import React from 'react'
-import { Input, Collapse } from 'antd'
+import { Input } from 'antd'
 import './style.scss'
 import { INodeItemProps } from '../../types'
 import { NodeTypeHeader } from './NodeTypeHeader'

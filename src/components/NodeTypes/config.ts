@@ -1,6 +1,6 @@
 import { NodeTypeInput } from './NodeTypeInput'
 import { NodeTypeSelect } from './NodeTypeSelect'
-import { NodeTypeButton } from './NodeTypeButton'
+import { NodeTypeBranch } from './NodeTypeBranch'
 import { AppleOutlined, WindowsOutlined, GithubOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
 import { ICoordinateType, INodeType, NodeTypeEnum } from '../../types'
@@ -8,7 +8,7 @@ import { ICoordinateType, INodeType, NodeTypeEnum } from '../../types'
 export enum NodeTypes {
   nodeTypeInput = 'nodeTypeInput',
   nodeTypeSelect = 'nodeTypeSelect',
-  nodeTypeButton = 'nodeTypeButton',
+  NodeTypeBranch = 'NodeTypeBranch',
 }
 
 export const nodesConfig = {
@@ -24,7 +24,7 @@ export const nodesConfig = {
         inputs: [{ id: uuidv4(), isLinked: false }],
         outputs: [{ id: uuidv4(), isLinked: false }],
         data: {
-          inputValue: 'default input value',
+          inputValue: '',
         },
       }
     },
@@ -37,28 +37,36 @@ export const nodesConfig = {
       return {
         id: uuidv4(),
         coordinates: [0, 0],
-        type: NodeTypes.nodeTypeInput,
+        type: NodeTypes.nodeTypeSelect,
         inputs: [{ id: uuidv4(), isLinked: false }],
         outputs: [{ id: uuidv4(), isLinked: false }],
         data: {
-          inputValue: 'default select value',
+          inputValue: '',
+          selectValue: '',
         },
       }
     },
   },
-  [NodeTypes.nodeTypeButton]: {
-    component: NodeTypeButton,
-    label: 'Button 节点',
+  [NodeTypes.NodeTypeBranch]: {
+    component: NodeTypeBranch,
+    label: '分支 节点',
     icon: GithubOutlined,
     defaultValue: () => {
+      const branchList = [
+        { id: uuidv4(), text: '' },
+        { id: uuidv4(), text: '' },
+      ]
+      // 由数据映射输出点
+      const outputs = branchList.map((item) => ({ id: item.id, isLinked: false }))
       return {
         id: uuidv4(),
         coordinates: [0, 0],
-        type: NodeTypes.nodeTypeInput,
-        inputs: [{ id: uuidv4(), isLinked: false }],
-        outputs: [{ id: uuidv4(), isLinked: false }],
+        type: NodeTypes.NodeTypeBranch,
+        inputs: [],
+        outputs,
         data: {
-          inputValue: 'default select',
+          inputValue: '',
+          branchList,
         },
       }
     },

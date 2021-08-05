@@ -34,7 +34,7 @@ export const defaultValue: IDiagramType = {
     {
       id: 'ebac3f07-598e-4e2f-9e81-e67e542322d8',
       coordinates: [364, 353],
-      type: 'nodeTypeButton',
+      type: 'NodeTypeBranch',
       inputs: [],
       outputs: [
         {
@@ -44,7 +44,7 @@ export const defaultValue: IDiagramType = {
         { id: '1751249f-fb2c-44ed-b324-e99cf1d8a5fd', isLinked: false },
       ],
       data: {
-        buttonList: [
+        branchList: [
           { text: 'button-1', id: 'd0ce404a-d95c-4210-be5d-106cb707ecda' },
           {
             text: 'button-2',
