@@ -35,4 +35,7 @@
 
 .node-content {
   padding: 8px;
+  .branch-input + .branch-input {
+    margin-top: 8px;
+  }
 }

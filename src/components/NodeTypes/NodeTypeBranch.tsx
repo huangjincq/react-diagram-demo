@@ -25,7 +25,7 @@ export const NodeTypeBranch: React.FC<NodeTypeBranchProps> = (props) => {
       <NodeTypeHeader icon={nodesConfig.NodeTypeBranch.icon} label={nodesConfig.NodeTypeBranch.label} />
       <div className="node-content">
         {value.branchList.map((item: any, index: number) => (
-          <div key={index}>
+          <div className="branch-input" key={index}>
             <Input placeholder="Input message here" value={item.text} data-index={index} onChange={handleInputChange} />
           </div>
         ))}

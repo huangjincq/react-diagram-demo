@@ -21,7 +21,7 @@ export const nodesConfig = {
         id: uuidv4(),
         coordinates: [0, 0],
         type: NodeTypes.nodeTypeInput,
-        inputs: [{ id: uuidv4(), isLinked: false }],
+        inputs: [],
         outputs: [{ id: uuidv4(), isLinked: false }],
         data: {
           inputValue: '',
