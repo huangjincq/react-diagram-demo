@@ -1,15 +1,26 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { DiagramManagerProvider } from '../Context/DiagramManager'
 import { IPortRefs, INodeRefs, ITransform } from '../../types'
+import { IPortManager, PortManagerContextProvider } from '../Context/PortManager'
 
-interface DiagramCanvasProps {
+interface DiagramCanvasProps extends IPortManager {
   portRefs: IPortRefs
   nodeRefs: INodeRefs
   transform: ITransform
 }
 
 export const DiagramCanvas: React.FC<DiagramCanvasProps> = React.memo((props) => {
-  const { children, portRefs, nodeRefs, transform } = props
+  const {
+    children,
+    portRefs,
+    nodeRefs,
+    transform,
+    onDragNewSegment,
+    onSegmentFail,
+    onSegmentConnect,
+    onShowSelectModel,
+    onPortMount,
+  } = props
   const { scale, translateX, translateY } = transform
 
   const [canvasDom, setBoundingBox] = useState<HTMLDivElement | null>(null)
@@ -29,6 +40,16 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = React.memo((props) =>
     }),
     [canvasDom, portRefs, nodeRefs, scale]
   )
+  const portContextValue = useMemo(
+    () => ({
+      onDragNewSegment,
+      onSegmentFail,
+      onSegmentConnect,
+      onShowSelectModel,
+      onPortMount,
+    }),
+    [onDragNewSegment, onSegmentFail, onSegmentConnect, onShowSelectModel, onPortMount]
+  )
 
   return (
     <div
@@ -38,7 +59,9 @@ export const DiagramCanvas: React.FC<DiagramCanvasProps> = React.memo((props) =>
       // style={{ transform: `translate(${translate.x}px, ${translate.y}px) scale(${scale})` }}
       style={{ transform: `matrix(${scale},0,0,${scale},${translateX},${translateY})` }}
     >
-      <DiagramManagerProvider value={contextValue}>{children}</DiagramManagerProvider>
+      <DiagramManagerProvider value={contextValue}>
+        <PortManagerContextProvider value={portContextValue}>{children}</PortManagerContextProvider>
+      </DiagramManagerProvider>
     </div>
   )
 })

@@ -15,11 +15,6 @@ interface DiagramNodeProps {
   onNodeValueChange: (id: string, nextNodeValue: any) => void
   onAddHistory: (id: string, nextCoords: ICoordinateType) => void
   onNodeMount: (id: string, dom: HTMLDivElement) => void
-  onPortMount: (id: string, dom: HTMLElement) => void
-  onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
-  onSegmentFail: (id: string, type: string) => void
-  onSegmentConnect: (id: string, targetPort: string) => void
-  onShowSelectModel: (event: MouseEvent, input: string) => void
   onNodeDelete: (nodeId: string) => void
   onNodeCopy: (nodeId: string) => void
   onToggleActiveNodeId: (nodeId: string) => void
@@ -31,12 +26,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     nodeInfo,
     onNodeValueChange,
     onNodePositionChange,
-    onPortMount,
-    onDragNewSegment,
     onNodeMount,
-    onSegmentFail,
-    onSegmentConnect,
-    onShowSelectModel,
     onAddHistory,
     onToggleActiveNodeId,
     isActive,
@@ -102,8 +92,6 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     [id, onToggleActiveNodeId]
   )
 
-  const options = { nodeId: id, onPortMount, onDragNewSegment, onSegmentFail, onSegmentConnect, onShowSelectModel }
-
   useEffect(() => {
     onNodeMount(id, ref.current)
   }, [id, onNodeMount])
@@ -131,8 +119,8 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
       {nodeConfig.component && React.createElement(nodeConfig.component, nodeItemProps)}
       {!nodeConfig.customRenderPort && (
         <>
-          <DiagramNodePorts inputs={inputs} {...options} type="input" />
-          <DiagramNodePorts inputs={outputs} {...options} type="output" />
+          <DiagramNodePorts inputs={inputs} nodeId={id} type="input" />
+          <DiagramNodePorts inputs={outputs} nodeId={id} type="output" />
         </>
       )}
       <DiagramNodeActionButtons id={id} onNodeDelete={onNodeDelete} onNodeCopy={onNodeCopy} />

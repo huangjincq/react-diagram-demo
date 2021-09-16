@@ -2,35 +2,20 @@ import React, { useEffect, useRef } from 'react'
 import useDrag from '../../hooks/useDrag'
 import { ICoordinateType, IPointType } from '../../types'
 import { calculatingCoordinates, findEventTargetParentNodeId } from '../../utils'
-import { useDiagramCanvas, useScale } from '../Context/DiagramManager'
+import { useDiagramManager } from '../Context/DiagramManager'
 import classnames from 'classnames'
+import { usePortManager } from '../Context/PortManager'
 
 interface PortProps extends IPointType {
   nodeId: string
   type: 'input' | 'output'
   index: number
-  onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
-  onSegmentFail: (id: string, type: string) => void
-  onSegmentConnect: (id: string, targetPort: string) => void
-  onShowSelectModel: (event: MouseEvent, input: string) => void
-  onPortMount: (id: string, dom: HTMLElement) => void
 }
 
 export const Port: React.FC<PortProps> = React.memo((props) => {
-  const {
-    id,
-    isLinked,
-    index,
-    nodeId,
-    onDragNewSegment,
-    onSegmentFail,
-    onSegmentConnect,
-    onShowSelectModel,
-    onPortMount,
-    type,
-  } = props
-  const canvasRef = useDiagramCanvas()
-  const scale = useScale()
+  const { id, isLinked, index, nodeId, type } = props
+  const { scale, canvasRef } = useDiagramManager()
+  const { onDragNewSegment, onSegmentFail, onSegmentConnect, onShowSelectModel, onPortMount } = usePortManager()
   const ref: any = useRef<React.RefObject<HTMLElement>>(null)
   const startCoordinatesRef = useRef<ICoordinateType | undefined>()
 

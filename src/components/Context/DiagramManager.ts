@@ -1,21 +1,21 @@
 import { createContext, useContext } from 'react'
 import { IPortRefs, INodeRefs } from '../../types'
 
-export interface DiagramManager {
+export interface IDiagramManager {
   canvasRef: HTMLDivElement | null
   portRefs: IPortRefs
   nodeRefs: INodeRefs
   scale: number
 }
 
-const defaultValue: DiagramManager = { canvasRef: null, portRefs: {}, nodeRefs: {}, scale: 1 }
+const defaultValue: IDiagramManager = { canvasRef: null, portRefs: {}, nodeRefs: {}, scale: 1 }
 
 const DiagramManagerContext = createContext(defaultValue)
 
 export const DiagramManagerProvider = DiagramManagerContext.Provider
 
 // export DiagramManager Context
-export const useDiagramManager = (): DiagramManager => {
+export const useDiagramManager = (): IDiagramManager => {
   return useContext(DiagramManagerContext)
 }
 

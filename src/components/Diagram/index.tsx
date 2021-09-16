@@ -156,19 +156,23 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   useEventBus({ type: EVENT_AUTO_LAYOUT, onChange: handleAutoLayout })
 
   return (
-    <DiagramCanvas portRefs={portRefs} nodeRefs={nodeRefs} transform={transform}>
+    <DiagramCanvas
+      portRefs={portRefs}
+      nodeRefs={nodeRefs}
+      transform={transform}
+      onDragNewSegment={onDragNewSegment}
+      onSegmentFail={onSegmentFail}
+      onSegmentConnect={onSegmentConnect}
+      onShowSelectModel={onShowSelectModel}
+      onPortMount={onPortRegister}
+    >
       <NodesCanvas
         nodes={value.nodes}
         onNodeMount={onNodeRegister}
-        onPortMount={onPortRegister}
-        onDragNewSegment={onDragNewSegment}
-        onSegmentFail={onSegmentFail}
-        onShowSelectModel={onShowSelectModel}
         onNodePositionChange={handleNodePositionChange}
         onNodeValueChange={handleNodeValueChange}
         onNodeDelete={handleNodeDelete}
         onNodeCopy={handleNodeCopy}
-        onSegmentConnect={onSegmentConnect}
         onAddHistory={handleAddHistory}
         onToggleActiveNodeId={onToggleActiveNodeId}
         activeNodeIds={activeNodeIds}
