@@ -16,6 +16,7 @@ export const nodesConfig = {
     component: NodeTypeInput,
     label: 'Input 节点',
     icon: AppleOutlined,
+    customRenderPort: false,
     defaultValue: () => {
       return {
         id: uuidv4(),
@@ -33,6 +34,7 @@ export const nodesConfig = {
     component: NodeTypeSelect,
     label: 'Select 节点',
     icon: WindowsOutlined,
+    customRenderPort: false,
     defaultValue: () => {
       return {
         id: uuidv4(),
@@ -51,6 +53,7 @@ export const nodesConfig = {
     component: NodeTypeBranch,
     label: '分支 节点',
     icon: GithubOutlined,
+    customRenderPort: true,
     defaultValue: () => {
       const branchList = [
         { id: uuidv4(), text: '' },

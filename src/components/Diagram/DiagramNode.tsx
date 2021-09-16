@@ -49,7 +49,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   const scale = useScale()
 
   // nodeType
-  const component = nodesConfig[type]?.component
+  const nodeConfig = nodesConfig[type]
 
   const handleNodeDataChange = (nextNodeData: any) => {
     onNodeValueChange(id, nextNodeData)
@@ -59,6 +59,8 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   const nodeItemProps = {
     value: data,
     onChange: handleNodeDataChange,
+    inputs: nodeConfig?.customRenderPort ? inputs : undefined,
+    outputs: nodeConfig?.customRenderPort ? outputs : undefined,
   }
 
   const ref: any = useRef(null)
@@ -112,6 +114,12 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
     })
   }, [isActive])
 
+  if (!nodeConfig.component) {
+    console.warn(`NodeType "${type}" does not exist`)
+
+    return null
+  }
+
   return (
     <div
       id={id}
@@ -120,9 +128,13 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
       style={{ left: coordinates[0], top: coordinates[1] }}
       onClick={handleClick}
     >
-      {component && React.createElement(component, nodeItemProps)}
-      <DiagramNodePorts inputs={inputs} {...options} type="input" />
-      <DiagramNodePorts inputs={outputs} {...options} type="output" />
+      {nodeConfig.component && React.createElement(nodeConfig.component, nodeItemProps)}
+      {!nodeConfig.customRenderPort && (
+        <>
+          <DiagramNodePorts inputs={inputs} {...options} type="input" />
+          <DiagramNodePorts inputs={outputs} {...options} type="output" />
+        </>
+      )}
       <DiagramNodeActionButtons id={id} onNodeDelete={onNodeDelete} onNodeCopy={onNodeCopy} />
     </div>
   )

@@ -97,4 +97,6 @@ export interface INodeStyle {
 export interface INodeItemProps<T> {
   value: T
   onChange: (value: T) => void
+  inputs?: IPointType[]
+  outputs?: IPointType[]
 }

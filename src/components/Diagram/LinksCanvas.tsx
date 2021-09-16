@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import { Link } from './Link'
 import { ILinkType, INodeType, ICoordinateType, IPortRefs, INodeRefs, IPointType } from '../../types'
 import { useDiagramManager } from '../Context/DiagramManager'
-import { useEffect } from 'react'
 
 interface LinkCanvasProps {
   nodes: INodeType[]
