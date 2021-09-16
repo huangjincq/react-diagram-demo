@@ -119,8 +119,8 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
       {nodeConfig.component && React.createElement(nodeConfig.component, nodeItemProps)}
       {!nodeConfig.customRenderPort && (
         <>
-          <DiagramNodePorts inputs={inputs} nodeId={id} type="input" />
-          <DiagramNodePorts inputs={outputs} nodeId={id} type="output" />
+          <DiagramNodePorts ports={inputs} nodeId={id} type="input" />
+          <DiagramNodePorts ports={outputs} nodeId={id} type="output" />
         </>
       )}
       <DiagramNodeActionButtons id={id} onNodeDelete={onNodeDelete} onNodeCopy={onNodeCopy} />

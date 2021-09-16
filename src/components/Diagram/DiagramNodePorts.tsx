@@ -3,13 +3,13 @@ import { IPointType } from '../../types'
 import { Port } from './Port'
 
 export interface DiagramNodePortsProps {
-  inputs: IPointType[]
+  ports: IPointType[]
   nodeId: string
   type: 'input' | 'output'
 }
 
 export const DiagramNodePorts: React.FC<DiagramNodePortsProps> = (props) => {
-  const { inputs, nodeId, type } = props
+  const { ports: inputs, nodeId, type } = props
   return (
     <>
       {inputs.map((port, index) => (
