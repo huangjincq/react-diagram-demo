@@ -1,3 +1,4 @@
+import classnames from 'classnames'
 import React from 'react'
 import { IPointType } from '../../types'
 import { Port } from './Port'
@@ -10,11 +11,18 @@ export interface DiagramNodePortsProps {
 
 export const DiagramNodePorts: React.FC<DiagramNodePortsProps> = (props) => {
   const { ports: inputs, nodeId, type } = props
+
+  const className = classnames('diagram-port-wrapper', {
+    'type-input': type === 'input',
+    'type-output': type === 'output',
+  })
   return (
     <>
-      {inputs.map((port, index) => (
-        <Port type={type} key={port.id} id={port.id} index={index} isLinked={port.isLinked} nodeId={nodeId} />
-      ))}
+      <div className={className}>
+        {inputs.map((port) => (
+          <Port key={port.id} id={port.id} isLinked={port.isLinked} nodeId={nodeId} />
+        ))}
+      </div>
     </>
   )
 }

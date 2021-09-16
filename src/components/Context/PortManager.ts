@@ -3,7 +3,7 @@ import { ICoordinateType } from '../../types'
 
 export interface IPortManager {
   onDragNewSegment: (id: string, from: ICoordinateType, to: ICoordinateType) => void
-  onSegmentFail: (id: string, type: string) => void
+  onSegmentFail: (id: string) => void
   onSegmentConnect: (id: string, targetPort: string) => void
   onShowSelectModel: (event: MouseEvent, input: string) => void
   onPortMount: (id: string, dom: HTMLElement) => void
@@ -11,7 +11,7 @@ export interface IPortManager {
 
 const defaultValue: IPortManager = {
   onDragNewSegment: (id, from, to) => {},
-  onSegmentFail: (id, type) => {},
+  onSegmentFail: (id) => {},
   onSegmentConnect: (id, targetPort) => {},
   onShowSelectModel: (event, input) => {},
   onPortMount: (id, dom) => {},

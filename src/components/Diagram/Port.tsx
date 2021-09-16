@@ -8,20 +8,16 @@ import { usePortManager } from '../Context/PortManager'
 
 interface PortProps extends IPointType {
   nodeId: string
-  type: 'input' | 'output'
-  index: number
 }
 
 export const Port: React.FC<PortProps> = React.memo((props) => {
-  const { id, isLinked, index, nodeId, type } = props
+  const { id, isLinked, nodeId } = props
   const { scale, canvasRef } = useDiagramManager()
   const { onDragNewSegment, onSegmentFail, onSegmentConnect, onShowSelectModel, onPortMount } = usePortManager()
   const ref: any = useRef<React.RefObject<HTMLElement>>(null)
   const startCoordinatesRef = useRef<ICoordinateType | undefined>()
 
   const className = classnames('diagram-port', {
-    'type-input': type === 'input',
-    'type-output': type === 'output',
     'is-linked': isLinked,
   })
 
@@ -67,14 +63,12 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
       onShowSelectModel(event, id)
     }
     // 否则在空白区域松开 释放
-    onSegmentFail && onSegmentFail(id, type)
+    onSegmentFail && onSegmentFail(id)
   })
 
   useEffect(() => {
     onPortMount(id, ref.current)
   }, [id, onPortMount])
 
-  return (
-    <div className={className} id={id} ref={ref} style={{ top: index === 0 ? '45%' : `calc(45% + ${index * 18}px)` }} />
-  )
+  return <div className={className} id={id} ref={ref} />
 })

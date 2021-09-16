@@ -19,7 +19,10 @@ export const defaultValue: IDiagramType = {
       id: 'node-1',
       coordinates: [100, 100],
       inputs: [],
-      outputs: [{ id: 'port-1', isLinked: true }],
+      outputs: [
+        { id: 'port-1', isLinked: true },
+        { id: 'port-2', isLinked: false },
+      ],
       type: 'nodeTypeInput',
       data: { inputValue: 'defaultValue' },
     },

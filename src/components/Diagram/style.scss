@@ -76,6 +76,23 @@ $segmentZIndexDefault: 30;
   // ----------------------------
   // Port
   // ----------------------------
+  &-port-wrapper {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    z-index: 1;
+    &.type-input {
+      left: -10px;
+      transform: rotate(-180deg);
+    }
+
+    &.type-output {
+      right: -10px;
+    }
+  }
   &-port {
     transition: background-color 0.25s ease-in-out;
     background-image: url('../../static/linked-port.png');
@@ -84,21 +101,9 @@ $segmentZIndexDefault: 30;
     background-size: 100% 100%;
     width: 10px;
     height: 14px;
-    position: absolute;
 
     &:hover {
       opacity: 0.8;
-    }
-
-    &.type-input {
-      left: -10px;
-      //border-top-left-radius: 8px;
-      //border-bottom-left-radius: 8px;
-      transform: rotate(-180deg);
-    }
-
-    &.type-output {
-      right: -10px;
     }
 
     &.is-linked {
