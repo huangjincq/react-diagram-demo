@@ -4,13 +4,17 @@ export const defaultValue: IDiagramType = {
   links: [
     { input: 'port-1', output: 'node-2' },
     { input: 'port-1', output: 'ebac3f07-598e-4e2f-9e81-e67e542322d8' },
+    { input: 'node-5-port-1', output: 'node-2' },
+    { input: 'node-1-port-1', output: 'node-5' },
+    { input: 'node-5-port-2', output: 'node-4' },
+    { input: 'node-4-port-3', output: 'node-3' },
   ],
   nodes: [
     {
       id: 'node-1',
       coordinates: [100, 100],
       inputs: [],
-      outputs: [{ id: 'port-1', isLinked: true }],
+      outputs: [{ id: 'node-1-port-1', isLinked: true }],
       type: 'nodeTypeSingleOutputs',
       data: { inputValue: 'defaultValue' },
     },
@@ -18,13 +22,13 @@ export const defaultValue: IDiagramType = {
       id: 'node-2',
       coordinates: [600, 100],
       type: 'nodeTypeSingleInputs',
-      inputs: [{ id: '62852bf6-4cb8-4437-8cb9-d1edce72de1b', isLinked: false }],
+      inputs: [{ id: 'node-2-port-1', isLinked: false }],
       outputs: [],
       data: { inputValue: 'test' },
     },
     {
       id: 'node-3',
-      coordinates: [800, 400],
+      coordinates: [850, 297],
       type: 'nodeTypeNoInputOutput',
       inputs: [],
       outputs: [],
@@ -32,27 +36,27 @@ export const defaultValue: IDiagramType = {
     },
     {
       id: 'node-4',
-      coordinates: [500, 700],
+      coordinates: [600, 297],
       type: 'nodeTypeMultipleInputsOutputs',
       inputs: [
-        { id: '34234', isLinked: false },
-        { id: 'dfaerqw', isLinked: false },
+        { id: 'node-4-port-1', isLinked: false },
+        { id: 'node-4-port-2', isLinked: false },
       ],
       outputs: [
-        { id: '1123', isLinked: false },
-        { id: 'SADA', isLinked: false },
-        { id: '3423FD', isLinked: false },
+        { id: 'node-4-port-3', isLinked: false },
+        { id: 'node-4-port-4', isLinked: false },
+        { id: 'node-4-port-5', isLinked: false },
       ],
       data: { inputValue: 'test' },
     },
     {
       id: 'node-5',
-      coordinates: [364, 353],
+      coordinates: [350, 100],
       type: 'nodeTypeCustomRenderPort',
       inputs: [],
       outputs: [
-        { id: 'd0ce404a', isLinked: false },
-        { id: '1751249f', isLinked: false },
+        { id: 'node-5-port-1', isLinked: false },
+        { id: 'node-5-port-2', isLinked: false },
       ],
       data: {
         branchList: [
