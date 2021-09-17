@@ -70,5 +70,5 @@ export const Port: React.FC<PortProps> = React.memo((props) => {
     onPortMount(id, ref.current)
   }, [id, onPortMount])
 
-  return <div className={className} id={id} ref={ref} />
+  return <b className={className} id={id} ref={ref} />
 })

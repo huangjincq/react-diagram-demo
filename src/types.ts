@@ -99,4 +99,5 @@ export interface INodeItemProps<T> {
   onChange: (value: T) => void
   inputs?: IPointType[]
   outputs?: IPointType[]
+  nodeId: string
 }

@@ -53,7 +53,8 @@ export const LinksCanvas: React.FC<LinkCanvasProps> = React.memo((props) => {
       }
     })
     return res
-  }, [nodes, links, nodeRefs, portRefs, canvasRef, scale])
+    //  eslint-disable-next-line
+  }, [nodes, links, nodeRefs, portRefs, canvasRef]) // 不要依赖 scale 因为缩放的时候不用重新计算位置
 
   return (
     <>

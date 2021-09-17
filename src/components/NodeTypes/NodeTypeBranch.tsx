@@ -9,7 +9,7 @@ import { Port } from '../Diagram/Port'
 export interface NodeTypeBranchProps extends INodeItemProps<any> {}
 
 export const NodeTypeBranch: React.FC<NodeTypeBranchProps> = (props) => {
-  const { value, onChange, inputs, outputs } = props
+  const { value, onChange, outputs, nodeId } = props
 
   const handleInputChange = (e: any) => {
     const index = e.target.dataset.index
@@ -28,19 +28,7 @@ export const NodeTypeBranch: React.FC<NodeTypeBranchProps> = (props) => {
         {value.branchList.map((item: any, index: number) => (
           <div className="branch-input" key={index}>
             <Input placeholder="Input message here" value={item.text} data-index={index} onChange={handleInputChange} />
-            {/* <Port
-              onPortMount={onPortMount}
-              onDragNewSegment={onDragNewSegment}
-              onSegmentFail={onSegmentFail}
-              onShowSelectModel={onShowSelectModel}
-              onSegmentConnect={onSegmentConnect}
-              type={type}
-              key={port.id}
-              id={port.id}
-              index={index}
-              isLinked={port.isLinked}
-              nodeId={nodeId}
-            /> */}
+            {outputs && <Port id={outputs[index].id} isLinked={outputs[index].isLinked} nodeId={nodeId} />}
           </div>
         ))}
       </div>

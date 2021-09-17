@@ -49,6 +49,7 @@ export const DiagramNode: React.FC<DiagramNodeProps> = React.memo((props) => {
   const nodeItemProps = {
     value: data,
     onChange: handleNodeDataChange,
+    nodeId: id,
     inputs: nodeConfig?.customRenderPort ? inputs : undefined,
     outputs: nodeConfig?.customRenderPort ? outputs : undefined,
   }

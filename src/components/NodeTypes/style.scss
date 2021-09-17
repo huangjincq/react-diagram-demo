@@ -35,7 +35,17 @@
 
 .node-content {
   padding: 8px;
-  .branch-input + .branch-input {
-    margin-top: 8px;
+  .branch-input {
+    position: relative;
+    .diagram-port {
+      position: absolute;
+      z-index: 1;
+      right: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+    & + .branch-input {
+      margin-top: 8px;
+    }
   }
 }
