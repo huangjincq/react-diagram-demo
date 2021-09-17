@@ -23,59 +23,44 @@ export const defaultValue: IDiagramType = {
       data: { inputValue: 'test' },
     },
     {
-      id: 'ebac3f07-598e-4e2f-9e81-e67e542322d8',
+      id: 'node-3',
+      coordinates: [800, 400],
+      type: 'nodeTypeNoInputOutput',
+      inputs: [],
+      outputs: [],
+      data: { inputValue: 'test' },
+    },
+    {
+      id: 'node-4',
+      coordinates: [500, 700],
+      type: 'nodeTypeMultipleInputsOutputs',
+      inputs: [
+        { id: '34234', isLinked: false },
+        { id: 'dfaerqw', isLinked: false },
+      ],
+      outputs: [
+        { id: '1123', isLinked: false },
+        { id: 'SADA', isLinked: false },
+        { id: '3423FD', isLinked: false },
+      ],
+      data: { inputValue: 'test' },
+    },
+    {
+      id: 'node-5',
       coordinates: [364, 353],
       type: 'nodeTypeCustomRenderPort',
       inputs: [],
       outputs: [
-        {
-          id: 'd0ce404a-d95c-4210-be5d-106cb707ecda',
-          isLinked: false,
-        },
-        { id: '1751249f-fb2c-44ed-b324-e99cf1d8a5fd', isLinked: false },
+        { id: 'd0ce404a', isLinked: false },
+        { id: '1751249f', isLinked: false },
       ],
       data: {
         branchList: [
-          { text: 'button-1', id: 'd0ce404a-d95c-4210-be5d-106cb707ecda' },
-          {
-            text: 'button-2',
-            id: '1751249f-fb2c-44ed-b324-e99cf1d8a5fd',
-          },
+          { text: 'button-1', id: 'd0ce404a' },
+          { text: 'button-2', id: '1751249f' },
         ],
       },
     },
-    // {
-    //   id: '0d8dcb00-7c54-488a-9e85-0f92cb463cc3',
-    //   coordinates: [604, 353],
-    //   type: 'nodeTypeInput',
-    //   inputs: [],
-    //   outputs: [{ id: 'f854d9bc-0b0e-481c-acfe-786a20483726', isLinked: false }],
-    //   data: { inputValue: 'input' },
-    // },
-    // {
-    //   id: 'f57ee82a-2f1e-45e8-905a-187d36a45dbb',
-    //   coordinates: [100, 370],
-    //   type: 'nodeTypeSingleInputs',
-    //   inputs: [],
-    //   outputs: [{ id: '459c4240-26f7-4351-857d-ba856ca755cb', isLinked: false }],
-    //   data: { inputValue: '', selectValue: 'lucy' },
-    // },
-    // {
-    //   id: 'node-2',
-    //   type: 'nodeTypeSingleInputs',
-    //   coordinates: [367, 226],
-    //   inputs: [{ id: 'input-1', isLinked: false }],
-    //   outputs: [{ id: 'port-5', isLinked: false }],
-    //   data: { selectValue: '' },
-    // },
-    // {
-    //   id: '1a5f12bc-9d9c-48e2-905d-97e865845e87',
-    //   coordinates: [597, 478],
-    //   type: 'nodeTypeSingleInputs',
-    //   inputs: [],
-    //   outputs: [{ id: '2d16159f-3f1c-4370-b3fc-28bd8e51c388', isLinked: false }],
-    //   data: { inputValue: '' },
-    // },
   ],
 }
 

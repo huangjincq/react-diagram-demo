@@ -19,7 +19,10 @@ export const NodeTypeMultipleInputsOutputs: React.FC<NodeTypeMultipleInputsOutpu
 
   return (
     <>
-      <NodeTypeHeader icon={nodesConfig.nodeTypeSingleOutputs.icon} label={nodesConfig.nodeTypeSingleOutputs.label} />
+      <NodeTypeHeader
+        icon={nodesConfig.nodeTypeMultipleInputsOutputs.icon}
+        label={nodesConfig.nodeTypeMultipleInputsOutputs.label}
+      />
       <div className="node-content">
         <TextArea placeholder="Input message here" rows={2} value={value.inputValue} onChange={handleInputChange} />
       </div>

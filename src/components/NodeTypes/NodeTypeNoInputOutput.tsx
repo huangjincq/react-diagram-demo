@@ -6,9 +6,9 @@ import { NodeTypeHeader } from './NodeTypeHeader'
 import { nodesConfig } from './config'
 const { TextArea } = Input
 
-export interface nodeTypeSingleOutputsProps extends INodeItemProps<any> {}
+export interface NodeTypeNoInputOutputProps extends INodeItemProps<any> {}
 
-export const nodeTypeSingleOutputs: React.FC<nodeTypeSingleOutputsProps> = (props) => {
+export const NodeTypeNoInputOutput: React.FC<NodeTypeNoInputOutputProps> = (props) => {
   const { value, onChange } = props
   const handleInputChange = (e: any) => {
     onChange({
@@ -19,7 +19,7 @@ export const nodeTypeSingleOutputs: React.FC<nodeTypeSingleOutputsProps> = (prop
 
   return (
     <>
-      <NodeTypeHeader icon={nodesConfig.nodeTypeSingleOutputs.icon} label={nodesConfig.nodeTypeSingleOutputs.label} />
+      <NodeTypeHeader icon={nodesConfig.nodeTypeNoInputOutput.icon} label={nodesConfig.nodeTypeNoInputOutput.label} />
       <div className="node-content">
         <TextArea placeholder="Input message here" rows={2} value={value.inputValue} onChange={handleInputChange} />
       </div>
@@ -27,4 +27,4 @@ export const nodeTypeSingleOutputs: React.FC<nodeTypeSingleOutputsProps> = (prop
   )
 }
 
-nodeTypeSingleOutputs.displayName = 'nodeTypeSingleOutputs'
+NodeTypeNoInputOutput.displayName = 'NodeTypeNoInputOutput'

@@ -1,9 +1,11 @@
 import { NodeTypeSingleOutputs } from './NodeTypeSingleOutputs'
 import { NodeTypeSingleInputs } from './NodeTypeSingleInputs'
 import { NodeTypeCustomRenderPort } from './NodeTypeCustomRenderPort'
+import { NodeTypeNoInputOutput } from './NodeTypeNoInputOutput'
 import { AppleOutlined, WindowsOutlined, GithubOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
 import { ICoordinateType, INodeType, NodeTypeEnum } from '../../types'
+import { NodeTypeMultipleInputsOutputs } from './NodeTypeMultipleInputsOutputs'
 /*
  * 1. 单出口节点
  * 2. 单入口节点
@@ -58,7 +60,7 @@ export const nodesConfig = {
     },
   },
   [NodeTypes.nodeTypeNoInputOutput]: {
-    component: NodeTypeSingleInputs,
+    component: NodeTypeNoInputOutput,
     label: '无出入口 节点',
     icon: WindowsOutlined,
     customRenderPort: false,
@@ -77,7 +79,7 @@ export const nodesConfig = {
     },
   },
   [NodeTypes.nodeTypeMultipleInputsOutputs]: {
-    component: NodeTypeSingleInputs,
+    component: NodeTypeMultipleInputsOutputs,
     label: '多出口 多入口 节点',
     icon: WindowsOutlined,
     customRenderPort: false,
