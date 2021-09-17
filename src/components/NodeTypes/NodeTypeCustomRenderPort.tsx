@@ -6,9 +6,9 @@ import { NodeTypeHeader } from './NodeTypeHeader'
 import { nodesConfig } from './config'
 import { Port } from '../Diagram/Port'
 
-export interface NodeTypeBranchProps extends INodeItemProps<any> {}
+export interface NodeTypeCustomRenderPortProps extends INodeItemProps<any> {}
 
-export const NodeTypeBranch: React.FC<NodeTypeBranchProps> = (props) => {
+export const NodeTypeCustomRenderPort: React.FC<NodeTypeCustomRenderPortProps> = (props) => {
   const { value, onChange, outputs, nodeId } = props
 
   const handleInputChange = (e: any) => {
@@ -23,7 +23,10 @@ export const NodeTypeBranch: React.FC<NodeTypeBranchProps> = (props) => {
 
   return (
     <>
-      <NodeTypeHeader icon={nodesConfig.NodeTypeBranch.icon} label={nodesConfig.NodeTypeBranch.label} />
+      <NodeTypeHeader
+        icon={nodesConfig.nodeTypeCustomRenderPort.icon}
+        label={nodesConfig.nodeTypeCustomRenderPort.label}
+      />
       <div className="node-content">
         {value.branchList.map((item: any, index: number) => (
           <div className="branch-input" key={index}>
@@ -36,4 +39,4 @@ export const NodeTypeBranch: React.FC<NodeTypeBranchProps> = (props) => {
   )
 }
 
-NodeTypeBranch.displayName = 'NodeTypeBranch'
+NodeTypeCustomRenderPort.displayName = 'NodeTypeCustomRenderPort'

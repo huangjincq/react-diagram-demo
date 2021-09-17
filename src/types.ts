@@ -1,4 +1,4 @@
-export type NodeTypeEnum = 'nodeTypeInput' | 'nodeTypeSelect' | 'NodeTypeBranch'
+export type NodeTypeEnum = 'nodeTypeSingleOutputs' | 'nodeTypeSingleInputs' | 'nodeTypeCustomRenderPort'
 
 /*
  * 坐标 数据类型

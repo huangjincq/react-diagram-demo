@@ -17,13 +17,12 @@ theme: juejin highlight:
 
     图形工具需要对dom元素对宽高、所在位置进行计算，先提前复习一些常用对 dom 宽高位置计算对方法。
 
-1. 通过 [HTMLElement](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/offsetHeight) 的属性获取  [*
-   详情点我*](https://www.cnblogs.com/ranyonsue/p/8109388.html)
+1. 通过 [HTMLElement](https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLElement/offsetHeight) 的属性获取 [_
+   详情点我_](https://www.cnblogs.com/ranyonsue/p/8109388.html)
 
-    - 常用的获取元素的宽高：`offsetHeight`/`offsetWidth`|`clientHeight`/`clientWidth`这`offset`和`client`的大概区别就是 `offset`
-      是包含边框的而 `client` 不包含边框。在项目里面都是用的 `offset` 相关属性计算的。
-    - `offsetLeft`/`offsetTop` 获取 dom 距离 上层有定位的父亲元素 的 左边/顶部 的距离
-
+   - 常用的获取元素的宽高：`offsetHeight`/`offsetWidth`|`clientHeight`/`clientWidth`这`offset`和`client`的大概区别就是 `offset`
+     是包含边框的而 `client` 不包含边框。在项目里面都是用的 `offset` 相关属性计算的。
+   - `offsetLeft`/`offsetTop` 获取 dom 距离 上层有定位的父亲元素 的 左边/顶部 的距离
 
 2. 通过 [getBoundingClientRect](https://developer.mozilla.org/zh-CN/docs/Web/API/Element/getBoundingClientRect) 获取
 
@@ -31,9 +30,9 @@ theme: juejin highlight:
 
    ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1363b9518404405398f9ce57a06ec04f~tplv-k3u1fbpfcp-zoom-1.image)
 
-    - `top,left,right,bottom` 对应获取的是元素的上下左右边界到窗口的距离 `x,y`同`left,top`
+   - `top,left,right,bottom` 对应获取的是元素的上下左右边界到窗口的距离 `x,y`同`left,top`
 
-    - `width,height` 获取的元素的显示宽高
+   - `width,height` 获取的元素的显示宽高
 
 **注意：通过 HTMLElement 获取的值不受 `CSS3 sacle` 影响，获取的依然是原始值，而通过`getBoundingClientRect` 获取的是缩放元素后实际显示的宽高，由于这个特殊的特性，2
 种方法都有实际的使用场景**
@@ -60,24 +59,25 @@ const defaultValue = {
       inputs: [], // node 中输入的点
       outputs: [{ id: 'port-1', isLinked: true }], // node 中输出的点
       type: 'nodeTypeInput',
-      data: { // node 携带自定义数据
-        inputValue: 'defaultValue'
-      }
+      data: {
+        // node 携带自定义数据
+        inputValue: 'defaultValue',
+      },
     },
     {
       id: 'node-2',
-      type: 'nodeTypeSelect',
+      type: 'nodeTypeSingleInputs',
       coordinates: [400, 200],
       inputs: [{ id: 'input-1', isLinked: false }],
       outputs: [{ id: 'port-5', isLinked: false }],
       data: {
-        selectValue: ''
-      }
-    }
+        selectValue: '',
+      },
+    },
   ],
   links: [
-    { input: 'port-1', output: 'node-2' } // 一条连线的起点终点
-  ]
+    { input: 'port-1', output: 'node-2' }, // 一条连线的起点终点
+  ],
 }
 ```
 
@@ -124,12 +124,12 @@ const handleDrop = useCallback(
     const coordinates: ICoordinateType = [event.clientX, event.clientY]
     const newNode = createNode(nodeType, coordinates)
 
-    handleChange({...value, nodes: [...value.nodes, newNode]})
+    handleChange({ ...value, nodes: [...value.nodes, newNode] })
   },
   [handleChange, transform, value]
 )
 
-return <div onDrop = {handleDrop} > </div>
+return <div onDrop={handleDrop}> </div>
 ```
 
 [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/DiagramPanel.tsx#L98)
@@ -167,9 +167,8 @@ _这里需要注意的是 `offsetLeft`/`offsetTop` 是找最近的父元素，�
 属性 `M ${start}, ${end}` 就可以生成一条直线
 
 ```html
-
 <svg>
-  <path d="M 0,0, 50,80" stroke="red"/>
+  <path d="M 0,0, 50,80" stroke="red" />
 </svg>
 ```
 
@@ -196,25 +195,25 @@ return <div className="node" ref={ref}></div>
 
 3. 然后我们将分成两种情况
 
-    1. 情况一：起点是 `port`, 终点是 `node` 例: `[{input: 'port-1', output: 'node-1'}]`
+   1. 情况一：起点是 `port`, 终点是 `node` 例: `[{input: 'port-1', output: 'node-1'}]`
 
-       起点 `port-1` 的位置计算方法:
+      起点 `port-1` 的位置计算方法:
 
-        1. 找到 `port-1` 父元素 `node` 的 `coordinates`
-           坐标 [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/components/Diagram/LinksCanvas.tsx#L24)
-        2. 找到 `port-1` 的 dom 节点 `port1Dom`
-        3. 得出 `port-1` 的坐标
-           为 `[coordinates[0] + port1Dom.offsetLeft + port1Dom.offsetWidth / 2, coordinates[1] + port1Dom.offsetTop + port1Dom.offsetHeight / 2]` [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/components/Diagram/Link.tsx#L14)
+      1. 找到 `port-1` 父元素 `node` 的 `coordinates`
+         坐标 [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/components/Diagram/LinksCanvas.tsx#L24)
+      2. 找到 `port-1` 的 dom 节点 `port1Dom`
+      3. 得出 `port-1` 的坐标
+         为 `[coordinates[0] + port1Dom.offsetLeft + port1Dom.offsetWidth / 2, coordinates[1] + port1Dom.offsetTop + port1Dom.offsetHeight / 2]` [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/components/Diagram/Link.tsx#L14)
 
-       终点 `node-1` 的位置计算方法(node 连接位置为左边的中间):
+      终点 `node-1` 的位置计算方法(node 连接位置为左边的中间):
 
-        1. 找到 `node-1` 父元素 `node` 的 `coordinates` 坐标
-        2. 找到 `node-1` 的 dom 节点 `node1Dom`
-        3. 得出 `node-1` 的坐标 为 `[coordinates[0], coordinates[1] + node1Dom.offsetHeight / 2]`
+      1. 找到 `node-1` 父元素 `node` 的 `coordinates` 坐标
+      2. 找到 `node-1` 的 dom 节点 `node1Dom`
+      3. 得出 `node-1` 的坐标 为 `[coordinates[0], coordinates[1] + node1Dom.offsetHeight / 2]`
 
-       拿到起点终点坐标后 设置 `svg` 的 `d` 就自动生成了一条 `link` `link` 位置也会时时随着 `node` 的位置更新
+      拿到起点终点坐标后 设置 `svg` 的 `d` 就自动生成了一条 `link` `link` 位置也会时时随着 `node` 的位置更新
 
-    1. 情况二：起点是 `port`, 终点是 `port` 同上 `port-1` 计算
+   1. 情况二：起点是 `port`, 终点是 `port` 同上 `port-1` 计算
 
 到这一步骤后就可生成直线，我们通过改变 `path` d
 的算法可生成曲线 [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/utils/makeSvgPath.ts#L41)
@@ -326,7 +325,7 @@ const handleWheel = useCallback(
     setTransform({
       scale: Number(scale.toFixed(2)),
       translateX,
-      translateY
+      translateY,
     })
   },
   [handleThrottleSetTransform, transform]
@@ -344,11 +343,11 @@ setSelectionArea({
   left: Math.min(e.clientX, mouseDownStartPosition.current.x) - panelRect.x,
   top: Math.min(e.clientY, mouseDownStartPosition.current.y) - panelRect.y,
   width: Math.abs(e.clientX - mouseDownStartPosition.current.x),
-  height: Math.abs(e.clientY - mouseDownStartPosition.current.y)
+  height: Math.abs(e.clientY - mouseDownStartPosition.current.y),
 })
 ```
 
-2.碰撞检测 检测两个div 是否相交
+2.碰撞检测 检测两个 div 是否相交
 原理:
 
 ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15f604a6f8e343be88d8e370a4aa4aea~tplv-k3u1fbpfcp-watermark.image)
@@ -367,13 +366,17 @@ export const collideCheck = (dom1: HTMLElement | null, dom2: HTMLElement | null)
   return false
 }
 ```
+
 3. 在鼠标 `moving` 时候遍历 所有 `node` `进行碰撞检测，追加到 `activeId`
 
 [源代码](https://github.com/huangjincq/react-diagram-demo/blob/master/src/DiagramPanel.tsx#L174)
 
 ## 10.撤销重做
+
 原理：在 `onChange` 事件到时候，把 `value` 推入 `past` 数组，在撤销的时候把 `value` 推入 `feature` 数组
 
 [源代码：useHistory](https://github.com/huangjincq/react-diagram-demo/blob/master/src/hooks/useHistory.ts) hook
+
+```
 
 ```

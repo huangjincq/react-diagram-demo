@@ -1,6 +1,6 @@
-import { NodeTypeInput } from './NodeTypeInput'
-import { NodeTypeSelect } from './NodeTypeSelect'
-import { NodeTypeBranch } from './NodeTypeBranch'
+import { NodeTypeSingleOutputs } from './NodeTypeSingleOutputs'
+import { NodeTypeSingleInputs } from './NodeTypeSingleInputs'
+import { NodeTypeCustomRenderPort } from './NodeTypeCustomRenderPort'
 import { AppleOutlined, WindowsOutlined, GithubOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
 import { ICoordinateType, INodeType, NodeTypeEnum } from '../../types'
@@ -12,22 +12,22 @@ import { ICoordinateType, INodeType, NodeTypeEnum } from '../../types'
  * 5. 自定义渲染节点
  */
 export enum NodeTypes {
-  nodeTypeInput = 'nodeTypeInput',
-  nodeTypeSelect = 'nodeTypeSelect',
-  NodeTypeBranch = 'NodeTypeBranch',
+  nodeTypeSingleOutputs = 'nodeTypeSingleOutputs', // 单出口节点
+  nodeTypeSingleInputs = 'nodeTypeSingleInputs', // 单入口节点
+  nodeTypeCustomRenderPort = 'nodeTypeCustomRenderPort', // 自定义渲染节点
 }
 
 export const nodesConfig = {
-  [NodeTypes.nodeTypeInput]: {
-    component: NodeTypeInput,
-    label: 'Input 节点',
+  [NodeTypes.nodeTypeSingleOutputs]: {
+    component: NodeTypeSingleOutputs,
+    label: '单出口节点',
     icon: AppleOutlined,
     customRenderPort: false,
     defaultValue: () => {
       return {
         id: uuidv4(),
         coordinates: [0, 0],
-        type: NodeTypes.nodeTypeInput,
+        type: NodeTypes.nodeTypeSingleOutputs,
         inputs: [],
         outputs: [{ id: uuidv4(), isLinked: false }],
         data: {
@@ -36,18 +36,18 @@ export const nodesConfig = {
       }
     },
   },
-  [NodeTypes.nodeTypeSelect]: {
-    component: NodeTypeSelect,
-    label: 'Select 节点',
+  [NodeTypes.nodeTypeSingleInputs]: {
+    component: NodeTypeSingleInputs,
+    label: '单入口节点',
     icon: WindowsOutlined,
     customRenderPort: false,
     defaultValue: () => {
       return {
         id: uuidv4(),
         coordinates: [0, 0],
-        type: NodeTypes.nodeTypeSelect,
+        type: NodeTypes.nodeTypeSingleInputs,
         inputs: [{ id: uuidv4(), isLinked: false }],
-        outputs: [{ id: uuidv4(), isLinked: false }],
+        outputs: [],
         data: {
           inputValue: '',
           selectValue: '',
@@ -55,8 +55,8 @@ export const nodesConfig = {
       }
     },
   },
-  [NodeTypes.NodeTypeBranch]: {
-    component: NodeTypeBranch,
+  [NodeTypes.nodeTypeCustomRenderPort]: {
+    component: NodeTypeCustomRenderPort,
     label: '分支 节点',
     icon: GithubOutlined,
     customRenderPort: true,
@@ -70,7 +70,7 @@ export const nodesConfig = {
       return {
         id: uuidv4(),
         coordinates: [0, 0],
-        type: NodeTypes.NodeTypeBranch,
+        type: NodeTypes.nodeTypeCustomRenderPort,
         inputs: [],
         outputs,
         data: {

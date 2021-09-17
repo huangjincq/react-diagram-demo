@@ -4,40 +4,28 @@ export const defaultValue: IDiagramType = {
   links: [
     { input: 'port-1', output: 'node-2' },
     { input: 'port-1', output: 'ebac3f07-598e-4e2f-9e81-e67e542322d8' },
-    // {
-    //   input: 'port-5',
-    //   output: '841e9704-c295-4915-8ba9-1d8ab4e6b172',
-    // },
-    // {
-    //   input: 'd0ce404a-d95c-4210-be5d-106cb707ecda',
-    //   output: '0d8dcb00-7c54-488a-9e85-0f92cb463cc3',
-    // },
-    // { input: '1751249f-fb2c-44ed-b324-e99cf1d8a5fd', output: '1a5f12bc-9d9c-48e2-905d-97e865845e87' },
   ],
   nodes: [
     {
       id: 'node-1',
       coordinates: [100, 100],
       inputs: [],
-      outputs: [
-        { id: 'port-1', isLinked: true },
-        { id: 'port-2', isLinked: false },
-      ],
-      type: 'nodeTypeInput',
+      outputs: [{ id: 'port-1', isLinked: true }],
+      type: 'nodeTypeSingleOutputs',
       data: { inputValue: 'defaultValue' },
     },
     {
       id: 'node-2',
       coordinates: [600, 100],
-      type: 'nodeTypeInput',
-      inputs: [],
-      outputs: [{ id: '62852bf6-4cb8-4437-8cb9-d1edce72de1b', isLinked: false }],
+      type: 'nodeTypeSingleInputs',
+      inputs: [{ id: '62852bf6-4cb8-4437-8cb9-d1edce72de1b', isLinked: false }],
+      outputs: [],
       data: { inputValue: 'test' },
     },
     {
       id: 'ebac3f07-598e-4e2f-9e81-e67e542322d8',
       coordinates: [364, 353],
-      type: 'NodeTypeBranch',
+      type: 'nodeTypeCustomRenderPort',
       inputs: [],
       outputs: [
         {
@@ -67,14 +55,14 @@ export const defaultValue: IDiagramType = {
     // {
     //   id: 'f57ee82a-2f1e-45e8-905a-187d36a45dbb',
     //   coordinates: [100, 370],
-    //   type: 'nodeTypeSelect',
+    //   type: 'nodeTypeSingleInputs',
     //   inputs: [],
     //   outputs: [{ id: '459c4240-26f7-4351-857d-ba856ca755cb', isLinked: false }],
     //   data: { inputValue: '', selectValue: 'lucy' },
     // },
     // {
     //   id: 'node-2',
-    //   type: 'nodeTypeSelect',
+    //   type: 'nodeTypeSingleInputs',
     //   coordinates: [367, 226],
     //   inputs: [{ id: 'input-1', isLinked: false }],
     //   outputs: [{ id: 'port-5', isLinked: false }],
@@ -83,7 +71,7 @@ export const defaultValue: IDiagramType = {
     // {
     //   id: '1a5f12bc-9d9c-48e2-905d-97e865845e87',
     //   coordinates: [597, 478],
-    //   type: 'nodeTypeSelect',
+    //   type: 'nodeTypeSingleInputs',
     //   inputs: [],
     //   outputs: [{ id: '2d16159f-3f1c-4370-b3fc-28bd8e51c388', isLinked: false }],
     //   data: { inputValue: '' },
