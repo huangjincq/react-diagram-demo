@@ -4,7 +4,13 @@ import { NodeTypeBranch } from './NodeTypeBranch'
 import { AppleOutlined, WindowsOutlined, GithubOutlined } from '@ant-design/icons'
 import { v4 as uuidv4 } from 'uuid'
 import { ICoordinateType, INodeType, NodeTypeEnum } from '../../types'
-
+/*
+ * 1. 单出口节点
+ * 2. 单入口节点
+ * 3. 无出入口节点
+ * 4. 多出口 多入口节点
+ * 5. 自定义渲染节点
+ */
 export enum NodeTypes {
   nodeTypeInput = 'nodeTypeInput',
   nodeTypeSelect = 'nodeTypeSelect',
