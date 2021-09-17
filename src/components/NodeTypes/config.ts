@@ -14,13 +14,15 @@ import { ICoordinateType, INodeType, NodeTypeEnum } from '../../types'
 export enum NodeTypes {
   nodeTypeSingleOutputs = 'nodeTypeSingleOutputs', // 单出口节点
   nodeTypeSingleInputs = 'nodeTypeSingleInputs', // 单入口节点
+  nodeTypeNoInputOutput = 'nodeTypeNoInputOutput', // 无出入口节点
+  nodeTypeMultipleInputsOutputs = 'nodeTypeMultipleInputsOutputs', // 多出口 多入口节点
   nodeTypeCustomRenderPort = 'nodeTypeCustomRenderPort', // 自定义渲染节点
 }
 
 export const nodesConfig = {
   [NodeTypes.nodeTypeSingleOutputs]: {
     component: NodeTypeSingleOutputs,
-    label: '单出口节点',
+    label: '单出口 节点',
     icon: AppleOutlined,
     customRenderPort: false,
     defaultValue: () => {
@@ -38,7 +40,7 @@ export const nodesConfig = {
   },
   [NodeTypes.nodeTypeSingleInputs]: {
     component: NodeTypeSingleInputs,
-    label: '单入口节点',
+    label: '单入口 节点',
     icon: WindowsOutlined,
     customRenderPort: false,
     defaultValue: () => {
@@ -55,9 +57,54 @@ export const nodesConfig = {
       }
     },
   },
+  [NodeTypes.nodeTypeNoInputOutput]: {
+    component: NodeTypeSingleInputs,
+    label: '无出入口 节点',
+    icon: WindowsOutlined,
+    customRenderPort: false,
+    defaultValue: () => {
+      return {
+        id: uuidv4(),
+        coordinates: [0, 0],
+        type: NodeTypes.nodeTypeNoInputOutput,
+        inputs: [],
+        outputs: [],
+        data: {
+          inputValue: '',
+          selectValue: '',
+        },
+      }
+    },
+  },
+  [NodeTypes.nodeTypeMultipleInputsOutputs]: {
+    component: NodeTypeSingleInputs,
+    label: '多出口 多入口 节点',
+    icon: WindowsOutlined,
+    customRenderPort: false,
+    defaultValue: () => {
+      return {
+        id: uuidv4(),
+        coordinates: [0, 0],
+        type: NodeTypes.nodeTypeNoInputOutput,
+        inputs: [
+          { id: uuidv4(), isLinked: false },
+          { id: uuidv4(), isLinked: false },
+        ],
+        outputs: [
+          { id: uuidv4(), isLinked: false },
+          { id: uuidv4(), isLinked: false },
+          { id: uuidv4(), isLinked: false },
+        ],
+        data: {
+          inputValue: '',
+          selectValue: '',
+        },
+      }
+    },
+  },
   [NodeTypes.nodeTypeCustomRenderPort]: {
     component: NodeTypeCustomRenderPort,
-    label: '分支 节点',
+    label: '自定义渲染 点 节点',
     icon: GithubOutlined,
     customRenderPort: true,
     defaultValue: () => {
