@@ -308,13 +308,6 @@ function DiagramPanel() {
     [selectionArea]
   )
 
-  const handleKey = (e: any) => {
-    console.log('keyDownEvent', e)
-    console.log('isPressed 8 ?=>', hotkeys.isPressed(8))
-    console.log('isPressed delete ?=>', hotkeys.isPressed('delete'))
-    console.log('isPressed backspace ?=>', hotkeys.isPressed('backspace'))
-  }
-
   /*
    * bind some hotkeys
    */
@@ -323,7 +316,6 @@ function DiagramPanel() {
   useHotkeys(HOT_KEY_SELECT_ALL, handleSelectAll, {}, [handleSelectAll])
   useHotkeys(HOT_KEY_DEL, handleBatchDelete, {}, [handleBatchDelete])
   useHotkeys(HOT_KEY_SPACE, handleSpaceHotKey, { keyup: true, keydown: true }, [handleSpaceHotKey])
-  useHotkeys('*', handleKey, {}, [handleSpaceHotKey])
 
   useEventListener('wheel', handleWheel, null, { passive: false })
 
