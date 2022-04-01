@@ -1,4 +1,5 @@
 import { ICoordinateType, IDiagramType, INodeStyle, INodeType } from '../types'
+import hotkeys from 'hotkeys-js'
 
 // 计算 鼠标事件 相对在 参照物(diagram 画布)内的坐标
 export const calculatingCoordinates = (
@@ -203,3 +204,7 @@ export const getInteger = (num: number) => {
   const res = integer * BASE_NUM + remainder
   return res
 }
+
+export const isMac = (() => /macintosh|mac os x/i.test(navigator.userAgent))()
+
+export const isCtrlOrCommandPress = () => (isMac ? hotkeys.command : hotkeys.ctrl)

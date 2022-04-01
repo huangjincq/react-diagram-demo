@@ -1,6 +1,6 @@
 export const HOT_KEY_UNDO = 'ctrl+z, cmd+z'
 export const HOT_KEY_REDO = 'ctrl+shift+z, cmd+shift+z'
 export const HOT_KEY_SELECT_ALL = 'ctrl+a, cmd+a'
-export const HOT_KEY_DEL = 'del'
+export const HOT_KEY_DEL = 'del, backspace'
 export const HOT_KEY_AUTO_LAYOUT = 'ctrl+shift+a, cmd+shift+a'
 export const HOT_KEY_SPACE = 'space'

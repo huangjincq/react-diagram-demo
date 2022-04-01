@@ -6,12 +6,14 @@ import { NodeList } from './components/NodeList/NodeList'
 import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionArea } from './types'
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
+import hotkeys from 'hotkeys-js'
 import {
   calculatingCoordinates,
   checkIsFocusInPanel,
   checkMouseDownTargetIsDrawPanel,
   checkWheelDirection,
   collideCheck,
+  isCtrlOrCommandPress,
   oneNodeDelete,
 } from './utils'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -101,9 +103,8 @@ function DiagramPanel() {
     e.preventDefault()
   }, [])
 
-  const handleWheel = useEventCallback((event: any) => {
-    if (!panelRef.current?.contains(event.target)) return
-
+  // 控制滚轮缩放
+  const handlePanelScale = useEventCallback((event: any) => {
     const { wheelDown, wheelUp } = checkWheelDirection(event)
 
     let { scale, translateX, translateY } = transform
@@ -129,6 +130,39 @@ function DiagramPanel() {
       translateX,
       translateY,
     })
+  })
+
+  // 控制滚轮移动画布
+  const handlePanelTranslate = useEventCallback((event: any) => {
+    const { wheelUp } = checkWheelDirection(event)
+
+    let { translateX, translateY } = transform
+
+    const diff = 40
+
+    if (hotkeys.shift) {
+      translateX = wheelUp ? translateX + diff : translateX - diff
+    } else {
+      translateY = wheelUp ? translateY + diff : translateY - diff
+    }
+
+    handleThrottleSetTransform({
+      ...transform,
+      translateX,
+      translateY,
+    })
+  })
+
+  const handleWheel = useEventCallback((event: any) => {
+    if (!event) event = window.event
+    if (panelRef.current?.contains(event.target)) {
+      event.returnValue = false
+      if (isCtrlOrCommandPress()) {
+        handlePanelScale(event)
+      } else {
+        handlePanelTranslate(event)
+      }
+    }
   })
 
   const handleMouseDown = useEventCallback((event) => {
@@ -285,7 +319,7 @@ function DiagramPanel() {
   useHotkeys(HOT_KEY_DEL, handleBatchDelete, {}, [handleBatchDelete])
   useHotkeys(HOT_KEY_SPACE, handleSpaceHotKey, { keyup: true, keydown: true }, [handleSpaceHotKey])
 
-  useEventListener('wheel', handleWheel)
+  useEventListener('wheel', handleWheel, null, { passive: false })
 
   useEventListener('mouseup', handleMouseUp)
   useEventListener('mousemove', handleMouseMove)
