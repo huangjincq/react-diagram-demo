@@ -153,8 +153,11 @@ function DiagramPanel() {
 
   const handleWheel = useEventCallback((event: any) => {
     if (!event) event = window.event
+    console.log('鼠标滚轮事件触发')
     if (panelRef.current?.contains(event.target)) {
       event.returnValue = false
+      console.log('isCtrlOrCommandPress=>', isCtrlOrCommandPress())
+
       if (isCtrlOrCommandPress()) {
         handlePanelScale(event)
       } else {
