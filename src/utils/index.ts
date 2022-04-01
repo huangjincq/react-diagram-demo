@@ -211,4 +211,4 @@ export const getInteger = (num: number) => {
 
 export const isMac = (() => /macintosh|mac os x/i.test(navigator.userAgent))()
 
-export const isCtrlOrCommandPress = () => isMac || hotkeys.ctrl
+export const isCtrlOrCommandPress = () => (isMac ? hotkeys.command : hotkeys.ctrl)
