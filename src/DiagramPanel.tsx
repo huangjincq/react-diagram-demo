@@ -125,7 +125,7 @@ function DiagramPanel() {
 
     if (scale > 1 || scale < 0.1) return
 
-    handleThrottleSetTransform({
+    setTransform({
       scale: Number(scale.toFixed(2)),
       translateX,
       translateY,
@@ -134,19 +134,17 @@ function DiagramPanel() {
 
   // 控制滚轮移动画布
   const handlePanelTranslate = useEventCallback((event: any) => {
-    const { wheelUp } = checkWheelDirection(event)
+    const { deltaY } = checkWheelDirection(event)
 
     let { translateX, translateY } = transform
 
-    const diff = 40
-
     if (hotkeys.shift) {
-      translateX = wheelUp ? translateX + diff : translateX - diff
+      translateX = translateX - deltaY / 2
     } else {
-      translateY = wheelUp ? translateY + diff : translateY - diff
+      translateY = translateY - deltaY / 2
     }
 
-    handleThrottleSetTransform({
+    setTransform({
       ...transform,
       translateX,
       translateY,

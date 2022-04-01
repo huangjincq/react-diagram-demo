@@ -20,7 +20,7 @@ export const Toolbar: React.FC<ToolbarProps> = React.memo(({ undo, redo, canUndo
 
   return (
     <div className="toolbar">
-      <Button disabled>{scale * 100}%</Button>
+      <Button disabled>{(scale * 100).toFixed(0)}%</Button>
       <Button disabled={!canUndo} onClick={undo}>
         撤销
       </Button>

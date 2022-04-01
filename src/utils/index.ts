@@ -178,19 +178,23 @@ export const computedLinkSvgInfo = (input: ICoordinateType, output: ICoordinateT
 export const checkWheelDirection = (event: any) => {
   let wheelDown = false
   let wheelUp = false
+  let deltaY = 0
 
   // in chrome
   if (event.wheelDelta) {
+    deltaY = -event.wheelDelta
     wheelDown = event.wheelDelta < 0
     wheelUp = event.wheelDelta > 0
     // in firefox
   } else {
+    deltaY = event.deltaY
     wheelDown = event.deltaX > 0 || event.deltaY > 0 || event.deltaZ > 0
     wheelUp = event.deltaX < 0 || event.deltaY < 0 || event.deltaZ < 0
   }
   return {
     wheelDown,
     wheelUp,
+    deltaY,
   }
 }
 
