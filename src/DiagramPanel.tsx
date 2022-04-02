@@ -23,6 +23,8 @@ import { HOT_KEY_DEL, HOT_KEY_REDO, HOT_KEY_SELECT_ALL, HOT_KEY_SPACE, HOT_KEY_U
 import { CURSOR_MAP, DRAG_STATE, SCALE_STEP } from './constant'
 import { defaultValue } from './utils/creatMockData'
 import { calculatePasteOriginCoordination, createCopyValue, createPasteValue } from './utils/copyPaste'
+import hotkeys from 'hotkeys-js'
+
 // import { useThrottleFn } from 'react-use'
 
 function DiagramPanel() {
@@ -221,11 +223,13 @@ function DiagramPanel() {
   })
 
   const handleSpaceHotKey = useEventCallback((event: KeyboardEvent) => {
-    if (event.type === 'keydown' && dragState === DRAG_STATE.DEFAULT) {
-      setDragState(DRAG_STATE.START)
-    }
-    if (event.type === 'keyup') {
-      setDragState(DRAG_STATE.DEFAULT)
+    if (hotkeys.isPressed(HOT_KEY_SPACE)) {
+      if (event.type === 'keydown' && dragState === DRAG_STATE.DEFAULT) {
+        setDragState(DRAG_STATE.START)
+      }
+      if (event.type === 'keyup') {
+        setDragState(DRAG_STATE.DEFAULT)
+      }
     }
   })
 
@@ -307,7 +311,8 @@ function DiagramPanel() {
   useHotkeys(HOT_KEY_REDO, handleRedo, {}, [handleRedo])
   useHotkeys(HOT_KEY_SELECT_ALL, handleSelectAll, {}, [handleSelectAll])
   useHotkeys(HOT_KEY_DEL, handleBatchDelete, {}, [handleBatchDelete])
-  useHotkeys(HOT_KEY_SPACE, handleSpaceHotKey, { keyup: true, keydown: true }, [handleSpaceHotKey])
+  // hotkeys-js 直接使用 'space' mac 空格有兼容问题
+  useHotkeys('*', handleSpaceHotKey, { keyup: true, keydown: true }, [handleSpaceHotKey])
 
   useEventListener('wheel', handleWheel, null, { passive: false })
 
