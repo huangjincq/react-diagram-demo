@@ -173,28 +173,16 @@ export const computedLinkSvgInfo = (input: ICoordinateType, output: ICoordinateT
 }
 
 /*
- * 检测鼠标滚轮方向
+ * 检测鼠标滚轮方向以及滚动距离
  */
-export const checkWheelDirection = (event: any) => {
-  let wheelDown = false
-  let wheelUp = false
-  let deltaY = 0
 
-  // in chrome
-  if (event.wheelDelta) {
-    deltaY = -event.wheelDelta
-    wheelDown = event.wheelDelta < 0
-    wheelUp = event.wheelDelta > 0
-    // in firefox
-  } else {
-    deltaY = event.deltaY
-    wheelDown = event.deltaX > 0 || event.deltaY > 0 || event.deltaZ > 0
-    wheelUp = event.deltaX < 0 || event.deltaY < 0 || event.deltaZ < 0
-  }
+export const checkWheelDirection = (event: any) => {
+  const SENSITIVITY = 2 // 设置灵敏度
   return {
-    wheelDown,
-    wheelUp,
-    deltaY,
+    wheelDown: event.deltaY > 0,
+    wheelUp: event.deltaY < 0,
+    deltaX: event.deltaX / SENSITIVITY,
+    deltaY: event.deltaY / SENSITIVITY,
   }
 }
 
@@ -211,4 +199,4 @@ export const getInteger = (num: number) => {
 
 export const isMac = (() => /macintosh|mac os x/i.test(navigator.userAgent))()
 
-export const isCtrlOrCommandPress = () => (isMac ? hotkeys.command : hotkeys.ctrl)
+export const isCtrlOrCommandPress = (event: any) => (isMac ? hotkeys.command || event.ctrlKey : hotkeys.ctrl)
