@@ -13,7 +13,7 @@ import {
   checkWheelDirection,
   collideCheck,
   computedWheelDelta,
-  isCtrlOrCommandPress,
+  isTriggerScale,
   oneNodeDelete,
 } from './utils'
 import { useHotkeys } from 'react-hotkeys-hook'
@@ -149,7 +149,7 @@ function DiagramPanel() {
   const handleWheel = useEventCallback((event: WheelEvent) => {
     if (panelRef.current?.contains(event.target as Node)) {
       event.returnValue = false
-      if (isCtrlOrCommandPress(event)) {
+      if (isTriggerScale(event)) {
         handlePanelScale(event)
       } else {
         handlePanelTranslate(event)

@@ -214,4 +214,4 @@ export const getInteger = (num: number) => {
 
 export const isMac = (() => /macintosh|mac os x/i.test(navigator.userAgent))()
 
-export const isCtrlOrCommandPress = (event: WheelEvent) => (isMac ? hotkeys.command || event.ctrlKey : hotkeys.ctrl)
+export const isTriggerScale = (event: WheelEvent) => (isMac ? hotkeys.command || event.ctrlKey : hotkeys.ctrl)
