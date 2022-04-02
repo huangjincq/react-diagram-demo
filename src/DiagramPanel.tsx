@@ -12,6 +12,7 @@ import {
   checkMouseDownTargetIsDrawPanel,
   checkWheelDirection,
   collideCheck,
+  computedWheelDelta,
   isCtrlOrCommandPress,
   oneNodeDelete,
 } from './utils'
@@ -103,7 +104,7 @@ function DiagramPanel() {
   }, [])
 
   // 控制滚轮缩放
-  const handlePanelScale = useEventCallback((event: any) => {
+  const handlePanelScale = useEventCallback((event: WheelEvent) => {
     const { wheelDown, wheelUp } = checkWheelDirection(event)
 
     let { scale, translateX, translateY } = transform
@@ -132,8 +133,8 @@ function DiagramPanel() {
   })
 
   // 控制滚轮移动画布
-  const handlePanelTranslate = useEventCallback((event: any) => {
-    const { deltaY, deltaX } = checkWheelDirection(event)
+  const handlePanelTranslate = useEventCallback((event: WheelEvent) => {
+    const { deltaY, deltaX } = computedWheelDelta(event)
     const { translateX, translateY } = transform
 
     setTransform({
@@ -143,9 +144,8 @@ function DiagramPanel() {
     })
   })
 
-  const handleWheel = useEventCallback((event: any) => {
-    if (!event) event = window.event
-    if (panelRef.current?.contains(event.target)) {
+  const handleWheel = useEventCallback((event: WheelEvent) => {
+    if (panelRef.current?.contains(event.target as Node)) {
       event.returnValue = false
       if (isCtrlOrCommandPress(event)) {
         handlePanelScale(event)
