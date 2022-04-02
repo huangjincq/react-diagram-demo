@@ -6,7 +6,6 @@ import { NodeList } from './components/NodeList/NodeList'
 import { IDiagramType, ICoordinateType, IMousePosition, ITransform, ISelectionArea } from './types'
 import { createNode } from './components/NodeTypes/config'
 import { throttle } from 'lodash-es'
-import hotkeys from 'hotkeys-js'
 import {
   calculatingCoordinates,
   checkIsFocusInPanel,
@@ -134,31 +133,21 @@ function DiagramPanel() {
 
   // 控制滚轮移动画布
   const handlePanelTranslate = useEventCallback((event: any) => {
-    const { deltaY } = checkWheelDirection(event)
-
-    let { translateX, translateY } = transform
-
-    if (hotkeys.shift) {
-      translateX = translateX - deltaY / 2
-    } else {
-      translateY = translateY - deltaY / 2
-    }
+    const { deltaY, deltaX } = checkWheelDirection(event)
+    const { translateX, translateY } = transform
 
     setTransform({
       ...transform,
-      translateX,
-      translateY,
+      translateX: translateX - deltaX / 2,
+      translateY: translateY - deltaY / 2,
     })
   })
 
   const handleWheel = useEventCallback((event: any) => {
     if (!event) event = window.event
-    console.log('鼠标滚轮事件触发')
     if (panelRef.current?.contains(event.target)) {
       event.returnValue = false
-      console.log('isCtrlOrCommandPress=>', isCtrlOrCommandPress())
-
-      if (isCtrlOrCommandPress()) {
+      if (isCtrlOrCommandPress(event)) {
         handlePanelScale(event)
       } else {
         handlePanelTranslate(event)

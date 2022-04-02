@@ -178,23 +178,26 @@ export const computedLinkSvgInfo = (input: ICoordinateType, output: ICoordinateT
 export const checkWheelDirection = (event: any) => {
   let wheelDown = false
   let wheelUp = false
+  let deltaX = 0
   let deltaY = 0
 
   // in chrome
-  if (event.wheelDelta) {
-    deltaY = -event.wheelDelta
-    wheelDown = event.wheelDelta < 0
-    wheelUp = event.wheelDelta > 0
-    // in firefox
-  } else {
-    deltaY = event.deltaY
-    wheelDown = event.deltaX > 0 || event.deltaY > 0 || event.deltaZ > 0
-    wheelUp = event.deltaX < 0 || event.deltaY < 0 || event.deltaZ < 0
-  }
+  // if (event.wheelDelta) {
+  //   deltaX = -event.wheelDeltaX
+  //   deltaY = -event.wheelDeltaY
+  //   wheelDown = event.wheelDelta < 0
+  //   wheelUp = event.wheelDelta > 0
+  //   // in firefox
+  // } else {
+  deltaX = event.deltaX
+  deltaY = event.deltaY
+  wheelDown = event.deltaY > 0
+  wheelUp = event.deltaY < 0
   return {
     wheelDown,
     wheelUp,
     deltaY,
+    deltaX,
   }
 }
 
@@ -211,4 +214,4 @@ export const getInteger = (num: number) => {
 
 export const isMac = (() => /macintosh|mac os x/i.test(navigator.userAgent))()
 
-export const isCtrlOrCommandPress = () => isMac || hotkeys.ctrl
+export const isCtrlOrCommandPress = (event: any) => (isMac ? hotkeys.command || event.ctrlKey : hotkeys.ctrl)
