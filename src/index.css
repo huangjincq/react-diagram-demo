@@ -12,6 +12,7 @@ body,
 #root,
 .diagram-panel {
   height: 100%;
+  overscroll-behavior-x: none;
 }
 
 .diagram-panel {

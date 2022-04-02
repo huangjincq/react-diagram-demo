@@ -148,6 +148,7 @@ function DiagramPanel() {
 
   const handleWheel = useEventCallback((event: WheelEvent) => {
     if (panelRef.current?.contains(event.target as Node)) {
+      event.preventDefault()
       event.returnValue = false
       if (isTriggerScale(event)) {
         handlePanelScale(event)
