@@ -192,6 +192,7 @@ export const computedWheelDelta = (event: WheelEvent) => {
 
   if (!isMac && hotkeys.shift) {
     deltaX = deltaY
+    deltaY = 0
   }
 
   return {
