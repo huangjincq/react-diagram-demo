@@ -138,8 +138,8 @@ function DiagramPanel() {
 
     setTransform({
       ...transform,
-      translateX: translateX - deltaX / 2,
-      translateY: translateY - deltaY / 2,
+      translateX: translateX - deltaX,
+      translateY: translateY - deltaY,
     })
   })
 

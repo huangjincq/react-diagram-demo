@@ -173,31 +173,16 @@ export const computedLinkSvgInfo = (input: ICoordinateType, output: ICoordinateT
 }
 
 /*
- * 检测鼠标滚轮方向
+ * 检测鼠标滚轮方向以及滚动距离
  */
-export const checkWheelDirection = (event: any) => {
-  let wheelDown = false
-  let wheelUp = false
-  let deltaX = 0
-  let deltaY = 0
 
-  // in chrome
-  // if (event.wheelDelta) {
-  //   deltaX = -event.wheelDeltaX
-  //   deltaY = -event.wheelDeltaY
-  //   wheelDown = event.wheelDelta < 0
-  //   wheelUp = event.wheelDelta > 0
-  //   // in firefox
-  // } else {
-  deltaX = event.deltaX
-  deltaY = event.deltaY
-  wheelDown = event.deltaY > 0
-  wheelUp = event.deltaY < 0
+export const checkWheelDirection = (event: any) => {
+  const SENSITIVITY = 2 // 设置灵敏度
   return {
-    wheelDown,
-    wheelUp,
-    deltaY,
-    deltaX,
+    wheelDown: event.deltaY > 0,
+    wheelUp: event.deltaY < 0,
+    deltaX: event.deltaX / SENSITIVITY,
+    deltaY: event.deltaY / SENSITIVITY,
   }
 }
 
