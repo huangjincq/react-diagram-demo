@@ -1,25 +1,25 @@
 {
   "files": {
-    "main.css": "/react-diagram-demo/static/css/main.c490a77b.chunk.css",
-    "main.js": "/react-diagram-demo/static/js/main.cae511a0.chunk.js",
-    "main.js.map": "/react-diagram-demo/static/js/main.cae511a0.chunk.js.map",
-    "runtime-main.js": "/react-diagram-demo/static/js/runtime-main.2187a890.js",
-    "runtime-main.js.map": "/react-diagram-demo/static/js/runtime-main.2187a890.js.map",
-    "static/css/2.7e6823b5.chunk.css": "/react-diagram-demo/static/css/2.7e6823b5.chunk.css",
-    "static/js/2.7e9a7621.chunk.js": "/react-diagram-demo/static/js/2.7e9a7621.chunk.js",
-    "static/js/2.7e9a7621.chunk.js.map": "/react-diagram-demo/static/js/2.7e9a7621.chunk.js.map",
-    "static/js/3.702f888a.chunk.js": "/react-diagram-demo/static/js/3.702f888a.chunk.js",
-    "static/js/3.702f888a.chunk.js.map": "/react-diagram-demo/static/js/3.702f888a.chunk.js.map",
+    "main.css": "/react-diagram-demo/static/css/main.a89aaeb0.chunk.css",
+    "main.js": "/react-diagram-demo/static/js/main.3049f9e7.chunk.js",
+    "main.js.map": "/react-diagram-demo/static/js/main.3049f9e7.chunk.js.map",
+    "runtime-main.js": "/react-diagram-demo/static/js/runtime-main.6eed5754.js",
+    "runtime-main.js.map": "/react-diagram-demo/static/js/runtime-main.6eed5754.js.map",
+    "static/css/2.0a11c2a3.chunk.css": "/react-diagram-demo/static/css/2.0a11c2a3.chunk.css",
+    "static/js/2.54d7fa32.chunk.js": "/react-diagram-demo/static/js/2.54d7fa32.chunk.js",
+    "static/js/2.54d7fa32.chunk.js.map": "/react-diagram-demo/static/js/2.54d7fa32.chunk.js.map",
+    "static/js/3.aaadb750.chunk.js": "/react-diagram-demo/static/js/3.aaadb750.chunk.js",
+    "static/js/3.aaadb750.chunk.js.map": "/react-diagram-demo/static/js/3.aaadb750.chunk.js.map",
     "index.html": "/react-diagram-demo/index.html",
-    "static/css/2.7e6823b5.chunk.css.map": "/react-diagram-demo/static/css/2.7e6823b5.chunk.css.map",
-    "static/css/main.c490a77b.chunk.css.map": "/react-diagram-demo/static/css/main.c490a77b.chunk.css.map",
-    "static/js/2.7e9a7621.chunk.js.LICENSE.txt": "/react-diagram-demo/static/js/2.7e9a7621.chunk.js.LICENSE.txt"
+    "static/css/2.0a11c2a3.chunk.css.map": "/react-diagram-demo/static/css/2.0a11c2a3.chunk.css.map",
+    "static/css/main.a89aaeb0.chunk.css.map": "/react-diagram-demo/static/css/main.a89aaeb0.chunk.css.map",
+    "static/js/2.54d7fa32.chunk.js.LICENSE.txt": "/react-diagram-demo/static/js/2.54d7fa32.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.2187a890.js",
-    "static/css/2.7e6823b5.chunk.css",
-    "static/js/2.7e9a7621.chunk.js",
-    "static/css/main.c490a77b.chunk.css",
-    "static/js/main.cae511a0.chunk.js"
+    "static/js/runtime-main.6eed5754.js",
+    "static/css/2.0a11c2a3.chunk.css",
+    "static/js/2.54d7fa32.chunk.js",
+    "static/css/main.a89aaeb0.chunk.css",
+    "static/js/main.3049f9e7.chunk.js"
   ]
 }
