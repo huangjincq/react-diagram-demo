@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react'
 import { DiagramManagerProvider } from '../Context/DiagramManager'
 import { IPortRefs, INodeRefs, ITransform } from '../../types'
 import { IPortManager, PortManagerContextProvider } from '../Context/PortManager'
@@ -7,6 +7,7 @@ interface DiagramCanvasProps extends IPortManager {
   portRefs: IPortRefs
   nodeRefs: INodeRefs
   transform: ITransform
+  children?: ReactNode
 }
 
 export const DiagramCanvas: React.FC<DiagramCanvasProps> = React.memo((props) => {

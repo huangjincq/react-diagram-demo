@@ -95,13 +95,19 @@ export const useHistory = (initialPresent: IDiagramType) => {
   }, [canRedo, dispatch])
 
   // 只设置值 不追加历史记录 例如 移动 node的过程不需要记录
-  const set = useCallback((newPresent) => dispatch({ type: 'SET', newPresent }), [dispatch])
+  const set = useCallback((newPresent: IDiagramType) => dispatch({ type: 'SET', newPresent }), [dispatch])
 
   // 设置值 并且追加历史记录 例如 增加删除节点，修改节点data数据等
-  const setWithHistory = useCallback((newPresent) => dispatch({ type: 'SET_WIDTH_HISTORY', newPresent }), [dispatch])
+  const setWithHistory = useCallback(
+    (newPresent: IDiagramType) => dispatch({ type: 'SET_WIDTH_HISTORY', newPresent }),
+    [dispatch]
+  )
 
   // 仅追加一条历史记录不设置值 例如 节点移动后，把节点拖拽的起始位置 追加进入历史栈
-  const addAHistory = useCallback((newPresent) => dispatch({ type: 'ADD_A_HISTORY', newPresent }), [dispatch])
+  const addAHistory = useCallback(
+    (newPresent: IDiagramType) => dispatch({ type: 'ADD_A_HISTORY', newPresent }),
+    [dispatch]
+  )
 
   const clear = useCallback(() => dispatch({ type: 'CLEAR', initialPresent }), [dispatch, initialPresent])
 

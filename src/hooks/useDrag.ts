@@ -30,7 +30,7 @@ const getEventCoordinates = (event: MouseEvent): ICoordinateType => [event.clien
  */
 const CreateCallbackRef = (ref: any) =>
   useCallback(
-    (callback) => {
+    (callback: any) => {
       if (!ref.current || callback !== ref.current) {
         ref.current = callback
       }
@@ -46,7 +46,7 @@ const useDrag = (options = defaultOptions) => {
   const { current: info } = useRef<InfoType>({ isDragging: false, start: [0, 0], end: [0, 0], offset: [0, 0] })
 
   const onDragStart = useCallback(
-    (event) => {
+    (event: any) => {
       const targetTagName = event.target.tagName
       if (
         !info.isDragging &&
@@ -81,7 +81,7 @@ const useDrag = (options = defaultOptions) => {
   )
 
   const onDragEnd = useCallback(
-    (event) => {
+    (event: any) => {
       if (info.isDragging) {
         info.isDragging = false
         info.end = getEventCoordinates(event)

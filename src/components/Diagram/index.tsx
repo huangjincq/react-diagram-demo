@@ -84,7 +84,7 @@ export const Diagram: React.FC<DiagramProps> = React.memo((props) => {
   })
 
   // when a new segment is dragged, save it to the local state
-  const onDragNewSegment = useCallback((portId, from, to) => {
+  const onDragNewSegment = useCallback((portId: string, from: ICoordinateType, to: ICoordinateType) => {
     setSegment({ id: `segment-${portId}`, from, to })
   }, [])
 
