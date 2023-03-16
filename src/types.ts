@@ -106,3 +106,5 @@ export interface INodeItemProps<T> {
   outputs?: IPointType[]
   nodeId: string
 }
+
+console.log('test')
